@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Structs\**" />
+    <Compile Remove="Views\**" />
+    <EmbeddedResource Remove="Structs\**" />
+    <EmbeddedResource Remove="Views\**" />
+    <None Remove="Structs\**" />
+    <None Remove="Views\**" />
+    <Page Remove="Structs\**" />
+    <Page Remove="Views\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProjectEvent.Core\ProjectEvent.Core.csproj" />
+  </ItemGroup>
+
+</Project>
