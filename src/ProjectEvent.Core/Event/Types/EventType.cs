@@ -43,5 +43,10 @@ namespace ProjectEvent.Core.Event.Types
         /// 鼠标单击
         /// </summary>
         OnMouseClick,
+
+        /// <summary>
+        /// 间隔重复计时
+        /// </summary>
+        OnIntervalTimer,
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ProjectEvent.Core.Action;
 using ProjectEvent.Core.Condition;
+using ProjectEvent.Core.Event;
 using ProjectEvent.Core.Event.Models;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace ProjectEvent.Core.Services.TimerTask
             _handledEventIDs = new List<int>();
         }
 
-       
+
 
         public void Run()
         {
@@ -42,31 +43,43 @@ namespace ProjectEvent.Core.Services.TimerTask
 
         private void Handle(EventModel ev)
         {
+            if (_handledEventIDs.Contains(ev.ID))
+            {
+                return;
+            }
+
+            //指定日期的事件
             if (ev.EventType == Event.Types.EventType.OnTimerChanged)
             {
-                if (_handledEventIDs.Contains(ev.ID))
-                {
-                    return;
-                }
                 _handledEventIDs.Add(ev.ID);
 
                 var condition = ev.Condition as OnTimerChangedCondition;
                 _timerService.StartNew(() =>
                 {
-                    foreach (var action in ev.Actions)
+                    if (ActionTask.Invoke(ev))
                     {
-                        for (int i = 0; i < action.Num; i++)
-                        {
-                            Task.Factory.StartNew(() =>
-                            {
-                                Debug.WriteLine(100);
-                                new ActionBuilder(action.Action, action.Args).Builer().Invoke();
-                            });
-                        }
+                        OnEventTrigger?.Invoke(ev, 0);
                     }
-
-                    OnEventTrigger?.Invoke(ev, 0);
                 }, condition.AtDateTime, condition.IsRepetition);
+
+            }
+
+            //计时循环事件
+            if (ev.EventType == Event.Types.EventType.OnIntervalTimer)
+            {
+                _handledEventIDs.Add(ev.ID);
+
+                var condition = ev.Condition as OnIntervalTimerCondition;
+                _timerService.StartNew(
+                    () =>
+                    {
+                        if (ActionTask.Invoke(ev))
+                        {
+                            OnEventTrigger?.Invoke(ev, 0);
+                        }
+                    },
+                condition.Seconds,
+                condition.Num);
 
             }
         }

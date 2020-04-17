@@ -13,6 +13,10 @@ namespace ProjectEvent.Core.Action.Types
         /// <summary>
         /// 删除文件
         /// </summary>
-        DeleteFile
+        DeleteFile,
+        /// <summary>
+        /// 判断
+        /// </summary>
+        IF
     }
 }

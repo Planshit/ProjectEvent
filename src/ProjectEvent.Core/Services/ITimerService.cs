@@ -18,8 +18,8 @@ namespace ProjectEvent.Core.Services
         /// </summary>
         /// <param name="action">执行方法</param>
         /// <param name="seconds">多少秒后执行</param>
-        /// <param name="autoReset">是否重复执行</param>
+        /// <param name="num">循环次数（为0时无限）</param>
         /// <param name="timerClosedAction">计时器关闭后执行方法</param>
-        void StartNew(System.Action action, double seconds, bool autoReset = false, System.Action timerClosedAction = null);
+        void StartNew(System.Action action, double seconds, int num = 0, System.Action timerClosedAction = null);
     }
 }

@@ -1,9 +1,11 @@
 ﻿using ProjectEvent.Core.Action.Actions;
 using ProjectEvent.Core.Action.Checks;
+using ProjectEvent.Core.Action.Models;
 using ProjectEvent.Core.Action.Types;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ProjectEvent.Core.Action
 {
@@ -32,10 +34,26 @@ namespace ProjectEvent.Core.Action
         }
 
         /// <summary>
+        /// 获取action是否有返回值
+        /// </summary>
+        /// <returns></returns>
+        public bool IsHasResult()
+        {
+            var result = false;
+            switch (actionType)
+            {
+                case ActionType.WriteFile:
+                    result = true;
+                    break;
+            }
+            return result;
+        }
+
+        /// <summary>
         /// 构建一个action，如果检查不通过时返回null
         /// </summary>
         /// <returns></returns>
-        public System.Action Builer()
+        public Task<object> Builer(int taskID, int actionID)
         {
             if (!Check())
             {
@@ -44,7 +62,7 @@ namespace ProjectEvent.Core.Action
             switch (actionType)
             {
                 case ActionType.WriteFile:
-                    return new WriteFileAction().GetAction(args);
+                    return new WriteFileAction().GenerateAction(taskID, actionID, args);
 
                 default:
                     return null;

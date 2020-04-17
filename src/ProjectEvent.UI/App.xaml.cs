@@ -36,9 +36,20 @@ namespace ProjectEvent
 
         private void OnStartup(object sender, StartupEventArgs e)
         {
-            //var mainWindow = _serviceProvider.GetService<MainWindow>();
             var main = _serviceProvider.GetService<IMainService>();
             main.Start();
+
+            //var a = new Task<bool>(() =>
+            //  {
+
+            //      Thread.Sleep(3000);
+            //      return true;
+            //  });
+            //a.Start();
+            
+            ////Debug.WriteLine(a.Result);
+            //Debug.WriteLine(2);
+
         }
 
     }

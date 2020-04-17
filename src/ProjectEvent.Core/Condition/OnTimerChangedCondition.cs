@@ -23,7 +23,8 @@ namespace ProjectEvent.Core.Condition
             var result = new ConditionCheckResultModel();
             result.IsValid = true;
 
-            if (!IsRepetition && AtDateTime < DateTime.Now)
+            var nowTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, 0);
+            if (!IsRepetition && AtDateTime < nowTime)
             {
                 result.IsValid = false;
                 result.Msg = "在不选择重复时指定的时间应该大于当前时间";

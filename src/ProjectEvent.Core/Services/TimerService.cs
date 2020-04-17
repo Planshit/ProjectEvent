@@ -9,10 +9,11 @@ namespace ProjectEvent.Core.Services
     public class TimerService : ITimerService, IDisposable
     {
         private Dictionary<int, Timer> _timers;
-
+        private Dictionary<int, int> _timerRunCount;
         public TimerService()
         {
             _timers = new Dictionary<int, Timer>();
+            _timerRunCount = new Dictionary<int, int>();
         }
 
         public void StartNew(System.Action action, DateTime dateTime, bool autoReset = false)
@@ -24,7 +25,7 @@ namespace ProjectEvent.Core.Services
             {
                 //每天
                 trueTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, dateTime.Hour, dateTime.Minute, 0);
-                StartNew(action, DateTime.Now.Subtract(trueTime).Seconds, false, () =>
+                StartNew(action, trueTime.Subtract(DateTime.Now).TotalSeconds, 1, () =>
                   {
                       //进行下一个周期
                       StartNew(action, dateTime, autoReset);
@@ -37,7 +38,7 @@ namespace ProjectEvent.Core.Services
                 {
                     var s = trueTime.Subtract(DateTime.Now).TotalSeconds;
                     //可以执行
-                    StartNew(action, s);
+                    StartNew(action, s, 1);
                 }
                 else
                 {
@@ -50,27 +51,84 @@ namespace ProjectEvent.Core.Services
 
 
 
-        public void StartNew(System.Action action, double seconds, bool autoReset = false, System.Action timerClosedAction = null)
+        public void StartNew(System.Action action, double seconds, int num = 0, System.Action timerClosedAction = null)
         {
             int id = _timers.Count + 1;
 
             var timer = new Timer();
             timer.Interval = seconds * 1000;
+
             Debug.WriteLine("任务在：" + timer.Interval + "秒后执行");
             timer.Elapsed += (e, c) =>
             {
-                if (!autoReset)
-                {
-                    timer.Stop();
-                    timer.Close();
-                    _timers.Remove(id);
-                }
-                action.Invoke();
+                action?.Invoke();
                 timerClosedAction?.Invoke();
+                SetRunCount(id);
+
+                int nextCount = GetRunCount(id) + 1;
+                if (num > 0 && nextCount > num)
+                {
+                    Close(id);
+                }
             };
 
+            _timerRunCount.Add(id, 0);
             _timers.Add(id, timer);
+
             timer.Start();
+        }
+
+
+        /// <summary>
+        /// 关闭一个timer
+        /// </summary>
+        /// <param name="id"></param>
+        public void Close(int id)
+        {
+            if (_timers.ContainsKey(id))
+            {
+                var timer = _timers[id];
+                timer.Stop();
+                timer.Dispose();
+                _timers.Remove(id);
+            }
+            if (_timerRunCount.ContainsKey(id))
+            {
+                _timerRunCount.Remove(id);
+            }
+        }
+
+        /// <summary>
+        /// 获取timer运行次数
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public int GetRunCount(int id)
+        {
+            int count = 0;
+
+            if (_timerRunCount.ContainsKey(id))
+            {
+                return _timerRunCount[id];
+            }
+            return count;
+        }
+
+        /// <summary>
+        /// 设置timer运行次数
+        /// </summary>
+        /// <param name="id">timer id</param>
+        /// <param name="count">次数，默认为0，叠加一次</param>
+        private void SetRunCount(int id, int count = 0)
+        {
+            if (_timerRunCount.ContainsKey(id))
+            {
+                if (count == 0)
+                {
+                    count = _timerRunCount[id] + 1;
+                }
+                _timerRunCount[id] = count;
+            }
         }
 
         #region IDisposable Support
