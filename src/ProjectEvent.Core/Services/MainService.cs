@@ -27,6 +27,13 @@ namespace ProjectEvent.Core.Services
                 Args = new string[] { "d:\\hello_project_event.txt", ":)" },
                 Num = 1
             });
+
+            actions.Add(new Core.Action.Models.ActionModel()
+            {
+                Action = Core.Action.Types.ActionType.IF,
+                Args = new string[] { "d:\\hello_project_event.txt", ":)" },
+                Num = 1
+            });
             //_eventContainerService.Add(new Event.Models.EventModel()
             //{
             //    EventType = Event.Types.EventType.OnTimerChanged,
