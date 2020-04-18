@@ -9,13 +9,17 @@
 
   <ItemGroup>
     <Compile Remove="Structs\**" />
-    <Compile Remove="Views\**" />
     <EmbeddedResource Remove="Structs\**" />
-    <EmbeddedResource Remove="Views\**" />
     <None Remove="Structs\**" />
-    <None Remove="Views\**" />
     <Page Remove="Structs\**" />
-    <Page Remove="Views\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\Icons\tray.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Icons\tray.ico" />
   </ItemGroup>
 
   <ItemGroup>

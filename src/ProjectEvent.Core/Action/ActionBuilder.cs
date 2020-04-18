@@ -12,11 +12,11 @@ namespace ProjectEvent.Core.Action
     public class ActionBuilder
     {
         private readonly ActionType actionType;
-        private readonly string[] args;
-        public ActionBuilder(ActionType actionType, string[] args)
+        private readonly BaseParameterModel parameter;
+        public ActionBuilder(ActionType actionType, BaseParameterModel parameter)
         {
             this.actionType = actionType;
-            this.args = args;
+            this.parameter = parameter;
         }
 
         /// <summary>
@@ -28,9 +28,9 @@ namespace ProjectEvent.Core.Action
             switch (actionType)
             {
                 case ActionType.WriteFile:
-                    return new WriteFileCheck(args).IsCheck();
+                    return new WriteFileCheck(parameter).IsCheck();
             }
-            return false;
+            return true;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace ProjectEvent.Core.Action
         /// 构建一个action，如果检查不通过时返回null
         /// </summary>
         /// <returns></returns>
-        public Task<object> Builer(int taskID, int actionID)
+        public Task<ActionResultModel> Builer(int taskID, int actionID)
         {
             if (!Check())
             {
@@ -62,8 +62,10 @@ namespace ProjectEvent.Core.Action
             switch (actionType)
             {
                 case ActionType.WriteFile:
-                    return new WriteFileAction().GenerateAction(taskID, actionID, args);
+                    return new WriteFileAction().GenerateAction(taskID, actionID, parameter);
 
+                case ActionType.IF:
+                    return new IFAction().GenerateAction(taskID, actionID, parameter);
                 default:
                     return null;
             }

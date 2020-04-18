@@ -4,6 +4,10 @@
              xmlns:local="clr-namespace:ProjectEvent"
              Startup="OnStartup">
     <Application.Resources>
-
+        <!--<ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Controls/Styles/PageContainer.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>-->
     </Application.Resources>
 </Application>

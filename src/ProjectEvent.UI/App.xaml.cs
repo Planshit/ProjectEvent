@@ -1,6 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ProjectEvent.Core.Services;
 using ProjectEvent.Core.Services.TimerTask;
+using ProjectEvent.UI;
+using ProjectEvent.UI.Controls;
+using ProjectEvent.UI.Services;
+using ProjectEvent.UI.ViewModels;
+using ProjectEvent.UI.Views;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -31,25 +36,28 @@ namespace ProjectEvent
             services.AddSingleton<IEventContainerService, EventContainerService>();
             services.AddSingleton<ITimerService, TimerService>();
             services.AddSingleton<ITimerTaskService, TimerTaskService>();
+            services.AddSingleton<ITrayService, TrayService>();
+            
+
+            //services.AddTransient<PageContainer>();
+
+            services.AddSingleton<MainViewModel>();
+            services.AddTransient<MainWindow>();
+            //主页
+            services.AddTransient<IndexPage>();
+            services.AddTransient<IndexPageVM>();
+            //设置页
+            services.AddTransient<SettingsPage>();
+            services.AddTransient<SettingsPageVM>();
+
+            services.AddSingleton<IServiceProvider>(services.BuildServiceProvider());
         }
 
 
         private void OnStartup(object sender, StartupEventArgs e)
         {
-            var main = _serviceProvider.GetService<IMainService>();
-            main.Start();
-
-            //var a = new Task<bool>(() =>
-            //  {
-
-            //      Thread.Sleep(3000);
-            //      return true;
-            //  });
-            //a.Start();
-            
-            ////Debug.WriteLine(a.Result);
-            //Debug.WriteLine(2);
-
+            var tray = _serviceProvider.GetService<ITrayService>();
+            tray.Init();
         }
 
     }

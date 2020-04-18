@@ -9,6 +9,6 @@ namespace ProjectEvent.Core.Action.Actions
 {
     public interface IAction
     {
-        Task<object> GenerateAction(int taskID, int actionID, object[] args);
+        Task<ActionResultModel> GenerateAction(int taskID, int actionID, BaseParameterModel parameter);
     }
 }

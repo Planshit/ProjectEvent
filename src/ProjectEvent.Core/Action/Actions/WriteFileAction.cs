@@ -12,21 +12,31 @@ namespace ProjectEvent.Core.Action.Actions
 {
     public class WriteFileAction : IAction
     {
-        public Task<object> GenerateAction(int taskID, int actionID, object[] args)
+        public Task<ActionResultModel> GenerateAction(int taskID, int actionID, BaseParameterModel parameter)
         {
-            var task = new Task<object>(() =>
+            var task = new Task<ActionResultModel>(() =>
             {
-                Debug.WriteLine("write file:" + args[0]);
+                var p = parameter as WriteFileActionParameterModel;
+                var result = new ActionResultModel();
+                result.ID = actionID;
+                result.Result = new Dictionary<int, ActionResultValueModel>();
+                result.Result.Add((int)CommonResultKeyType.Status, new ActionResultValueModel()
+                {
+                    Type = ActoinResultValueType.BOOL,
+                    Value = false
+                });
+                Debug.WriteLine("write file:" + p.FilePath);
                 Thread.Sleep(5000);
                 try
                 {
-                    File.WriteAllText(args[0].ToString(), args[1].ToString());
-                    return true;
+                    File.WriteAllText(p.FilePath, p.Content);
+                    result.Result[(int)CommonResultKeyType.Status].Value = true;
                 }
                 catch
                 {
-                    return false;
+
                 }
+                return result;
             });
             return task;
         }

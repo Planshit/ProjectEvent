@@ -1,4 +1,6 @@
-﻿using ProjectEvent.Core.Condition;
+﻿using ProjectEvent.Core.Action.Models;
+using ProjectEvent.Core.Action.Types;
+using ProjectEvent.Core.Condition;
 using ProjectEvent.Core.Services.TimerTask;
 using System;
 using System.Collections.Generic;
@@ -24,14 +26,58 @@ namespace ProjectEvent.Core.Services
             actions.Add(new Core.Action.Models.ActionModel()
             {
                 Action = Core.Action.Types.ActionType.WriteFile,
-                Args = new string[] { "d:\\hello_project_event.txt", ":)" },
+                Parameter = new WriteFileActionParameterModel()
+                {
+                    FilePath = "d:\\hello_project_event.txt",
+                    Content = ":)"
+                },
                 Num = 1
             });
 
+
+            //test if action
+            var ifPassActions = new List<Core.Action.Models.ActionModel>();
+            ifPassActions.Add(new Core.Action.Models.ActionModel()
+            {
+                Action = Core.Action.Types.ActionType.WriteFile,
+                Parameter = new WriteFileActionParameterModel()
+                {
+                    FilePath = "d:\\ifpass.txt",
+                    Content = ":)"
+                },
+                Num = 1
+            });
+            var ifUnPassActions = new List<Core.Action.Models.ActionModel>();
+            ifUnPassActions.Add(new Core.Action.Models.ActionModel()
+            {
+                Action = Core.Action.Types.ActionType.WriteFile,
+                Parameter = new WriteFileActionParameterModel()
+                {
+                    FilePath = "d:\\unifpass.txt",
+                    Content = ":)"
+                },
+                Num = 1
+            });
             actions.Add(new Core.Action.Models.ActionModel()
             {
                 Action = Core.Action.Types.ActionType.IF,
-                Args = new string[] { "d:\\hello_project_event.txt", ":)" },
+                Parameter = new IFActionParameterModel()
+                {
+                    LeftInput = new IFActionResultInputModel()
+                    {
+                        InputType = Core.Action.Types.IFActionInputType.ActionResult,
+                        ActionID = 1,
+                        ResultKey = (int)CommonResultKeyType.Status
+                    },
+                    RightInput = new IFActionTextInputModel()
+                    {
+                        InputType = Core.Action.Types.IFActionInputType.Text,
+                        Value = "bool"
+                    },
+                    Condition = Core.Action.Types.IFActionConditionType.UnEqual,
+                    PassActions = ifPassActions,
+                    NoPassActions = ifUnPassActions
+                },
                 Num = 1
             });
             //_eventContainerService.Add(new Event.Models.EventModel()
@@ -51,7 +97,7 @@ namespace ProjectEvent.Core.Services
                 Condition = new OnIntervalTimerCondition()
                 {
                     Seconds = 3,
-                    Num = 2
+                    Num = 1
                 },
                 Actions = actions,
             });

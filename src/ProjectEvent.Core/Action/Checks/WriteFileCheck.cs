@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjectEvent.Core.Action.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,14 +7,23 @@ namespace ProjectEvent.Core.Action.Checks
 {
     public class WriteFileCheck : ICheck
     {
-        private readonly string[] args;
-        public WriteFileCheck(string[] args)
+        private readonly BaseParameterModel parameter;
+        public WriteFileCheck(BaseParameterModel parameter)
         {
-            this.args = args;
+            this.parameter = parameter;
         }
         public bool IsCheck()
         {
-            return args.Length == 2;
+            var p = (parameter as WriteFileActionParameterModel);
+            if (p == null)
+            {
+                return false;
+            }
+            else if (p.FilePath == string.Empty)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

@@ -45,6 +45,7 @@ namespace ProjectEvent.Core.Services.TimerTask
         {
             if (_handledEventIDs.Contains(ev.ID))
             {
+                Debug.WriteLine("已存在 event " + ev.ID);
                 return;
             }
 

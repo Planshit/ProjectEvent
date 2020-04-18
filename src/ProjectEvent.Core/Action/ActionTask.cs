@@ -45,7 +45,7 @@ namespace ProjectEvent.Core.Action
             {
                 actionID++;
 
-                var actionBuilder = new ActionBuilder(action.Action, action.Args);
+                var actionBuilder = new ActionBuilder(action.Action, action.Parameter);
                 var actionTask = actionBuilder.Builer(taskID, actionID);
 
                 for (int i = 0; i < action.Num; i++)
@@ -54,11 +54,7 @@ namespace ProjectEvent.Core.Action
                     if (actionBuilder.IsHasResult())
                     {
                         var actionResult = actionTask.Result;
-                        ActionTaskResulter.Add(taskID, new Models.ActionResultModel()
-                        {
-                            ID = actionID,
-                            Result = actionResult
-                        });
+                        ActionTaskResulter.Add(taskID, actionResult);
                     }
                 }
             }

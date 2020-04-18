@@ -40,7 +40,7 @@ namespace ProjectEvent.Core.Services
             //检查action是否输入正确
             foreach (var action in ev.Actions)
             {
-                var actionCheck = new ActionBuilder(action.Action, action.Args).Check();
+                var actionCheck = new ActionBuilder(action.Action, action.Parameter).Check();
                 if (!actionCheck)
                 {
                     return false;

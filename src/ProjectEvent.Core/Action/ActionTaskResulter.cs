@@ -1,6 +1,7 @@
 ﻿using ProjectEvent.Core.Action.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ProjectEvent.Core.Action
@@ -46,6 +47,24 @@ namespace ProjectEvent.Core.Action
             return null;
         }
 
-
+        /// <summary>
+        /// 获得一条action result
+        /// </summary>
+        /// <param name="taskid">task id</param>
+        /// <param name="actionid">action id</param>
+        /// <returns></returns>
+        public static ActionResultModel GetActionResult(int taskid, int actionid)
+        {
+            var taskResult = Get(taskid);
+            if (taskResult != null)
+            {
+                var actionResult = taskResult.Where(m => m.ID == actionid).FirstOrDefault();
+                if (actionResult != null)
+                {
+                    return actionResult;
+                }
+            }
+            return null;
+        }
     }
 }
