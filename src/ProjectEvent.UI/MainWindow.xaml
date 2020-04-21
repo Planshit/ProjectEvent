@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjectEvent.UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Project Event" Height="450" Width="800">
     <Grid>
         <Controls:PageContainer Grid.Row="1" ServiceProvider="{Binding ServiceProvider}" Uri="{Binding Uri}"/>
+        
     </Grid>
 </Window>

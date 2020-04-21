@@ -9,6 +9,7 @@
       Title="IndexPage">
 
     <Grid>
-        <TextBlock Text="Index"/>
+        <!--<TextBlock Text="Index"/>-->
+        <Button Content="Add Event" Command="{Binding RedirectCommand}" CommandParameter="AddEventPage"/>
     </Grid>
 </Page>

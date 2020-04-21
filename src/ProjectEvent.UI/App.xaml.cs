@@ -49,6 +49,9 @@ namespace ProjectEvent
             //设置页
             services.AddTransient<SettingsPage>();
             services.AddTransient<SettingsPageVM>();
+            //添加页
+            services.AddTransient<AddEventPage>();
+            services.AddTransient<AddEventPageVM>();
 
             services.AddSingleton<IServiceProvider>(services.BuildServiceProvider());
         }

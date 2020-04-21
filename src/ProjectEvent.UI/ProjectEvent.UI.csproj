@@ -5,6 +5,7 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationIcon>Assets\Icons\tray.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,10 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Fonts\FabExMDL2.3.36.ttf" />
     <None Remove="Assets\Icons\tray.ico" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\Fonts\FabExMDL2.3.36.ttf" />
     <Resource Include="Assets\Icons\tray.ico" />
   </ItemGroup>
 
@@ -28,6 +31,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ProjectEvent.Core\ProjectEvent.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Themes\Action\ActionItem.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>
