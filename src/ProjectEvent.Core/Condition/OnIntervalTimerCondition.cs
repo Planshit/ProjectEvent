@@ -27,10 +27,10 @@ namespace ProjectEvent.Core.Condition
                 result.IsValid = false;
                 result.Msg = "间隔秒数不能小于等于0";
             }
-            if (Num <= 0)
+            if (Num < 0)
             {
                 result.IsValid = false;
-                result.Msg = "循环次数不能小于等于0";
+                result.Msg = "循环次数不能小于0";
             }
 
             return result;
