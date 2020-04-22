@@ -7,5 +7,10 @@
         <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/PageContainer.xaml" />
         <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Action/ActionContainer.xaml" />
         <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Action/ActionItem.xaml"/>
+
+        <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/ItemSelect/ItemSelect.xaml" />
+        <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/ItemSelect/Item.xaml"/>
+
+        <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/InputGroup/InputGroup.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

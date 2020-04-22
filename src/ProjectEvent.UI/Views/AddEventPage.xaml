@@ -1,4 +1,4 @@
-﻿<Page xmlns:Action="clr-namespace:ProjectEvent.UI.Controls.Action"  x:Class="ProjectEvent.UI.Views.AddEventPage"
+﻿<Page xmlns:InputGroup="clr-namespace:ProjectEvent.UI.Controls.InputGroup"  xmlns:ItemSelect="clr-namespace:ProjectEvent.UI.Controls.ItemSelect"  xmlns:Action="clr-namespace:ProjectEvent.UI.Controls.Action"  x:Class="ProjectEvent.UI.Views.AddEventPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -10,13 +10,33 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
 
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
-            <Button Command="{Binding AddActionCommand}" Content="Add action"/>
+        <TabControl SelectedIndex="{Binding StepIndex,Mode=TwoWay}">
+            <TabItem Header="事件">
+                <ItemSelect:ItemSelect Items="{Binding Events,Mode=TwoWay}" SelectID="{Binding SelectedEventID,Mode=TwoWay}"/>
+            </TabItem>
+            <TabItem Header="条件">
+                <InputGroup:InputGroup Groups="{Binding Conditions}" DataSource="{Binding ConditionData}"/>
+            </TabItem>
+            <TabItem Header="操作">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="*"/>
+
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Command="{Binding AddActionCommand}" Content="Add action"/>
+                    </StackPanel>
+                    <Action:ActionContainer Grid.Row="1" Items="{Binding Actions,Mode=TwoWay}"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <Button Content="Add" Width="120" Height="30" Command="{Binding AddCommand}"/>
         </StackPanel>
-        <Action:ActionContainer Grid.Row="1" Items="{Binding Actions,Mode=TwoWay}"/>
     </Grid>
 </Page>

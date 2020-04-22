@@ -37,6 +37,15 @@
     <Page Update="Themes\Action\ActionItem.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Themes\InputGroup\InputGroup.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\ItemSelect\Item.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\ItemSelect\ItemSelect.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>
