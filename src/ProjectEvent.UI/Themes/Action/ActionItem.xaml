@@ -30,6 +30,7 @@
                                     <TextBlock Text="&#xE8BB;" FontFamily="/ProjectEvent.UI;component/Assets/Fonts/#Fabric External MDL2 Assets" VerticalAlignment="Center" FontSize="14" Foreground="#737373"/>
                                 </Button>
                             </Grid>
+                            <Border x:Name="Input" Grid.Row="1"/>
                         </Grid>
                     </Border>
                 </ControlTemplate>

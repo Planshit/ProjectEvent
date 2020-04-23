@@ -1,4 +1,4 @@
-﻿using ProjectEvent.UI.Controls.Action.WriteFile;
+﻿using ProjectEvent.UI.Controls.Action.Models;
 using ProjectEvent.UI.Models.DataModels;
 using System;
 using System.Collections.Generic;
@@ -77,6 +77,7 @@ namespace ProjectEvent.UI.Controls.Action
             }
         }
 
+        private Border Input;
         public ActionItem()
         {
             DefaultStyleKey = typeof(ActionItem);
@@ -85,6 +86,12 @@ namespace ProjectEvent.UI.Controls.Action
             RenderTransform = translateTransform;
         }
 
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            Input = GetTemplateChild("Input") as Border;
+            Render();
+        }
         private void translateTransform_Changed(object sender, EventArgs e)
         {
             var ttf = RenderTransform as TranslateTransform;
@@ -93,20 +100,37 @@ namespace ProjectEvent.UI.Controls.Action
 
         private void Render()
         {
-            object item = null;
-            switch (Action.ActionType)
+            if (Input == null)
             {
-                case Types.ActionType.WriteFile:
-                    item = new WriteActioin();
-
-                    break;
+                return;
             }
+            var inputs = new List<ActionInputModel>();
+            inputs.Add(new ActionInputModel()
+            {
+                Title = "路径",
+                InputType = Types.InputType.Text
+            });
+            inputs.Add(new ActionInputModel()
+            {
+                Title = "内容",
+                InputType = Types.InputType.Text
+            });
+            UIElement item = new Action(inputs);
+            //switch (Action.ActionType)
+            //{
+            //    case UI.Types.ActionType.WriteFile:
+
+            //        break;
+            //}
             //填充基本信息
             ActionName = Action.ActionName;
             Icon = Action.Icon == string.Empty || Action.Icon == null ? "\xE3AE" : Action.Icon;
 
+            Input.Child = item;
 
         }
+
+
 
     }
 }

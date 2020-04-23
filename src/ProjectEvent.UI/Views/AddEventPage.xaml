@@ -23,15 +23,33 @@
             </TabItem>
             <TabItem Header="操作">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="50"/>
-                        <RowDefinition Height="*"/>
+                    <Grid Panel.ZIndex="2" Visibility="{Binding AddACtionDialogVisibility}">
+                        <Border Background="White" Margin="20" Panel.ZIndex="1">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="auto"/>
 
-                    </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal">
-                        <Button Command="{Binding AddActionCommand}" Content="Add action"/>
-                    </StackPanel>
-                    <Action:ActionContainer Grid.Row="1" Items="{Binding Actions,Mode=TwoWay}"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Margin="20">
+                                    <TextBlock Text="添加操作"/>
+                                    <ComboBox 
+                                        Margin="0,10,0,0" 
+                                        ItemsSource="{Binding ComBoxActions}" 
+                                        SelectedValuePath="ID" 
+                                        SelectedValue="{Binding ComBoxSelectedAction.ID}"
+                                        DisplayMemberPath="Name"
+                                        SelectedItem="{Binding ComBoxSelectedAction}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="20">
+                                    <Button Command="{Binding AddActionCommand}" Width="120" Height="30" Content="确定"/>
+                                    <Button Command="{Binding ActionDialogStateCommand}" CommandParameter="false" Width="120" Height="30" Content="取消" Margin="10,0,0,0"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        <Border Background="Black" Opacity=".5"/>
+                    </Grid>
+                    <Action:ActionContainer Grid.Row="1" Items="{Binding Actions,Mode=TwoWay}" AddActionCommand="{Binding ShowActionDialogCommand}"/>
                 </Grid>
             </TabItem>
         </TabControl>

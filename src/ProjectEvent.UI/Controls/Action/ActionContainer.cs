@@ -17,6 +17,16 @@ namespace ProjectEvent.UI.Controls.Action
 {
     public class ActionContainer : Control
     {
+        public ICommand AddActionCommand
+        {
+            get { return (ICommand)GetValue(AddActionCommandProperty); }
+            set { SetValue(AddActionCommandProperty, value); }
+        }
+        public static readonly DependencyProperty AddActionCommandProperty =
+            DependencyProperty.Register("AddActionCommand",
+                typeof(ICommand),
+                typeof(ActionContainer));
+
         protected static PropertyChangedCallback ItemsPropertyChangedCallback = new PropertyChangedCallback(ItemsPropertyChanged);
 
         public static DependencyProperty ItemsProperty = DependencyProperty.RegisterAttached("Items", typeof(ObservableCollection<BaseActionItemModel>), typeof(ActionContainer), new PropertyMetadata(null, ItemsPropertyChangedCallback));
@@ -76,8 +86,12 @@ namespace ProjectEvent.UI.Controls.Action
 
         private Grid ActionPanel;
         private Point oldPoint;
+        private Button AddActionBtn;
+
+        private double oldMoveItemY;
         private List<ActionItem> actionItems;
         public Command RemoveCommand { get; set; }
+
         public ActionContainer()
         {
             DefaultStyleKey = typeof(ActionContainer);
@@ -85,6 +99,7 @@ namespace ProjectEvent.UI.Controls.Action
             actionItems = new List<ActionItem>();
             RemoveCommand = new Command(new Action<object>(OnRemoveCommand));
         }
+
 
         private void OnRemoveCommand(object obj)
         {
@@ -95,8 +110,12 @@ namespace ProjectEvent.UI.Controls.Action
         {
             base.OnApplyTemplate();
             ActionPanel = GetTemplateChild("ActionPanel") as Grid;
-            ActionPanel.Height = 100;
+            AddActionBtn = GetTemplateChild("AddActionBtn") as Button;
+
+            //ActionPanel.Height = 0;
             ActionPanel.VerticalAlignment = VerticalAlignment.Top;
+
+            AddActionBtn.Command = AddActionCommand;
         }
 
         private void Render()
@@ -139,7 +158,7 @@ namespace ProjectEvent.UI.Controls.Action
             }
             var lastItem = ActionPanel.Children[ActionPanel.Children.Count - 1] as ActionItem;
             var lastItemTTF = lastItem.RenderTransform as TranslateTransform;
-            AddItem(action, lastItemTTF.Y + lastItem.ActualHeight + 10);
+            AddItem(action, lastItemTTF.Y + lastItem.ActualHeight);
         }
 
         private void AddItem(BaseActionItemModel action, double y)
@@ -157,7 +176,16 @@ namespace ProjectEvent.UI.Controls.Action
             item.MouseMove += Item_MouseMove;
             item.Loaded += (e, c) =>
             {
+                if (item.Tag != null && (bool)item.Tag == true)
+                {
+                    return;
+                }
+                item.Tag = true;
                 ActionPanel.Height += item.ActualHeight;
+                if (double.IsNaN(ActionPanel.Height))
+                {
+                    ActionPanel.Height = item.ActualHeight;
+                }
                 //判断需要下移的项目
                 foreach (var actionItem in ActionPanel.Children)
                 {
@@ -167,7 +195,7 @@ namespace ProjectEvent.UI.Controls.Action
                         var itemControlTTF = (itemControl.RenderTransform as TranslateTransform);
                         if (itemControlTTF.Y >= y)
                         {
-                            MoveY(itemControl, itemControlTTF.Y + item.ActualHeight + 10);
+                            MoveY(itemControl, itemControlTTF.Y + item.ActualHeight);
                         }
                     }
                 }
@@ -198,6 +226,11 @@ namespace ProjectEvent.UI.Controls.Action
                     MoveY(itemControl, itemControlTTF.Y - control.ActualHeight);
                 }
             }
+            ActionPanel.Height -= control.ActualHeight;
+            if (actionItems.Count == 1)
+            {
+                ActionPanel.Height = double.NaN;
+            }
             ActionPanel.Children.Remove(control);
             actionItems.Remove(control);
         }
@@ -220,10 +253,12 @@ namespace ProjectEvent.UI.Controls.Action
         private void Item_MouseMove(object sender, MouseEventArgs e)
         {
             var control = sender as ActionItem;
+
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 //控件的坐标信息
                 var controlPoint = control.RenderTransform as TranslateTransform;
+
                 //当前鼠标坐标信息
                 var mousePoint = e.GetPosition(this);
                 //鼠标在控件的坐标信息
@@ -234,49 +269,66 @@ namespace ProjectEvent.UI.Controls.Action
                 double movetoX = e.GetPosition(null).X - oldPoint.X + controlPoint.X;
                 double movetoY = e.GetPosition(null).Y - oldPoint.Y + controlPoint.Y;
 
-
+                bool isUp = false;
                 if (movetoY >= 0 && movetoY <= ActualHeight)
                 {
                     controlPoint.Y = movetoY;
                     oldPoint = e.GetPosition(null);
-                }
-
-                //判断上移
-                //上一个action索引
-                int upItemIndex = actionItems.IndexOf(actionItems.Where(m => m.ID == control.ID).FirstOrDefault()) - 1;
-                if (upItemIndex >= 0)
-                {
-                    var upItem = actionItems[upItemIndex] as ActionItem;
-                    var upItemPoint = upItem.RenderTransform as TranslateTransform;
-                    if (movetoY <= upItemPoint.Y + upItem.ActualHeight / 2)
+                    if (oldMoveItemY > movetoY)
                     {
-                        MoveY(upItem, upItemPoint.Y + control.ActualHeight + 10);
+                        isUp = true;
                     }
-                }
-                //判断下移
-                int downItemIndex = actionItems.IndexOf(actionItems.Where(m => m.ID == control.ID).FirstOrDefault()) + 1;
-                if (downItemIndex < actionItems.Count)
-                {
-                    Debug.WriteLine("has down item");
-                    var downItem = actionItems[downItemIndex] as ActionItem;
-                    var downItemPoint = downItem.RenderTransform as TranslateTransform;
 
-                    if (movetoY + control.ActualHeight >= downItemPoint.Y + downItem.ActualHeight / 2)
+                    //上一个action索引
+                    int upItemIndex = actionItems.IndexOf(actionItems.Where(m => m.ID == control.ID).FirstOrDefault()) - 1;
+
+                    if (isUp)
                     {
-                        Debug.WriteLine("set down item");
+                        Debug.WriteLine("up");
+                        //判断上移
                         if (upItemIndex >= 0)
                         {
-                            //存在上一个，则移动到上一个的末尾
-                            MoveY(downItem, actionItems[upItemIndex].Y + actionItems[upItemIndex].ActualHeight + 10);
+                            var upItem = actionItems[upItemIndex] as ActionItem;
+                            var upItemPoint = upItem.RenderTransform as TranslateTransform;
+                            if (movetoY <= upItemPoint.Y + upItem.ActualHeight / 2)
+                            {
+                                MoveY(upItem, upItemPoint.Y + control.ActualHeight);
+                                //MoveY(upItem, upItemPoint.Y + control.ActualHeight);
+                            }
                         }
-                        else
-                        {
-                            //不存在则移动到第一位
-                            MoveY(downItem, 0);
-                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine("down");
 
+                        //判断下移
+                        int downItemIndex = actionItems.IndexOf(actionItems.Where(m => m.ID == control.ID).FirstOrDefault()) + 1;
+                        if (downItemIndex < actionItems.Count)
+                        {
+                            //Debug.WriteLine("has down item");
+                            var downItem = actionItems[downItemIndex] as ActionItem;
+                            var downItemPoint = downItem.RenderTransform as TranslateTransform;
+
+                            if (movetoY + control.ActualHeight >= downItemPoint.Y + downItem.ActualHeight / 2)
+                            {
+                                //Debug.WriteLine("set down item");
+                                if (upItemIndex >= 0)
+                                {
+                                    //存在上一个，则移动到上一个的末尾
+                                    MoveY(downItem, actionItems[upItemIndex].Y + actionItems[upItemIndex].ActualHeight);
+                                }
+                                else
+                                {
+                                    //不存在则移动到第一位
+                                    MoveY(downItem, 0);
+                                }
+
+                            }
+                        }
                     }
                 }
+
+
             }
 
         }
@@ -294,7 +346,7 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 var upItem = actionItems[upItemIndex] as ActionItem;
                 var upItemPoint = upItem.RenderTransform as TranslateTransform;
-                MoveY(control, upItemPoint.Y + upItem.ActualHeight + 10);
+                MoveY(control, upItemPoint.Y + upItem.ActualHeight);
             }
             else
             {
@@ -314,6 +366,7 @@ namespace ProjectEvent.UI.Controls.Action
                 control.CaptureMouse();
                 control.Cursor = Cursors.SizeAll;
                 control.SetValue(Panel.ZIndexProperty, 1);
+                oldMoveItemY = (control.RenderTransform as TranslateTransform).Y;
             }
         }
     }

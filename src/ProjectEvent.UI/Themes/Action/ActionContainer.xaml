@@ -12,9 +12,10 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <ScrollViewer>
-                            <Grid x:Name="ActionPanel">
-
-                            </Grid>
+                            <StackPanel>
+                                <Grid x:Name="ActionPanel"/>
+                                <Button x:Name="AddActionBtn" Width="120" Height="30" Content="添加Action" VerticalAlignment="Bottom"/>
+                            </StackPanel>
                         </ScrollViewer>
                     </Border>
                 </ControlTemplate>

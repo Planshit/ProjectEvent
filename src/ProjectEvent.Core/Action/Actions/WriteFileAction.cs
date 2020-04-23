@@ -26,7 +26,7 @@ namespace ProjectEvent.Core.Action.Actions
                     Value = false
                 });
                 Debug.WriteLine("write file:" + p.FilePath);
-                Thread.Sleep(5000);
+                //Thread.Sleep(5000);
                 try
                 {
                     File.WriteAllText(p.FilePath, p.Content);

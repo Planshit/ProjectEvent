@@ -14,21 +14,44 @@ namespace ProjectEvent.UI.ViewModels
 
         public Command AddActionCommand { get; set; }
         public Command AddCommand { get; set; }
+        public Command ActionDialogStateCommand { get; set; }
+        public Command ShowActionDialogCommand { get; set; }
 
         public AddEventPageVM()
         {
             Actions = new System.Collections.ObjectModel.ObservableCollection<BaseActionItemModel>();
             Events = new System.Collections.ObjectModel.ObservableCollection<Controls.ItemSelect.Models.ItemModel>();
+            ComBoxActions = new System.Collections.ObjectModel.ObservableCollection<ComBoxActionModel>();
 
             AddActionCommand = new Command(new Action<object>(OnAddActionCommand));
             AddCommand = new Command(new Action<object>(OnAddCommand));
+            ActionDialogStateCommand = new Command(new Action<object>(OnActionDialogStateCommand));
+            ShowActionDialogCommand = new Command(new Action<object>(OnShowActionDialogCommand));
 
             StepIndex = 0;
-
+            AddACtionDialogVisibility = System.Windows.Visibility.Hidden;
             PropertyChanged += AddEventPageVM_PropertyChanged;
 
             InitEvents();
             InitConditions();
+            InitComboxAcions();
+        }
+
+        private void OnShowActionDialogCommand(object obj)
+        {
+            OnActionDialogStateCommand(true);
+        }
+
+        private void OnActionDialogStateCommand(object obj)
+        {
+            if (bool.Parse(obj.ToString()))
+            {
+                AddACtionDialogVisibility = System.Windows.Visibility.Visible;
+            }
+            else
+            {
+                AddACtionDialogVisibility = System.Windows.Visibility.Hidden;
+            }
         }
 
         private void OnAddCommand(object obj)
@@ -67,6 +90,15 @@ namespace ProjectEvent.UI.ViewModels
             });
         }
 
+        private void InitComboxAcions()
+        {
+            ComBoxActions.Add(new ComBoxActionModel()
+            {
+                ID = 1,
+                Name = "创建文件"
+            });
+            ComBoxSelectedAction = ComBoxActions[0];
+        }
         private void InitConditions()
         {
             var cds = new List<InputModel>();
@@ -105,6 +137,7 @@ namespace ProjectEvent.UI.ViewModels
                 Icon = "\xF2E6",
                 Index = new Random().Next(10)
             });
+            OnActionDialogStateCommand(false);
         }
     }
 }
