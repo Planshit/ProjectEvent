@@ -19,7 +19,7 @@
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
-                            <Grid>
+                            <Grid x:Name="Header">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                                     <TextBlock Text="{TemplateBinding Icon}" FontFamily="/ProjectEvent.UI;component/Assets/Fonts/#Fabric External MDL2 Assets" VerticalAlignment="Center" FontSize="16" Foreground="#737373"/>
 

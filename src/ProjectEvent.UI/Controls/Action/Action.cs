@@ -10,10 +10,14 @@ namespace ProjectEvent.UI.Controls.Action
     {
         private List<ActionInputModel> inputs;
         private StackPanel container;
-        public Action(List<ActionInputModel> inputs)
+        private Dictionary<int, List<string>> actionResults;
+        private int ID;
+        public Action(int ID, List<ActionInputModel> inputs, Dictionary<int, List<string>> actionResults)
         {
             DefaultStyleKey = typeof(Action);
             this.inputs = inputs;
+            this.actionResults = actionResults;
+            this.ID = ID;
         }
 
         public override void OnApplyTemplate()
@@ -30,7 +34,10 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 var label = new Label();
                 label.Content = item.Title;
-                var input = new ActionInput();
+                label.VerticalAlignment = System.Windows.VerticalAlignment.Center;
+                var input = new ActionInput(actionResults);
+                input.ActionID = ID;
+                input.VerticalAlignment = System.Windows.VerticalAlignment.Center;
                 container.Children.Add(label);
                 container.Children.Add(input);
 

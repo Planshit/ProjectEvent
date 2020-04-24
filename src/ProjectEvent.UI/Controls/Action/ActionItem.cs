@@ -1,5 +1,6 @@
 ﻿using ProjectEvent.UI.Controls.Action.Models;
 using ProjectEvent.UI.Models.DataModels;
+using ProjectEvent.UI.Types;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -76,7 +77,7 @@ namespace ProjectEvent.UI.Controls.Action
                 }
             }
         }
-
+        private Grid Header;
         private Border Input;
         public ActionItem()
         {
@@ -90,6 +91,7 @@ namespace ProjectEvent.UI.Controls.Action
         {
             base.OnApplyTemplate();
             Input = GetTemplateChild("Input") as Border;
+            Header = GetTemplateChild("Header") as Grid;
             Render();
         }
         private void translateTransform_Changed(object sender, EventArgs e)
@@ -115,22 +117,31 @@ namespace ProjectEvent.UI.Controls.Action
                 Title = "内容",
                 InputType = Types.InputType.Text
             });
-            UIElement item = new Action(inputs);
-            //switch (Action.ActionType)
-            //{
-            //    case UI.Types.ActionType.WriteFile:
+            UIElement item = new Action(Action.ID, inputs, GetActionResults());
 
-            //        break;
-            //}
             //填充基本信息
-            ActionName = Action.ActionName;
+            ActionName = $"[{Action.ID}] {Action.ActionName}";
             Icon = Action.Icon == string.Empty || Action.Icon == null ? "\xE3AE" : Action.Icon;
 
             Input.Child = item;
 
+
         }
 
-
-
+        private Dictionary<int, List<string>> GetActionResults()
+        {
+            var result = new Dictionary<int, List<string>>();
+            switch (Action.ActionType)
+            {
+                case ActionType.WriteFile:
+                    //填充action results
+                    result.Add(Action.ID, new List<string>()
+                    {
+                        "Status",
+                    });
+                    break;
+            }
+            return result;
+        }
     }
 }

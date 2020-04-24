@@ -132,6 +132,7 @@ namespace ProjectEvent.UI.ViewModels
         {
             Actions.Add(new WriteFileActionModel()
             {
+                ID = Actions.Count + 1,
                 ActionName = "写文件",
                 ActionType = Types.ActionType.WriteFile,
                 Icon = "\xF2E6",

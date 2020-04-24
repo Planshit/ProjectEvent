@@ -7,6 +7,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -90,6 +91,8 @@ namespace ProjectEvent.UI.Controls.Action
 
         private double oldMoveItemY;
         private List<ActionItem> actionItems;
+        private bool isCanMove;
+        private Timer moveTimer;
         public Command RemoveCommand { get; set; }
 
         public ActionContainer()
@@ -98,8 +101,18 @@ namespace ProjectEvent.UI.Controls.Action
             oldPoint = new Point();
             actionItems = new List<ActionItem>();
             RemoveCommand = new Command(new Action<object>(OnRemoveCommand));
+            moveTimer = new Timer();
+            moveTimer.Interval = 500;
+            moveTimer.Elapsed += MoveTimer_Elapsed;
+            isCanMove = false;
+
         }
 
+        private void MoveTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            isCanMove = true;
+            moveTimer.Stop();
+        }
 
         private void OnRemoveCommand(object obj)
         {
@@ -252,9 +265,9 @@ namespace ProjectEvent.UI.Controls.Action
 
         private void Item_MouseMove(object sender, MouseEventArgs e)
         {
-            var control = sender as ActionItem;
 
-            if (e.LeftButton == MouseButtonState.Pressed)
+            var control = sender as ActionItem;
+            if (e.LeftButton == MouseButtonState.Pressed && isCanMove)
             {
                 //控件的坐标信息
                 var controlPoint = control.RenderTransform as TranslateTransform;
@@ -335,6 +348,9 @@ namespace ProjectEvent.UI.Controls.Action
 
         private void Item_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            isCanMove = false;
+            moveTimer.Stop();
+
             var control = sender as ActionItem;
             control.ReleaseMouseCapture();
             control.Cursor = Cursors.Arrow;
@@ -358,7 +374,6 @@ namespace ProjectEvent.UI.Controls.Action
         private void Item_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             var control = sender as ActionItem;
-
             if (control != null)
             {
                 oldPoint = e.GetPosition(null);
@@ -367,6 +382,7 @@ namespace ProjectEvent.UI.Controls.Action
                 control.Cursor = Cursors.SizeAll;
                 control.SetValue(Panel.ZIndexProperty, 1);
                 oldMoveItemY = (control.RenderTransform as TranslateTransform).Y;
+                moveTimer.Start();
             }
         }
     }
