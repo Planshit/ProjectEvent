@@ -7,7 +7,6 @@ namespace ProjectEvent.UI.Controls.Action.Types
     public enum InputType
     {
         Text,
-        Number,
-        ActionResult
+        Select
     }
 }

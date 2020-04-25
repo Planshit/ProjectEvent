@@ -15,25 +15,43 @@
                             Padding="5"
                             CornerRadius="2">
                         <Grid>
-
-                            <Popup x:Name="Popup" AllowsTransparency="True" IsOpen="{TemplateBinding PopupIsOpen}" PlacementTarget="{Binding ElementName=Border}" Placement="Bottom">
-                                <Border Width="120" Background="White" Padding="10">
-                                    <StackPanel>
-                                        <TextBlock Text="操作返回"/>
-                                        <ComboBox Name="ActionIDComboBox"/>
-                                        <ComboBox Name="ActionResultsComboBox"/>
-                                        <Button Content="添加" Height="25"/>
-                                    </StackPanel>
-                                </Border>
-                            </Popup>
-                            <TextBlock Visibility="{TemplateBinding PlaceholderVisibility}" Text="请输入" Foreground="White"/>
-                            <Grid x:Name="Text">
-                                <TextBox x:Name="InputTextBox" Foreground="White" Background="Transparent" BorderThickness="0"/>
+                            <Grid x:Name="TextInput" Visibility="Collapsed">
+                                <Popup x:Name="Popup" AllowsTransparency="True" IsOpen="{TemplateBinding PopupIsOpen}" PlacementTarget="{Binding ElementName=Border}" Placement="Bottom">
+                                    <Border Width="200" Background="White" Padding="10" BorderBrush="#ccc" BorderThickness="1">
+                                        <StackPanel>
+                                            <TextBlock Text="操作返回"/>
+                                            <TextBlock Text="操作ID" Margin="0,10,0,0"/>
+                                            <ComboBox Name="ActionIDComboBox" Margin="0,10,0,0"/>
+                                            <TextBlock Text="获取返回字段" Margin="0,10,0,0"/>
+                                            <ComboBox Name="ActionResultsComboBox" Margin="0,10,0,0"/>
+                                            <Button x:Name="AddActionResultBtn" Content="添加" Height="25" Margin="0,10,0,0"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Popup>
+                                <TextBlock Visibility="{TemplateBinding PlaceholderVisibility}" Text="请输入" Foreground="White"/>
+                                <Grid x:Name="Text">
+                                    <TextBox x:Name="InputTextBox" Foreground="White" Background="Transparent" BorderThickness="0"/>
+                                </Grid>
+                            </Grid>
+                            <Grid x:Name="SelectInput">
+                                <ComboBox x:Name="SelectComboBox" />
                             </Grid>
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
+                        <Trigger Property="IsValidInput" Value="false">
+                            <Setter Property="Background" Value="Red"/>
+                        </Trigger>
+                        <Trigger Property="InputType" Value="Text">
+                            <Setter Property="Visibility" Value="Collapsed" TargetName="SelectInput"/>
 
+                            <Setter Property="Visibility" Value="Visible" TargetName="TextInput"/>
+                        </Trigger>
+                        <Trigger Property="InputType" Value="Select">
+                            <Setter Property="Visibility" Value="Collapsed" TargetName="TextInput"/>
+
+                            <Setter Property="Visibility" Value="Visible" TargetName="SelectInput"/>
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

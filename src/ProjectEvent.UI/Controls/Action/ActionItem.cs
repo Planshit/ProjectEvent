@@ -52,14 +52,14 @@ namespace ProjectEvent.UI.Controls.Action
                 typeof(string),
                 typeof(ActionItem));
 
-        public BaseActionItemModel Action
+        public ActionItemModel Action
         {
-            get { return (BaseActionItemModel)GetValue(ActionProperty); }
+            get { return (ActionItemModel)GetValue(ActionProperty); }
             set { SetValue(ActionProperty, value); }
         }
         public static readonly DependencyProperty ActionProperty =
             DependencyProperty.Register("Action",
-                typeof(BaseActionItemModel),
+                typeof(ActionItemModel),
                 typeof(ActionItem),
                 new PropertyMetadata(null, new PropertyChangedCallback(OnPropertyChanged))
                 );
@@ -69,7 +69,7 @@ namespace ProjectEvent.UI.Controls.Action
             if (e.Property == ActionProperty)
             {
 
-                var newValue = e.NewValue as BaseActionItemModel;
+                var newValue = e.NewValue as ActionItemModel;
 
                 if (newValue != null)
                 {
@@ -106,42 +106,60 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 return;
             }
-            var inputs = new List<ActionInputModel>();
-            inputs.Add(new ActionInputModel()
+            if (Action.ParentID > 0)
             {
-                Title = "路径",
-                InputType = Types.InputType.Text
-            });
-            inputs.Add(new ActionInputModel()
+                ActionName = $"{Action.ActionName}";
+            }
+            else
             {
-                Title = "内容",
-                InputType = Types.InputType.Text
-            });
-            UIElement item = new Action(Action.ID, inputs, GetActionResults());
-
-            //填充基本信息
-            ActionName = $"[{Action.ID}] {Action.ActionName}";
-            Icon = Action.Icon == string.Empty || Action.Icon == null ? "\xE3AE" : Action.Icon;
-
-            Input.Child = item;
-
+                UIElement item = new Action(Action.ID, GetInputs());
+                ActionName = $"[{Action.ID}] {Action.ActionName}";
+                Icon = Action.Icon;
+                Input.Child = item;
+            }
 
         }
 
-        private Dictionary<int, List<string>> GetActionResults()
+        private List<ActionInputModel> GetInputs()
         {
-            var result = new Dictionary<int, List<string>>();
+            var inputs = new List<ActionInputModel>();
             switch (Action.ActionType)
             {
                 case ActionType.WriteFile:
-                    //填充action results
-                    result.Add(Action.ID, new List<string>()
+                    inputs.Add(new ActionInputModel()
                     {
-                        "Status",
+                        Title = "路径",
+                        InputType = Types.InputType.Text,
+                    });
+                    inputs.Add(new ActionInputModel()
+                    {
+                        Title = "内容",
+                        InputType = Types.InputType.Text
+                    });
+                    break;
+                case ActionType.IF:
+                    inputs.Add(new ActionInputModel()
+                    {
+                        Title = "如果",
+                        InputType = Types.InputType.Text,
+                    });
+                    inputs.Add(new ActionInputModel()
+                    {
+                        InputType = Types.InputType.Select,
+                        SelectItems = new List<string>()
+                        {
+                            "等于",
+                            "不等于",
+                        }
+                    });
+                    inputs.Add(new ActionInputModel()
+                    {
+                        InputType = Types.InputType.Text,
                     });
                     break;
             }
-            return result;
+            return inputs;
         }
+
     }
 }

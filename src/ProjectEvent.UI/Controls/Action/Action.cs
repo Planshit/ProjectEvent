@@ -10,13 +10,11 @@ namespace ProjectEvent.UI.Controls.Action
     {
         private List<ActionInputModel> inputs;
         private StackPanel container;
-        private Dictionary<int, List<string>> actionResults;
         private int ID;
-        public Action(int ID, List<ActionInputModel> inputs, Dictionary<int, List<string>> actionResults)
+        public Action(int ID, List<ActionInputModel> inputs)
         {
             DefaultStyleKey = typeof(Action);
             this.inputs = inputs;
-            this.actionResults = actionResults;
             this.ID = ID;
         }
 
@@ -35,8 +33,10 @@ namespace ProjectEvent.UI.Controls.Action
                 var label = new Label();
                 label.Content = item.Title;
                 label.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-                var input = new ActionInput(actionResults);
+                var input = new ActionInput();
                 input.ActionID = ID;
+                input.InputType = item.InputType;
+                input.SelectItems = item.SelectItems;
                 input.VerticalAlignment = System.Windows.VerticalAlignment.Center;
                 container.Children.Add(label);
                 container.Children.Add(input);

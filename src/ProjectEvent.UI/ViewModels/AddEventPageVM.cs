@@ -4,6 +4,7 @@ using ProjectEvent.UI.Models.ConditionModels;
 using ProjectEvent.UI.Models.DataModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows.Controls;
 
@@ -19,7 +20,7 @@ namespace ProjectEvent.UI.ViewModels
 
         public AddEventPageVM()
         {
-            Actions = new System.Collections.ObjectModel.ObservableCollection<BaseActionItemModel>();
+            Actions = new System.Collections.ObjectModel.ObservableCollection<ActionItemModel>();
             Events = new System.Collections.ObjectModel.ObservableCollection<Controls.ItemSelect.Models.ItemModel>();
             ComBoxActions = new System.Collections.ObjectModel.ObservableCollection<ComBoxActionModel>();
 
@@ -97,6 +98,11 @@ namespace ProjectEvent.UI.ViewModels
                 ID = 1,
                 Name = "创建文件"
             });
+            ComBoxActions.Add(new ComBoxActionModel()
+            {
+                ID = 2,
+                Name = "判断"
+            });
             ComBoxSelectedAction = ComBoxActions[0];
         }
         private void InitConditions()
@@ -128,16 +134,52 @@ namespace ProjectEvent.UI.ViewModels
 
             Conditions = cds;
         }
+        private int CreateActionID()
+        {
+            //int count = Actions.Where(m => m.ParentID == 0).Count();
+
+            return Actions.Count + 1;
+        }
         private void OnAddActionCommand(object obj)
         {
-            Actions.Add(new WriteFileActionModel()
+            switch (ComBoxSelectedAction.ID)
             {
-                ID = Actions.Count + 1,
-                ActionName = "写文件",
-                ActionType = Types.ActionType.WriteFile,
-                Icon = "\xF2E6",
-                Index = new Random().Next(10)
-            });
+                case 1:
+                    Actions.Add(new ActionItemModel()
+                    {
+                        ID = CreateActionID(),
+                        ActionName = "写文件",
+                        ActionType = Types.ActionType.WriteFile,
+                        Icon = "\xF2E6",
+                        //Index = new Random().Next(10)
+                    });
+                    break;
+                case 2:
+                    int id = CreateActionID();
+                    Actions.Add(new ActionItemModel()
+                    {
+                        ID = id,
+                        ActionName = "判断",
+                        ActionType = Types.ActionType.IF,
+                        Icon = "\xE9D4",
+                    });
+                    Actions.Add(new ActionItemModel()
+                    {
+                        ID = CreateActionID(),
+                        ActionName = "否则",
+                        ActionType = Types.ActionType.IFElse,
+                        ParentID = id
+                    });
+                    Actions.Add(new ActionItemModel()
+                    {
+                        ID = CreateActionID(),
+                        ActionName = "判断结束",
+                        ActionType = Types.ActionType.IFEnd,
+                        ParentID = id
+                    });
+                    break;
+            }
+
             OnActionDialogStateCommand(false);
         }
     }

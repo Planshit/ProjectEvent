@@ -6,6 +6,9 @@ namespace ProjectEvent.UI.Types
 {
     public enum ActionType
     {
-        WriteFile
+        WriteFile,
+        IF,
+        IFElse,
+        IFEnd
     }
 }

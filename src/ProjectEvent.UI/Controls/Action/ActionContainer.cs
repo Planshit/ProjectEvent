@@ -30,7 +30,7 @@ namespace ProjectEvent.UI.Controls.Action
 
         protected static PropertyChangedCallback ItemsPropertyChangedCallback = new PropertyChangedCallback(ItemsPropertyChanged);
 
-        public static DependencyProperty ItemsProperty = DependencyProperty.RegisterAttached("Items", typeof(ObservableCollection<BaseActionItemModel>), typeof(ActionContainer), new PropertyMetadata(null, ItemsPropertyChangedCallback));
+        public static DependencyProperty ItemsProperty = DependencyProperty.RegisterAttached("Items", typeof(ObservableCollection<ActionItemModel>), typeof(ActionContainer), new PropertyMetadata(null, ItemsPropertyChangedCallback));
 
         private static void ItemsPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
@@ -39,15 +39,15 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 return;
             }
-            control.UnregisterItems(e.OldValue as ObservableCollection<BaseActionItemModel>);
-            control.RegisterItems(e.NewValue as ObservableCollection<BaseActionItemModel>);
+            control.UnregisterItems(e.OldValue as ObservableCollection<ActionItemModel>);
+            control.RegisterItems(e.NewValue as ObservableCollection<ActionItemModel>);
         }
 
-        public ObservableCollection<BaseActionItemModel> Items
+        public ObservableCollection<ActionItemModel> Items
         {
             get
             {
-                return (ObservableCollection<BaseActionItemModel>)GetValue(ItemsProperty);
+                return (ObservableCollection<ActionItemModel>)GetValue(ItemsProperty);
             }
             set
             {
@@ -55,7 +55,7 @@ namespace ProjectEvent.UI.Controls.Action
             }
         }
 
-        protected void UnregisterItems(ObservableCollection<BaseActionItemModel> items)
+        protected void UnregisterItems(ObservableCollection<ActionItemModel> items)
         {
             if (items == null)
             {
@@ -64,7 +64,7 @@ namespace ProjectEvent.UI.Controls.Action
             items.CollectionChanged -= ItemsChanged;
         }
 
-        protected void RegisterItems(ObservableCollection<BaseActionItemModel> items)
+        protected void RegisterItems(ObservableCollection<ActionItemModel> items)
         {
             if (items == null)
             {
@@ -79,12 +79,12 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 foreach (var item in e.NewItems)
                 {
-                    var itemAction = item as BaseActionItemModel;
+                    var itemAction = item as ActionItemModel;
                     AddItem(itemAction);
                 }
             }
         }
-
+        public event EventHandler ItemIndexChanged;
         private Grid ActionPanel;
         private Point oldPoint;
         private Button AddActionBtn;
@@ -93,6 +93,8 @@ namespace ProjectEvent.UI.Controls.Action
         private List<ActionItem> actionItems;
         private bool isCanMove;
         private Timer moveTimer;
+        private List<ActionItemModel> appendList;
+        private bool isRendering;
         public Command RemoveCommand { get; set; }
 
         public ActionContainer()
@@ -100,12 +102,13 @@ namespace ProjectEvent.UI.Controls.Action
             DefaultStyleKey = typeof(ActionContainer);
             oldPoint = new Point();
             actionItems = new List<ActionItem>();
+            appendList = new List<ActionItemModel>();
             RemoveCommand = new Command(new Action<object>(OnRemoveCommand));
             moveTimer = new Timer();
             moveTimer.Interval = 500;
             moveTimer.Elapsed += MoveTimer_Elapsed;
             isCanMove = false;
-
+            isRendering = false;
         }
 
         private void MoveTimer_Elapsed(object sender, ElapsedEventArgs e)
@@ -162,8 +165,18 @@ namespace ProjectEvent.UI.Controls.Action
 
         }
 
-        private void AddItem(BaseActionItemModel action)
+        private void AddItem(ActionItemModel action)
         {
+            if (!appendList.Contains(action))
+            {
+                appendList.Add(action);
+            }
+
+            if (isRendering)
+            {
+                return;
+            }
+
             if (ActionPanel.Children.Count == 0)
             {
                 AddItem(action, 0);
@@ -174,11 +187,12 @@ namespace ProjectEvent.UI.Controls.Action
             AddItem(action, lastItemTTF.Y + lastItem.ActualHeight);
         }
 
-        private void AddItem(BaseActionItemModel action, double y)
+        private void AddItem(ActionItemModel action, double y)
         {
+            isRendering = true;
             var item = new ActionItem();
             item.DataContext = this;
-            item.ID = ActionPanel.Children.Count + 1;
+            item.ID = action.ID;
             item.Action = action;
             item.VerticalAlignment = VerticalAlignment.Top;
             var ttf = item.RenderTransform as TranslateTransform;
@@ -191,6 +205,7 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 if (item.Tag != null && (bool)item.Tag == true)
                 {
+                    //如果tag为true表示已加载完成了
                     return;
                 }
                 item.Tag = true;
@@ -211,6 +226,13 @@ namespace ProjectEvent.UI.Controls.Action
                             MoveY(itemControl, itemControlTTF.Y + item.ActualHeight);
                         }
                     }
+                }
+                //继续队列
+                appendList.Remove(action);
+                isRendering = false;
+                if (appendList.Count > 0)
+                {
+                    AddItem(appendList[0]);
                 }
             };
             ActionPanel.Children.Add(item);
@@ -250,6 +272,15 @@ namespace ProjectEvent.UI.Controls.Action
         private void Sort()
         {
             actionItems = actionItems.OrderBy(m => m.Y).ToList();
+            for (int i = 0; i < actionItems.Count; i++)
+            {
+                var item = Items.Where(m => m.ID == actionItems[i].ID).FirstOrDefault();
+                if (item != null)
+                {
+                    item.Index = i;
+                }
+            }
+            ItemIndexChanged?.Invoke(this, null);
         }
 
         private void MoveY(ActionItem item, double y, bool soft = true)
@@ -262,11 +293,29 @@ namespace ProjectEvent.UI.Controls.Action
             }
         }
 
-
+        private void HandleIFActionMoveState(ActionItem control, bool isshow)
+        {
+            //if action
+            if (control.Action.ActionType == UI.Types.ActionType.IF)
+            {
+                //if action需要移动包含的全部action
+                int startIndex = control.Action.Index;
+                int endIndex = Items.Where(m => m.ParentID == control.Action.ID).LastOrDefault().Index;
+                var allActions = Items.Where(m => m.Index > startIndex && m.Index <= endIndex);
+                foreach (var action in allActions)
+                {
+                    actionItems[action.Index].Visibility = isshow ? Visibility.Visible : Visibility.Hidden;
+                }
+            }
+        }
         private void Item_MouseMove(object sender, MouseEventArgs e)
         {
-
             var control = sender as ActionItem;
+            if (control.Action.ActionType == UI.Types.ActionType.IFElse ||
+                control.Action.ActionType == UI.Types.ActionType.IFEnd)
+            {
+                return;
+            }
             if (e.LeftButton == MouseButtonState.Pressed && isCanMove)
             {
                 //控件的坐标信息
@@ -282,6 +331,8 @@ namespace ProjectEvent.UI.Controls.Action
                 double movetoX = e.GetPosition(null).X - oldPoint.X + controlPoint.X;
                 double movetoY = e.GetPosition(null).Y - oldPoint.Y + controlPoint.Y;
 
+                HandleIFActionMoveState(control, false);
+                //是否上移
                 bool isUp = false;
                 if (movetoY >= 0 && movetoY <= ActualHeight)
                 {
@@ -297,7 +348,6 @@ namespace ProjectEvent.UI.Controls.Action
 
                     if (isUp)
                     {
-                        Debug.WriteLine("up");
                         //判断上移
                         if (upItemIndex >= 0)
                         {
@@ -312,10 +362,13 @@ namespace ProjectEvent.UI.Controls.Action
                     }
                     else
                     {
-                        Debug.WriteLine("down");
-
                         //判断下移
-                        int downItemIndex = actionItems.IndexOf(actionItems.Where(m => m.ID == control.ID).FirstOrDefault()) + 1;
+                        //int downItemIndex = actionItems.IndexOf(actionItems.Where(m => m.ID == control.ID).FirstOrDefault()) + 1;
+                        int downItemIndex = actionItems.Where(m => m.ID == control.ID).FirstOrDefault().Action.Index + 1;
+                        if (control.Action.ActionType == UI.Types.ActionType.IF)
+                        {
+                            downItemIndex = actionItems.Where(m => m.Action.ParentID == control.ID).LastOrDefault().Action.Index + 1;
+                        }
                         if (downItemIndex < actionItems.Count)
                         {
                             //Debug.WriteLine("has down item");
@@ -348,13 +401,23 @@ namespace ProjectEvent.UI.Controls.Action
 
         private void Item_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            var control = sender as ActionItem;
+
+            if (control.Action.ActionType == UI.Types.ActionType.IFElse ||
+                control.Action.ActionType == UI.Types.ActionType.IFEnd)
+            {
+                return;
+            }
+
             isCanMove = false;
             moveTimer.Stop();
 
-            var control = sender as ActionItem;
+
             control.ReleaseMouseCapture();
             control.Cursor = Cursors.Arrow;
             control.SetValue(Panel.ZIndexProperty, 0);
+
+            var newMargin = new Thickness(0, 0, 0, 0);
             //拖动结束后调整自身位置对齐
             //上一个action索引
             int upItemIndex = actionItems.IndexOf(actionItems.Where(m => m.ID == control.ID).FirstOrDefault()) - 1;
@@ -363,17 +426,31 @@ namespace ProjectEvent.UI.Controls.Action
                 var upItem = actionItems[upItemIndex] as ActionItem;
                 var upItemPoint = upItem.RenderTransform as TranslateTransform;
                 MoveY(control, upItemPoint.Y + upItem.ActualHeight);
+                if (upItem.Action.ActionType == UI.Types.ActionType.IF ||
+                    upItem.Action.ActionType == UI.Types.ActionType.IFElse)
+                {
+                    newMargin = new Thickness(10, 0, 10, 0);
+
+                }
             }
             else
             {
                 //没有上一个了
                 MoveY(control, 0);
             }
+            control.Margin = newMargin;
+            HandleIFActionMoveState(control, true);
         }
 
         private void Item_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             var control = sender as ActionItem;
+            if (control.Action.ActionType == UI.Types.ActionType.IFElse ||
+                control.Action.ActionType == UI.Types.ActionType.IFEnd)
+            {
+                return;
+            }
+
             if (control != null)
             {
                 oldPoint = e.GetPosition(null);
