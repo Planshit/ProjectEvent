@@ -355,8 +355,22 @@ namespace ProjectEvent.UI.Controls.Action
                             var upItemPoint = upItem.RenderTransform as TranslateTransform;
                             if (movetoY <= upItemPoint.Y + upItem.ActualHeight / 2)
                             {
-                                MoveY(upItem, upItemPoint.Y + control.ActualHeight);
-                                //MoveY(upItem, upItemPoint.Y + control.ActualHeight);
+                                double newY = upItemPoint.Y + control.ActualHeight;
+                                if (control.Action.ActionType == UI.Types.ActionType.IF)
+                                {
+                                    newY = 0;
+                                    //如果上移的是if action，那么下移的action需要移至末尾
+                                    //if action需要移动包含的全部action
+                                    int startIndex = control.Action.Index;
+                                    int endIndex = Items.Where(m => m.ParentID == control.Action.ID).LastOrDefault().Index;
+
+                                    for (int i = startIndex; i < endIndex + 1; i++)
+                                    {
+                                        newY += actionItems[i].ActualHeight;
+                                        Debug.WriteLine(actionItems[i].ActionName + ":" + actionItems[i].ActualHeight);
+                                    }
+                                }
+                                MoveY(upItem, newY);
                             }
                         }
                     }
@@ -426,17 +440,29 @@ namespace ProjectEvent.UI.Controls.Action
                 var upItem = actionItems[upItemIndex] as ActionItem;
                 var upItemPoint = upItem.RenderTransform as TranslateTransform;
                 MoveY(control, upItemPoint.Y + upItem.ActualHeight);
-                if (upItem.Action.ActionType == UI.Types.ActionType.IF ||
-                    upItem.Action.ActionType == UI.Types.ActionType.IFElse)
-                {
-                    newMargin = new Thickness(10, 0, 10, 0);
+                //if (upItem.Action.ActionType == UI.Types.ActionType.IF ||
+                //    upItem.Action.ActionType == UI.Types.ActionType.IFElse)
+                //{
+                //    newMargin = new Thickness(10, 0, 10, 0);
 
-                }
+                //}
             }
             else
             {
                 //没有上一个了
                 MoveY(control, 0);
+            }
+            //如果是if action需要调整所有下级位置
+            if (control.Action.ActionType == UI.Types.ActionType.IF)
+            {
+                int startIndex = control.Action.Index + 1;
+                int endIndex = Items.Where(m => m.ParentID == control.Action.ID).LastOrDefault().Index;
+
+                for (int i = startIndex; i < endIndex + 1; i++)
+                {
+                    double 
+                   MoveY(actionItems[i],)
+                }
             }
             control.Margin = newMargin;
             HandleIFActionMoveState(control, true);
