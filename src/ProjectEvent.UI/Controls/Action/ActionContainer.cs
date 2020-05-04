@@ -18,6 +18,7 @@ namespace ProjectEvent.UI.Controls.Action
 {
     public class ActionContainer : Control
     {
+        #region 依赖属性
         public ICommand AddActionCommand
         {
             get { return (ICommand)GetValue(AddActionCommandProperty); }
@@ -84,19 +85,20 @@ namespace ProjectEvent.UI.Controls.Action
                 }
             }
         }
+
+        #endregion
+
         public event EventHandler ItemIndexChanged;
         private Grid ActionPanel;
         private Point oldPoint;
         private Button AddActionBtn;
-
-        private double oldMoveItemY;
+        //控件列表
         private List<ActionItem> actionItems;
-        private bool isCanMove;
         private Timer moveTimer;
         private List<ActionItemModel> appendList;
         private bool isRendering;
         public Command RemoveCommand { get; set; }
-
+        private double oldMoveItemY;
         public ActionContainer()
         {
             DefaultStyleKey = typeof(ActionContainer);
@@ -107,19 +109,17 @@ namespace ProjectEvent.UI.Controls.Action
             moveTimer = new Timer();
             moveTimer.Interval = 500;
             moveTimer.Elapsed += MoveTimer_Elapsed;
-            isCanMove = false;
             isRendering = false;
         }
 
         private void MoveTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            isCanMove = true;
             moveTimer.Stop();
         }
 
         private void OnRemoveCommand(object obj)
         {
-            Remove(int.Parse(obj.ToString()));
+            //Remove(int.Parse(obj.ToString()));
         }
 
         public override void OnApplyTemplate()
@@ -134,36 +134,7 @@ namespace ProjectEvent.UI.Controls.Action
             AddActionBtn.Command = AddActionCommand;
         }
 
-        private void Render()
-        {
-            //if (ActionPanel == null || Actions == null)
-            //{
-            //    return;
-            //}
-            //ActionPanel.Children.Clear();
-            //ActionPanel.Height = 100;
-            //foreach (var action in Actions)
-            //{
-            //    var item = new ActionItem();
-            //    item.Action = action;
-            //    item.VerticalAlignment = VerticalAlignment.Top;
-            //    item.RenderTransform = new TranslateTransform()
-            //    {
-            //        X = 0,
-            //        Y = 0
-            //    };
-            //    item.MouseLeftButtonDown += Item_MouseLeftButtonDown;
-            //    item.MouseLeftButtonUp += Item_MouseLeftButtonUp;
-            //    item.MouseMove += Item_MouseMove;
-            //    item.Loaded += (e, c) =>
-            //    {
-            //        ActionPanel.Height += item.ActualHeight;
-            //    };
-            //    ActionPanel.Children.Add(item);
-            //}
 
-
-        }
 
         private void AddItem(ActionItemModel action)
         {
@@ -176,57 +147,46 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 return;
             }
-
-            if (ActionPanel.Children.Count == 0)
-            {
-                AddItem(action, 0);
-                return;
-            }
-            var lastItem = ActionPanel.Children[ActionPanel.Children.Count - 1] as ActionItem;
-            var lastItemTTF = lastItem.RenderTransform as TranslateTransform;
-            AddItem(action, lastItemTTF.Y + lastItem.ActualHeight);
+            AddItemControl(action);
         }
 
-        private void AddItem(ActionItemModel action, double y)
+        private void AddItemControl(ActionItemModel action)
         {
             isRendering = true;
+            double Y = 0;
+
+            if (actionItems.Count > 0)
+            {
+                var lastItem = actionItems.Last();
+                var lastItemTTF = lastItem.RenderTransform as TranslateTransform;
+                Y = lastItemTTF.Y + lastItem.ActualHeight;
+            }
+
             var item = new ActionItem();
             item.DataContext = this;
             item.ID = action.ID;
             item.Action = action;
             item.VerticalAlignment = VerticalAlignment.Top;
             var ttf = item.RenderTransform as TranslateTransform;
-            ttf.Y = y;
-
+            ttf.Y = Y;
+            item.Y = Y;
             item.MouseLeftButtonDown += Item_MouseLeftButtonDown;
             item.MouseLeftButtonUp += Item_MouseLeftButtonUp;
             item.MouseMove += Item_MouseMove;
             item.Loaded += (e, c) =>
             {
-                if (item.Tag != null && (bool)item.Tag == true)
+                if (item.Tag != null)
                 {
-                    //如果tag为true表示已加载完成了
+                    //如果tag不为null表示已加载完成了
                     return;
                 }
-                item.Tag = true;
+                item.Tag = string.Empty;
                 ActionPanel.Height += item.ActualHeight;
                 if (double.IsNaN(ActionPanel.Height))
                 {
                     ActionPanel.Height = item.ActualHeight;
                 }
-                //判断需要下移的项目
-                foreach (var actionItem in ActionPanel.Children)
-                {
-                    var itemControl = actionItem as ActionItem;
-                    if (itemControl != item)
-                    {
-                        var itemControlTTF = (itemControl.RenderTransform as TranslateTransform);
-                        if (itemControlTTF.Y >= y)
-                        {
-                            MoveY(itemControl, itemControlTTF.Y + item.ActualHeight);
-                        }
-                    }
-                }
+
                 //继续队列
                 appendList.Remove(action);
                 isRendering = false;
@@ -237,39 +197,10 @@ namespace ProjectEvent.UI.Controls.Action
             };
             ActionPanel.Children.Add(item);
             actionItems.Add(item);
-            Sort();
         }
 
-        private void Remove(int id)
-        {
-            var control = actionItems.Where(m => m.ID == id).FirstOrDefault();
-            Remove(control);
-        }
-        private void Remove(ActionItem actionItem)
-        {
-            var control = actionItems.Where(m => m.ID == actionItem.ID).FirstOrDefault();
-            int index = actionItems.IndexOf(control) + 1;
-            if (index < actionItems.Count)
-            {
-                //上移项目
-                for (int i = index; i < actionItems.Count; i++)
-                {
-                    var itemControl = actionItems[i] as ActionItem;
 
-                    var itemControlTTF = (itemControl.RenderTransform as TranslateTransform);
-
-                    MoveY(itemControl, itemControlTTF.Y - control.ActualHeight);
-                }
-            }
-            ActionPanel.Height -= control.ActualHeight;
-            if (actionItems.Count == 1)
-            {
-                ActionPanel.Height = double.NaN;
-            }
-            ActionPanel.Children.Remove(control);
-            actionItems.Remove(control);
-        }
-        private void Sort()
+        private void SortAction()
         {
             actionItems = actionItems.OrderBy(m => m.Y).ToList();
             for (int i = 0; i < actionItems.Count; i++)
@@ -283,210 +214,59 @@ namespace ProjectEvent.UI.Controls.Action
             ItemIndexChanged?.Invoke(this, null);
         }
 
-        private void MoveY(ActionItem item, double y, bool soft = true)
-        {
-            var ttf = item.RenderTransform as TranslateTransform;
-            ttf.Y = y;
-            if (soft)
-            {
-                Sort();
-            }
-        }
 
-        private void HandleIFActionMoveState(ActionItem control, bool isshow)
-        {
-            //if action
-            if (control.Action.ActionType == UI.Types.ActionType.IF)
-            {
-                //if action需要移动包含的全部action
-                int startIndex = control.Action.Index;
-                int endIndex = Items.Where(m => m.ParentID == control.Action.ID).LastOrDefault().Index;
-                var allActions = Items.Where(m => m.Index > startIndex && m.Index <= endIndex);
-                foreach (var action in allActions)
-                {
-                    actionItems[action.Index].Visibility = isshow ? Visibility.Visible : Visibility.Hidden;
-                }
-            }
-        }
         private void Item_MouseMove(object sender, MouseEventArgs e)
         {
+            
             var control = sender as ActionItem;
-            if (control.Action.ActionType == UI.Types.ActionType.IFElse ||
-                control.Action.ActionType == UI.Types.ActionType.IFEnd)
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
-                return;
-            }
-            if (e.LeftButton == MouseButtonState.Pressed && isCanMove)
-            {
+                ////Debug.WriteLine(1);
+                Debug.WriteLine("oldY:" + oldPoint.Y + ",nowY:" + e.GetPosition(null).Y);
+                ////return;
+                if (oldPoint.Y == e.GetPosition(null).Y)
+                {
+                    return;
+                }
                 //控件的坐标信息
                 var controlPoint = control.RenderTransform as TranslateTransform;
-
-                //当前鼠标坐标信息
-                var mousePoint = e.GetPosition(this);
-                //鼠标在控件的坐标信息
-                var mouseinControlPoint = e.GetPosition(control);
-
-
                 //最终移动坐标
-                double movetoX = e.GetPosition(null).X - oldPoint.X + controlPoint.X;
                 double movetoY = e.GetPosition(null).Y - oldPoint.Y + controlPoint.Y;
-
-                HandleIFActionMoveState(control, false);
-                //是否上移
-                bool isUp = false;
+                //判断是否在可移动区域
                 if (movetoY >= 0 && movetoY <= ActualHeight)
                 {
                     controlPoint.Y = movetoY;
                     oldPoint = e.GetPosition(null);
                     if (oldMoveItemY > movetoY)
                     {
-                        isUp = true;
-                    }
-
-                    //上一个action索引
-                    int upItemIndex = actionItems.IndexOf(actionItems.Where(m => m.ID == control.ID).FirstOrDefault()) - 1;
-
-                    if (isUp)
-                    {
-                        //判断上移
-                        if (upItemIndex >= 0)
-                        {
-                            var upItem = actionItems[upItemIndex] as ActionItem;
-                            var upItemPoint = upItem.RenderTransform as TranslateTransform;
-                            if (movetoY <= upItemPoint.Y + upItem.ActualHeight / 2)
-                            {
-                                double newY = upItemPoint.Y + control.ActualHeight;
-                                if (control.Action.ActionType == UI.Types.ActionType.IF)
-                                {
-                                    newY = 0;
-                                    //如果上移的是if action，那么下移的action需要移至末尾
-                                    //if action需要移动包含的全部action
-                                    int startIndex = control.Action.Index;
-                                    int endIndex = Items.Where(m => m.ParentID == control.Action.ID).LastOrDefault().Index;
-
-                                    for (int i = startIndex; i < endIndex + 1; i++)
-                                    {
-                                        newY += actionItems[i].ActualHeight;
-                                        Debug.WriteLine(actionItems[i].ActionName + ":" + actionItems[i].ActualHeight);
-                                    }
-                                }
-                                MoveY(upItem, newY);
-                            }
-                        }
+                        //向上拖动
                     }
                     else
                     {
-                        //判断下移
-                        //int downItemIndex = actionItems.IndexOf(actionItems.Where(m => m.ID == control.ID).FirstOrDefault()) + 1;
-                        int downItemIndex = actionItems.Where(m => m.ID == control.ID).FirstOrDefault().Action.Index + 1;
-                        if (control.Action.ActionType == UI.Types.ActionType.IF)
-                        {
-                            downItemIndex = actionItems.Where(m => m.Action.ParentID == control.ID).LastOrDefault().Action.Index + 1;
-                        }
-                        if (downItemIndex < actionItems.Count)
-                        {
-                            //Debug.WriteLine("has down item");
-                            var downItem = actionItems[downItemIndex] as ActionItem;
-                            var downItemPoint = downItem.RenderTransform as TranslateTransform;
-
-                            if (movetoY + control.ActualHeight >= downItemPoint.Y + downItem.ActualHeight / 2)
-                            {
-                                //Debug.WriteLine("set down item");
-                                if (upItemIndex >= 0)
-                                {
-                                    //存在上一个，则移动到上一个的末尾
-                                    MoveY(downItem, actionItems[upItemIndex].Y + actionItems[upItemIndex].ActualHeight);
-                                }
-                                else
-                                {
-                                    //不存在则移动到第一位
-                                    MoveY(downItem, 0);
-                                }
-
-                            }
-                        }
+                        //向下拖动
                     }
                 }
-
-
             }
-
         }
 
         private void Item_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             var control = sender as ActionItem;
-
-            if (control.Action.ActionType == UI.Types.ActionType.IFElse ||
-                control.Action.ActionType == UI.Types.ActionType.IFEnd)
-            {
-                return;
-            }
-
-            isCanMove = false;
-            moveTimer.Stop();
-
-
             control.ReleaseMouseCapture();
             control.Cursor = Cursors.Arrow;
             control.SetValue(Panel.ZIndexProperty, 0);
-
-            var newMargin = new Thickness(0, 0, 0, 0);
-            //拖动结束后调整自身位置对齐
-            //上一个action索引
-            int upItemIndex = actionItems.IndexOf(actionItems.Where(m => m.ID == control.ID).FirstOrDefault()) - 1;
-            if (upItemIndex >= 0)
-            {
-                var upItem = actionItems[upItemIndex] as ActionItem;
-                var upItemPoint = upItem.RenderTransform as TranslateTransform;
-                MoveY(control, upItemPoint.Y + upItem.ActualHeight);
-                //if (upItem.Action.ActionType == UI.Types.ActionType.IF ||
-                //    upItem.Action.ActionType == UI.Types.ActionType.IFElse)
-                //{
-                //    newMargin = new Thickness(10, 0, 10, 0);
-
-                //}
-            }
-            else
-            {
-                //没有上一个了
-                MoveY(control, 0);
-            }
-            //如果是if action需要调整所有下级位置
-            if (control.Action.ActionType == UI.Types.ActionType.IF)
-            {
-                int startIndex = control.Action.Index + 1;
-                int endIndex = Items.Where(m => m.ParentID == control.Action.ID).LastOrDefault().Index;
-
-                for (int i = startIndex; i < endIndex + 1; i++)
-                {
-                    double 
-                   MoveY(actionItems[i],)
-                }
-            }
-            control.Margin = newMargin;
-            HandleIFActionMoveState(control, true);
         }
 
         private void Item_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            oldPoint = e.GetPosition(null);
+            //Debug.WriteLine(oldPoint.Y);
             var control = sender as ActionItem;
-            if (control.Action.ActionType == UI.Types.ActionType.IFElse ||
-                control.Action.ActionType == UI.Types.ActionType.IFEnd)
-            {
-                return;
-            }
-
-            if (control != null)
-            {
-                oldPoint = e.GetPosition(null);
-
-                control.CaptureMouse();
-                control.Cursor = Cursors.SizeAll;
-                control.SetValue(Panel.ZIndexProperty, 1);
-                oldMoveItemY = (control.RenderTransform as TranslateTransform).Y;
-                moveTimer.Start();
-            }
+            control.CaptureMouse();
+            control.Cursor = Cursors.SizeAll;
+            control.SetValue(Panel.ZIndexProperty, 1);
+            
+            oldMoveItemY = (control.RenderTransform as TranslateTransform).Y;
         }
     }
 }
