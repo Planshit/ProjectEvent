@@ -99,12 +99,16 @@ namespace ProjectEvent.UI.Controls.Action
         private bool isRendering;
         public Command RemoveCommand { get; set; }
         private double oldMoveItemY;
+        private bool isClick = false;
+        //当前移动的if action items
+        private List<ActionItem> ifActionItems;
         public ActionContainer()
         {
             DefaultStyleKey = typeof(ActionContainer);
             oldPoint = new Point();
             actionItems = new List<ActionItem>();
             appendList = new List<ActionItemModel>();
+            ifActionItems = new List<ActionItem>();
             RemoveCommand = new Command(new Action<object>(OnRemoveCommand));
             moveTimer = new Timer();
             moveTimer.Interval = 500;
@@ -197,8 +201,8 @@ namespace ProjectEvent.UI.Controls.Action
             };
             ActionPanel.Children.Add(item);
             actionItems.Add(item);
+            SortAction();
         }
-
 
         private void SortAction()
         {
@@ -210,6 +214,7 @@ namespace ProjectEvent.UI.Controls.Action
                 {
                     item.Index = i;
                 }
+                actionItems[i].Action.Index = i;
             }
             ItemIndexChanged?.Invoke(this, null);
         }
@@ -217,12 +222,11 @@ namespace ProjectEvent.UI.Controls.Action
 
         private void Item_MouseMove(object sender, MouseEventArgs e)
         {
-            
             var control = sender as ActionItem;
-            if (e.LeftButton == MouseButtonState.Pressed)
+            if (isClick && e.LeftButton == MouseButtonState.Pressed)
             {
                 ////Debug.WriteLine(1);
-                Debug.WriteLine("oldY:" + oldPoint.Y + ",nowY:" + e.GetPosition(null).Y);
+                //Debug.WriteLine("oldY:" + oldPoint.Y + ",nowY:" + e.GetPosition(null).Y);
                 ////return;
                 if (oldPoint.Y == e.GetPosition(null).Y)
                 {
@@ -237,36 +241,102 @@ namespace ProjectEvent.UI.Controls.Action
                 {
                     controlPoint.Y = movetoY;
                     oldPoint = e.GetPosition(null);
-                    if (oldMoveItemY > movetoY)
-                    {
-                        //向上拖动
-                    }
-                    else
-                    {
-                        //向下拖动
-                    }
+                    HandleActionMove(control, movetoY);
                 }
             }
         }
 
+        private void HandleActionMove(ActionItem action, double moveY)
+        {
+            bool moveUp = false;
+            if (oldMoveItemY > moveY)
+            {
+                //向上拖动
+                moveUp = true;
+            }
+
+            int itemIndex = moveUp ? action.Action.Index - 1 : action.Action.Index + 1;
+            var item = actionItems.Where(a => a.Action.Index == itemIndex).SingleOrDefault();
+            if (item != null)
+            {
+                var itemPoint = item.RenderTransform as TranslateTransform;
+                var actionPoint = action.RenderTransform as TranslateTransform;
+                if (moveUp)
+                {
+                    if (actionPoint.Y <= itemPoint.Y + item.ActualHeight / 2)
+                    {
+                        //移动超出了一半的范围则可以调整顺序
+                        itemPoint.Y = itemPoint.Y + action.ActualHeight;
+                        SortAction();
+                    }
+                }
+                else
+                {
+                    //往下
+                    if (actionPoint.Y + action.ActualHeight >= itemPoint.Y + item.ActualHeight / 2)
+                    {
+                        //移动超出了一半的范围则可以调整顺序
+                        itemPoint.Y = itemPoint.Y - action.ActualHeight;
+                        SortAction();
+                    }
+                }
+
+            }
+        }
+        private void HandleMoveEnd(ActionItem action)
+        {
+            var item = actionItems.Where(a => a.Action.Index == action.Action.Index - 1).SingleOrDefault();
+            var actionPoint = action.RenderTransform as TranslateTransform;
+            if (item != null)
+            {
+                var itemPoint = item.RenderTransform as TranslateTransform;
+                actionPoint.Y = itemPoint.Y + item.ActualHeight;
+            }
+            else
+            {
+                actionPoint.Y = 0;
+            }
+
+            
+        }
+        private void HandleMoveStart(ActionItem action)
+        {
+            if (action.Action.ActionType == UI.Types.ActionType.IF)
+            {
+                int endIndex = actionItems.Where(m => m.Action.ParentID == action.Action.ID).LastOrDefault().Action.Index;
+                for (int i = action.Action.Index + 1; i < endIndex + 1; i++)
+                {
+                    actionItems[i].Visibility = Visibility.Hidden;
+                    ifActionItems.Add(actionItems[i]);
+                }
+            }
+        }
         private void Item_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            isClick = false;
             var control = sender as ActionItem;
             control.ReleaseMouseCapture();
             control.Cursor = Cursors.Arrow;
             control.SetValue(Panel.ZIndexProperty, 0);
+            HandleMoveEnd(control);
         }
 
         private void Item_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            oldPoint = e.GetPosition(null);
-            //Debug.WriteLine(oldPoint.Y);
             var control = sender as ActionItem;
-            control.CaptureMouse();
-            control.Cursor = Cursors.SizeAll;
-            control.SetValue(Panel.ZIndexProperty, 1);
-            
-            oldMoveItemY = (control.RenderTransform as TranslateTransform).Y;
+            if (control.Action.ActionType != UI.Types.ActionType.IFElse &&
+                control.Action.ActionType != UI.Types.ActionType.IFEnd)
+            {
+                isClick = true;
+                oldPoint = e.GetPosition(null);
+                //Debug.WriteLine(oldPoint.Y);
+
+                control.CaptureMouse();
+                control.Cursor = Cursors.SizeAll;
+                control.SetValue(Panel.ZIndexProperty, 1);
+
+                oldMoveItemY = (control.RenderTransform as TranslateTransform).Y;
+            }
         }
     }
 }

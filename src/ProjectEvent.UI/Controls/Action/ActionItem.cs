@@ -77,6 +77,7 @@ namespace ProjectEvent.UI.Controls.Action
                 }
             }
         }
+        public event EventHandler OnClick;
         private Grid Header;
         private Border Input;
         public ActionItem()
@@ -112,12 +113,18 @@ namespace ProjectEvent.UI.Controls.Action
             }
             else
             {
-                UIElement item = new Action(Action.ID, GetInputs());
+                Action item = new Action(Action.ID, GetInputs());
                 ActionName = $"[{Action.ID}] {Action.ActionName}";
                 Icon = Action.Icon;
                 Input.Child = item;
+                item.OnClick += Item_OnClick;
             }
 
+        }
+
+        private void Item_OnClick(object sender, EventArgs e)
+        {
+            OnClick?.Invoke(sender, e);
         }
 
         private List<ActionInputModel> GetInputs()

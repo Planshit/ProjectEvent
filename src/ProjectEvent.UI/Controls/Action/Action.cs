@@ -8,6 +8,7 @@ namespace ProjectEvent.UI.Controls.Action
 {
     public class Action : Control
     {
+        public event EventHandler OnClick;
         private List<ActionInputModel> inputs;
         private StackPanel container;
         private int ID;
@@ -23,6 +24,12 @@ namespace ProjectEvent.UI.Controls.Action
             base.OnApplyTemplate();
             container = GetTemplateChild("Container") as StackPanel;
             Render();
+            MouseLeftButtonDown += Action_MouseLeftButtonDown;
+        }
+
+        private void Action_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            OnClick?.Invoke(this, e);
         }
 
         private void Render()
