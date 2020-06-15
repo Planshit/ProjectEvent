@@ -233,13 +233,16 @@ namespace ProjectEvent.UI.Controls.Action
         private void HandleActionMove(ActionItem action, double moveY)
         {
             bool moveUp = false;
+            //更新自身Y
+            action.Y = moveY;
+
             //查找相邻的action
             var items = actionItems.Where(m => m.Y > moveY).OrderBy(m => m.Y);
             //相邻的action
             ActionItem item = null;
             //移动的距离
             double moveLength = action.ActualHeight;
-            if(action.Action.ActionType== UI.Types.ActionType.IF)
+            if (action.Action.ActionType == UI.Types.ActionType.IF)
             {
                 moveLength += ifActionItems.Sum(m => m.ActualHeight);
             }
@@ -252,9 +255,14 @@ namespace ProjectEvent.UI.Controls.Action
             }
             if (items.Count() > 0)
             {
+                foreach (var item_ in items.ToList())
+                {
+                    Debug.Write((moveUp ? "上" : "下") +" - "+ item_.ActionName + "," + item_.Y);
+                }
+                Debug.WriteLine("--------------------");
                 item = moveUp ? items.Last() : items.First();
             }
-            
+
 
             if (moveUp)
             {
@@ -266,6 +274,8 @@ namespace ProjectEvent.UI.Controls.Action
                     {
                         //需要
                         (item.RenderTransform as TranslateTransform).Y += moveLength;
+                        //更新Y
+                        item.Y = (item.RenderTransform as TranslateTransform).Y;
                     }
                 }
             }
@@ -280,9 +290,15 @@ namespace ProjectEvent.UI.Controls.Action
                     {
                         //需要
                         (item.RenderTransform as TranslateTransform).Y -= moveLength;
+                        //更新Y
+                        item.Y = (item.RenderTransform as TranslateTransform).Y;
                     }
                 }
             }
+
+
+            //更新
+            oldMoveItemY = moveY;
 
         }
         #endregion
@@ -291,6 +307,44 @@ namespace ProjectEvent.UI.Controls.Action
         private void HandleMoveEnd(ActionItem action)
         {
             var actionPoint = action.RenderTransform as TranslateTransform;
+            //调整控件自身的位置对齐
+
+            //查找当前控件的上一个控件
+            var topActionItems = actionItems.
+                Where(
+                m => m.Visibility != Visibility.Hidden &&
+                m.Y < actionPoint.Y
+                ).
+                OrderBy(m => m.Y);
+            ActionItem topActionItem = null;
+            if (topActionItems.Count() > 0)
+            {
+                //存在上一个时
+                topActionItem = topActionItems.Last();
+                //调整自身对齐上一个
+                actionPoint.Y = topActionItem.Y + topActionItem.ActualHeight;
+
+                //判断上一个是否是判断action
+                if (topActionItem.Action.ActionType == UI.Types.ActionType.IF ||
+                    topActionItem.Action.ActionType == UI.Types.ActionType.IFElse)
+                {
+                    //是的话需要将自身设置为if的下级
+                    action.Action.ParentID = topActionItem.Action.ActionType == UI.Types.ActionType.IF ? topActionItem.Action.ID : topActionItem.Action.ParentID;
+                }
+                else
+                {
+                    //重置父级id
+                    action.Action.ParentID = 0;
+                }
+            }
+            else
+            {
+                //不存在说明已经是第一个了
+                actionPoint.Y = 0;
+                //重置父级id
+                action.Action.ParentID = 0;
+            }
+
             if (action.Action.ActionType == UI.Types.ActionType.IF)
             {
                 //调整子级的位置
@@ -319,6 +373,9 @@ namespace ProjectEvent.UI.Controls.Action
                 }
                 ifActionItems.Clear();
             }
+
+            //排序
+            SortAction();
         }
 
         #endregion
