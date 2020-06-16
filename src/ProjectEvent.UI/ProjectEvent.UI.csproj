@@ -8,6 +8,10 @@
     <ApplicationIcon>Assets\Icons\tray.ico</ApplicationIcon>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>0</WarningLevel>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Structs\**" />
     <EmbeddedResource Remove="Structs\**" />

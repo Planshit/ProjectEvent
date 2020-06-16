@@ -26,7 +26,7 @@
                                     <TextBlock Text="{TemplateBinding ActionName}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="#737373"/>
 
                                 </StackPanel>
-                                <Button Command="{Binding RemoveCommand}" CommandParameter="{TemplateBinding ID}" HorizontalAlignment="Right" Width="30" Height="30">
+                                <Button x:Name="ButtonRemove" Command="{Binding RemoveCommand}" CommandParameter="{TemplateBinding ID}" HorizontalAlignment="Right" Width="30" Height="30">
                                     <TextBlock Text="&#xE8BB;" FontFamily="/ProjectEvent.UI;component/Assets/Fonts/#Fabric External MDL2 Assets" VerticalAlignment="Center" FontSize="14" Foreground="#737373"/>
                                 </Button>
                             </Grid>

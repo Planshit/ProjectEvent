@@ -118,13 +118,11 @@ namespace ProjectEvent.UI.Controls.Action
             isRendering = false;
         }
 
-        private void MoveTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-        }
+
 
         private void OnRemoveCommand(object obj)
         {
-            //Remove(int.Parse(obj.ToString()));
+            Remove(int.Parse(obj.ToString()));
         }
 
         public override void OnApplyTemplate()
@@ -208,6 +206,32 @@ namespace ProjectEvent.UI.Controls.Action
         }
         #endregion
 
+        #region 移除控件
+        private void Remove(int id)
+        {
+            var action = actionItems.Where(m => m.Action.ID == id).FirstOrDefault();
+            if (action.Action.ActionType == UI.Types.ActionType.IF)
+            {
+                var actions = actionItems.Where(m => m.Action.ID == id || m.Action.ParentID == id).ToList();
+                foreach (var item in actions)
+                {
+                    Remove(item);
+                }
+            }
+            else
+            {
+                Remove(action);
+            }
+        }
+        private void Remove(ActionItem item)
+        {
+            ActionPanel.Children.Remove(item);
+            actionItems.Remove(item);
+            SortAction();
+            UpdateActionsLocation();
+        }
+        #endregion
+
         #region 排序
         /// <summary>
         /// 根据action位置排序分配index
@@ -242,10 +266,10 @@ namespace ProjectEvent.UI.Controls.Action
             ActionItem item = null;
             //移动的距离
             double moveLength = action.ActualHeight;
-            if (action.Action.ActionType == UI.Types.ActionType.IF)
-            {
-                moveLength += ifActionItems.Sum(m => m.ActualHeight);
-            }
+            //if (action.Action.ActionType == UI.Types.ActionType.IF)
+            //{
+            //    moveLength += ifActionItems.Sum(m => m.ActualHeight);
+            //}
             if (oldMoveItemY > moveY)
             {
                 //向上拖动
@@ -255,11 +279,6 @@ namespace ProjectEvent.UI.Controls.Action
             }
             if (items.Count() > 0)
             {
-                foreach (var item_ in items.ToList())
-                {
-                    Debug.Write((moveUp ? "上" : "下") +" - "+ item_.ActionName + "," + item_.Y);
-                }
-                Debug.WriteLine("--------------------");
                 item = moveUp ? items.Last() : items.First();
             }
 
@@ -290,8 +309,15 @@ namespace ProjectEvent.UI.Controls.Action
                     {
                         //需要
                         (item.RenderTransform as TranslateTransform).Y -= moveLength;
+
                         //更新Y
                         item.Y = (item.RenderTransform as TranslateTransform).Y;
+                        if (actionItems.Where(m => m.Y < item.Y && m.Visibility != Visibility.Hidden && m != item).ToList().Count() == 0)
+                        {
+                            (item.RenderTransform as TranslateTransform).Y = 0;
+                            item.Y = 0;
+                        }
+
                     }
                 }
             }
@@ -324,17 +350,27 @@ namespace ProjectEvent.UI.Controls.Action
                 //调整自身对齐上一个
                 actionPoint.Y = topActionItem.Y + topActionItem.ActualHeight;
 
+
+
                 //判断上一个是否是判断action
                 if (topActionItem.Action.ActionType == UI.Types.ActionType.IF ||
-                    topActionItem.Action.ActionType == UI.Types.ActionType.IFElse)
+                    topActionItem.Action.ActionType == UI.Types.ActionType.IFElse ||
+                    topActionItem.Action.ParentID > 0 &&
+                    topActionItem.Action.ActionType != UI.Types.ActionType.IFEnd)
                 {
                     //是的话需要将自身设置为if的下级
                     action.Action.ParentID = topActionItem.Action.ActionType == UI.Types.ActionType.IF ? topActionItem.Action.ID : topActionItem.Action.ParentID;
+
+                    //设置间距
+                    double margin = topActionItem.Action.ActionType == UI.Types.ActionType.IF || topActionItem.Action.ActionType == UI.Types.ActionType.IFElse ? topActionItem.Margin.Left + 10 : topActionItem.Margin.Left;
+                    action.Margin = new Thickness(margin, 0, margin, 0);
+
                 }
                 else
                 {
                     //重置父级id
                     action.Action.ParentID = 0;
+                    action.Margin = new Thickness(0);
                 }
             }
             else
@@ -343,10 +379,14 @@ namespace ProjectEvent.UI.Controls.Action
                 actionPoint.Y = 0;
                 //重置父级id
                 action.Action.ParentID = 0;
+                action.Margin = new Thickness(0);
             }
 
             if (action.Action.ActionType == UI.Types.ActionType.IF)
             {
+                //查找if action下方的action
+                var bottomActions = actionItems.Where(m => m.Y > actionPoint.Y && m.Visibility != Visibility.Hidden).OrderBy(m => m.Y).ToList();
+
                 //调整子级的位置
                 for (int i = 0; i < ifActionItems.Count; i++)
                 {
@@ -371,7 +411,27 @@ namespace ProjectEvent.UI.Controls.Action
                     //恢复显示
                     actionItem.Visibility = Visibility.Visible;
                 }
+                if (bottomActions.Count > 0)
+                {
+                    for (int i = 0; i < bottomActions.Count; i++)
+                    {
+                        var actionTTF = bottomActions[i].RenderTransform as TranslateTransform;
+                        if (i == 0)
+                        {
+                            actionTTF.Y = ifActionItems[ifActionItems.Count - 1].Y + ifActionItems[ifActionItems.Count - 1].ActualHeight;
+                        }
+                        else
+                        {
+                            var lastactionTTF = bottomActions[i - 1].RenderTransform as TranslateTransform;
+                            actionTTF.Y = lastactionTTF.Y + bottomActions[i - 1].ActualHeight;
+                        }
+                        bottomActions[i].Y = actionTTF.Y;
+                    }
+                }
                 ifActionItems.Clear();
+
+                //调整间距
+                ResetIfActionMargin(action);
             }
 
             //排序
@@ -391,9 +451,101 @@ namespace ProjectEvent.UI.Controls.Action
                 for (int i = start; i < end; i++)
                 {
                     actionItems[i].Visibility = Visibility.Hidden;
+                    actionItems[i].Margin = new Thickness(0);
                     ifActionItems.Add(actionItems[i]);
                 }
+                var bottomItems = actionItems.Where(m => m.Y > action.Y && m.Visibility != Visibility.Hidden).ToList();
+                for (int i = 0; i < bottomItems.Count; i++)
+                {
+                    var item = bottomItems[i];
+                    var itemPoint = item.RenderTransform as TranslateTransform;
+                    if (i == 0)
+                    {
+                        itemPoint.Y = action.Y + action.ActualHeight;
+                    }
+                    else
+                    {
+                        itemPoint.Y = bottomItems[i - 1].Y + bottomItems[i - 1].ActualHeight;
+                    }
+                    item.Y = itemPoint.Y;
+                }
             }
+        }
+        #endregion
+
+        #region 调整ifaction的间距
+        /// <summary>
+        /// 调整ifaction的间距
+        /// </summary>
+        /// <param name="action"></param>
+        private void ResetIfActionMargin(ActionItem action)
+        {
+            var actionPoint = action.RenderTransform as TranslateTransform;
+            //查找当前控件的上一个控件
+            var topActionItems = actionItems.
+                Where(
+                m => m.Visibility != Visibility.Hidden &&
+                m.Y < actionPoint.Y
+                ).
+                OrderBy(m => m.Y);
+            ActionItem topActionItem = null;
+            double addMargin = 0;
+            if (topActionItems.Count() > 0)
+            {
+                //存在上一个时
+                topActionItem = topActionItems.Last();
+                if (topActionItem.Action.ActionType == UI.Types.ActionType.IF ||
+                    topActionItem.Action.ParentID > 0 &&
+                    topActionItem.Action.ActionType != UI.Types.ActionType.IFEnd)
+                {
+                    //上一个action还是属于if子级
+                    //addMargin = topActionItem.Margin.Left + 10;
+                    addMargin = topActionItem.Action.ActionType == UI.Types.ActionType.IF || topActionItem.Action.ParentID != action.Action.ID ? topActionItem.Margin.Left + 10 : 10;
+                }
+            }
+
+
+            //调整间距
+            var ifactions = actionItems.Where(m => m.Action.ID == action.Action.ID || m.Action.ParentID == action.Action.ID).OrderBy(m => m.Y).ToList();
+            foreach (var ifaction in ifactions)
+            {
+                var newmarigin = addMargin;
+                if (ifaction.Action.ActionType != UI.Types.ActionType.IF &&
+                    ifaction.Action.ActionType != UI.Types.ActionType.IFElse &&
+                    ifaction.Action.ActionType != UI.Types.ActionType.IFEnd)
+                {
+                    newmarigin = addMargin + 10;
+                }
+                ifaction.Margin = new Thickness(newmarigin, 0, newmarigin, 0);
+                if (ifaction.Action.ActionType == UI.Types.ActionType.IF && ifaction != action)
+                {
+                    ResetIfActionMargin(ifaction);
+                }
+            }
+        }
+        #endregion
+
+        #region 调整所有action位置
+        private void UpdateActionsLocation()
+        {
+            var actions = actionItems.OrderBy(m => m.Y).ToList();
+
+            for (int i = 0; i < actions.Count; i++)
+            {
+                var actionPoint = actions[i].RenderTransform as TranslateTransform;
+                if (i == 0)
+                {
+                    actionPoint.Y = 0;
+                    actions[i].Y = 0;
+                }
+                else
+                {
+                    var topAction = actions[i - 1];
+                    actionPoint.Y = topAction.Y + topAction.ActualHeight;
+                    actions[i].Y = actionPoint.Y;
+                }
+            }
+
         }
         #endregion
 
@@ -415,22 +567,25 @@ namespace ProjectEvent.UI.Controls.Action
                 //最终移动坐标
                 double movetoY = e.GetPosition(null).Y - oldPoint.Y + controlPoint.Y;
                 //判断是否在可移动区域
-                if (movetoY >= 0 && movetoY <= ActualHeight)
-                {
-                    controlPoint.Y = movetoY;
-                    oldPoint = e.GetPosition(null);
-                    HandleActionMove(control, movetoY);
-                }
+                //if (movetoY >= 0 && movetoY <= ActualHeight)
+                //{
+                controlPoint.Y = movetoY;
+                oldPoint = e.GetPosition(null);
+                HandleActionMove(control, movetoY);
+                //}
             }
         }
         private void Item_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            isClick = false;
-            var control = sender as ActionItem;
-            control.ReleaseMouseCapture();
-            control.Cursor = Cursors.Arrow;
-            control.SetValue(Panel.ZIndexProperty, 0);
-            HandleMoveEnd(control);
+            if (isClick)
+            {
+                isClick = false;
+                var control = sender as ActionItem;
+                control.ReleaseMouseCapture();
+                control.Cursor = Cursors.Arrow;
+                control.SetValue(Panel.ZIndexProperty, 0);
+                HandleMoveEnd(control);
+            }
         }
 
         private void Item_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -452,5 +607,7 @@ namespace ProjectEvent.UI.Controls.Action
             }
         }
         #endregion
+
+        
     }
 }

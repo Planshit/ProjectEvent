@@ -80,6 +80,7 @@ namespace ProjectEvent.UI.Controls.Action
         public event EventHandler OnClick;
         private Grid Header;
         private Border Input;
+        private Button ButtonRemove;
         public ActionItem()
         {
             DefaultStyleKey = typeof(ActionItem);
@@ -93,6 +94,7 @@ namespace ProjectEvent.UI.Controls.Action
             base.OnApplyTemplate();
             Input = GetTemplateChild("Input") as Border;
             Header = GetTemplateChild("Header") as Grid;
+            ButtonRemove = GetTemplateChild("ButtonRemove") as Button;
             Render();
         }
         private void translateTransform_Changed(object sender, EventArgs e)
@@ -118,6 +120,10 @@ namespace ProjectEvent.UI.Controls.Action
                 Icon = Action.Icon;
                 Input.Child = item;
                 item.OnClick += Item_OnClick;
+            }
+            if(Action.ActionType== ActionType.IFElse || Action.ActionType== ActionType.IFEnd)
+            {
+                ButtonRemove.Visibility = Visibility.Collapsed;
             }
 
         }
