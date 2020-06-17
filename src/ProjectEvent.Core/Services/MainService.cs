@@ -58,28 +58,28 @@ namespace ProjectEvent.Core.Services
                 },
                 Num = 1
             });
-            actions.Add(new Core.Action.Models.ActionModel()
-            {
-                Action = Core.Action.Types.ActionType.IF,
-                Parameter = new IFActionParameterModel()
-                {
-                    LeftInput = new IFActionResultInputModel()
-                    {
-                        InputType = Core.Action.Types.IFActionInputType.ActionResult,
-                        ActionID = 1,
-                        ResultKey = (int)CommonResultKeyType.Status
-                    },
-                    RightInput = new IFActionTextInputModel()
-                    {
-                        InputType = Core.Action.Types.IFActionInputType.Text,
-                        Value = "bool"
-                    },
-                    Condition = Core.Action.Types.IFActionConditionType.UnEqual,
-                    PassActions = ifPassActions,
-                    NoPassActions = ifUnPassActions
-                },
-                Num = 1
-            });
+            //actions.Add(new Core.Action.Models.ActionModel()
+            //{
+            //    Action = Core.Action.Types.ActionType.IF,
+            //    Parameter = new IFActionParameterModel()
+            //    {
+            //        LeftInput = new IFActionResultInputModel()
+            //        {
+            //            InputType = Core.Action.Types.IFActionInputType.ActionResult,
+            //            ActionID = 1,
+            //            ResultKey = (int)CommonResultKeyType.Status
+            //        },
+            //        RightInput = new IFActionTextInputModel()
+            //        {
+            //            InputType = Core.Action.Types.IFActionInputType.Text,
+            //            Value = "bool"
+            //        },
+            //        Condition = Core.Action.Types.IFActionConditionType.UnEqual,
+            //        PassActions = ifPassActions,
+            //        NoPassActions = ifUnPassActions
+            //    },
+            //    Num = 1
+            //});
             //_eventContainerService.Add(new Event.Models.EventModel()
             //{
             //    EventType = Event.Types.EventType.OnTimerChanged,

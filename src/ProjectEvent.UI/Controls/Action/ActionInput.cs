@@ -1,4 +1,5 @@
-﻿using ProjectEvent.UI.Controls.Action.Types;
+﻿using ProjectEvent.UI.Controls.Action.Models;
+using ProjectEvent.UI.Controls.Action.Types;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 
 namespace ProjectEvent.UI.Controls.Action
 {
@@ -54,6 +56,10 @@ namespace ProjectEvent.UI.Controls.Action
                 typeof(InputType),
                 typeof(ActionInput),
                 new PropertyMetadata(InputType.Text));
+
+        public object Data { get; set; }
+        public string BindingName { get; set; }
+        public List<ComBoxModel> ComboBoxItemsSource { get; set; }
         public int ActionID { get; set; }
         private Dictionary<int, List<string>> actionResults;
         private TextBox inputTextBox;
@@ -63,7 +69,7 @@ namespace ProjectEvent.UI.Controls.Action
 
         private Popup Popup;
         private bool isEnterPopup;
-        private ActionContainer actionContainer;
+        public ActionContainer ActionContainer { get; set; }
         private Button addActionResultBtn;
         public List<string> SelectItems { get; set; }
         //public InputType InputType { get; set; }
@@ -71,16 +77,16 @@ namespace ProjectEvent.UI.Controls.Action
         {
             DefaultStyleKey = typeof(ActionInput);
             isEnterPopup = false;
-
             actionResults = new Dictionary<int, List<string>>();
+            ComboBoxItemsSource = new List<ComBoxModel>();
 
         }
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            actionContainer = DataContext as ActionContainer;
-            actionContainer.Items.CollectionChanged += Items_CollectionChanged;
-            actionContainer.ItemIndexChanged += ActionContainer_ItemIndexChanged;
+            //actionContainer = DataContext as ActionContainer;
+            //ActionContainer.Items.CollectionChanged += Items_CollectionChanged;
+            ActionContainer.ItemIndexChanged += ActionContainer_ItemIndexChanged;
             inputTextBox = GetTemplateChild("InputTextBox") as TextBox;
             inputTextBox.TextChanged += InputTextBox_TextChanged;
             inputTextBox.GotKeyboardFocus += InputTextBox_GotKeyboardFocus;
@@ -98,8 +104,55 @@ namespace ProjectEvent.UI.Controls.Action
             Popup.MouseEnter += Popup_MouseEnter;
             Popup.MouseLeave += Popup_MouseLeave;
             Render();
+            BindingData();
         }
+        private void BindingData()
+        {
+            switch (InputType)
+            {
+                case InputType.Text:
+                    //绑定数据
+                    BindingOperations.SetBinding(inputTextBox, TextBox.TextProperty, new Binding()
+                    {
+                        Source = Data,
+                        Path = new PropertyPath(BindingName),
+                        Mode = BindingMode.TwoWay,
 
+                    });
+                    break;
+                case InputType.Select:
+                    for (int i = 0; i < SelectItems.Count; i++)
+                    {
+                        ComboBoxItemsSource.Add(new ComBoxModel()
+                        {
+                            ID = (i + 1),
+                            DisplayName = SelectItems[i]
+                        });
+                    }
+                    //绑定数据
+                    SelectComboBox.ItemsSource = ComboBoxItemsSource;
+                    //SelectComboBox.SelectedValuePath = "ID";
+                    SelectComboBox.DisplayMemberPath = "DisplayName";
+                    //BindingOperations.SetBinding(SelectComboBox, ComboBox.SelectedValueProperty, new Binding()
+                    //{
+                    //    Source = Data,
+                    //    Path = new PropertyPath("ID"),
+                    //    Mode = BindingMode.TwoWay,
+
+                    //});
+                    BindingOperations.SetBinding(SelectComboBox, ComboBox.SelectedItemProperty, new Binding()
+                    {
+                        Source = Data,
+                        Path = new PropertyPath(BindingName),
+                        Mode = BindingMode.TwoWay,
+
+                    });
+
+                    SelectComboBox.SelectedIndex = 0;
+
+                    break;
+            }
+        }
         private void AddActionResultBtn_Click(object sender, RoutedEventArgs e)
         {
             if (ActionResultsComboBox.SelectedItem == null)
@@ -107,6 +160,7 @@ namespace ProjectEvent.UI.Controls.Action
                 return;
             }
             inputTextBox.AppendText($"{{{ActionIDComboBox.SelectedItem}.{ActionResultsComboBox.SelectedItem}}}");
+            inputTextBox.Focus();
             Valid();
         }
 
@@ -180,17 +234,16 @@ namespace ProjectEvent.UI.Controls.Action
                 {
                     ActionIDComboBox.SelectedIndex = 0;
                 }
+
+
             }
-            else if (InputType == InputType.Select)
-            {
-                SelectComboBox.Items.Clear();
-                SelectComboBox.Items.Add("请选择条件");
-                foreach (var item in SelectItems)
-                {
-                    SelectComboBox.Items.Add(item);
-                }
-                SelectComboBox.SelectedIndex = 0;
-            }
+            //else if (InputType == InputType.Select)
+            //{
+            //    //SelectComboBox.Items.Clear();
+            //    //SelectComboBox.Items.Add("请选择条件");
+
+            //    SelectComboBox.SelectedIndex = 0;
+            //}
         }
         private void InputTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -200,16 +253,17 @@ namespace ProjectEvent.UI.Controls.Action
         private void UpdateActionResults()
         {
             actionResults.Clear();
-            var selfItem = actionContainer.Items.Where(m => m.ID == ActionID).FirstOrDefault();
-            if (selfItem.ParentID > 0)
+            var selfItem = ActionContainer.ActionItems.Where(m => m.Action.ID == ActionID).FirstOrDefault();
+            if (selfItem == null || selfItem.Action.ParentID > 0)
             {
                 return;
             }
-            foreach (var action in actionContainer.Items)
+            foreach (var item in ActionContainer.ActionItems)
             {
+                var action = item.Action;
                 //排除自身
                 if (action.ID != ActionID &&
-                    action.Index < selfItem.Index &&
+                    action.Index < selfItem.Action.Index &&
                     action.ID > 0)
                 {
                     actionResults.Add(action.ID, new List<string>());

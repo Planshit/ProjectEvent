@@ -78,15 +78,19 @@ namespace ProjectEvent.UI.Controls.Action
             }
         }
         public event EventHandler OnClick;
+        public object InputDataModel { get; set; }
+
         private Grid Header;
         private Border Input;
         private Button ButtonRemove;
+        public ActionContainer ActionContainer { get; set; }
         public ActionItem()
         {
             DefaultStyleKey = typeof(ActionItem);
             var translateTransform = new TranslateTransform() { X = 0, Y = 0 };
             translateTransform.Changed += translateTransform_Changed;
             RenderTransform = translateTransform;
+            //SetDefautlInputData();
         }
 
         public override void OnApplyTemplate()
@@ -109,25 +113,47 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 return;
             }
-            if (Action.ParentID > 0)
+            if (Action.ActionType == ActionType.IFElse || Action.ActionType == ActionType.IFEnd)
             {
                 ActionName = $"{Action.ActionName}";
             }
             else
             {
+                //SetInputData();
                 Action item = new Action(Action.ID, GetInputs());
+                item.ActionContainer = ActionContainer;
                 ActionName = $"[{Action.ID}] {Action.ActionName}";
+                item.Data = InputDataModel;
                 Icon = Action.Icon;
                 Input.Child = item;
                 item.OnClick += Item_OnClick;
             }
-            if(Action.ActionType== ActionType.IFElse || Action.ActionType== ActionType.IFEnd)
+            if (Action.ActionType == ActionType.IFElse || Action.ActionType == ActionType.IFEnd)
             {
                 ButtonRemove.Visibility = Visibility.Collapsed;
             }
 
         }
-
+        //private void SetDefautlInputData()
+        //{
+        //    switch (Action.ActionType)
+        //    {
+        //        case ActionType.WriteFile:
+        //            InputDataModel = new WriteFileActionInputModel();
+        //            break;
+        //        case ActionType.IF:
+        //            InputDataModel = new IFActionInputModel();
+        //            break;
+        //    }
+        //}
+        /// <summary>
+        /// 获取输入数据
+        /// </summary>
+        /// <returns></returns>
+        public object GetInputData()
+        {
+            return InputDataModel;
+        }
         private void Item_OnClick(object sender, EventArgs e)
         {
             OnClick?.Invoke(sender, e);
@@ -143,11 +169,13 @@ namespace ProjectEvent.UI.Controls.Action
                     {
                         Title = "路径",
                         InputType = Types.InputType.Text,
+                        BindingName = "FilePath"
                     });
                     inputs.Add(new ActionInputModel()
                     {
                         Title = "内容",
-                        InputType = Types.InputType.Text
+                        InputType = Types.InputType.Text,
+                        BindingName = "Content"
                     });
                     break;
                 case ActionType.IF:
@@ -155,6 +183,7 @@ namespace ProjectEvent.UI.Controls.Action
                     {
                         Title = "如果",
                         InputType = Types.InputType.Text,
+                        BindingName="Left"
                     });
                     inputs.Add(new ActionInputModel()
                     {
@@ -163,11 +192,13 @@ namespace ProjectEvent.UI.Controls.Action
                         {
                             "等于",
                             "不等于",
-                        }
+                        },
+                        BindingName = "Condition"
                     });
                     inputs.Add(new ActionInputModel()
                     {
                         InputType = Types.InputType.Text,
+                        BindingName = "Right"
                     });
                     break;
             }

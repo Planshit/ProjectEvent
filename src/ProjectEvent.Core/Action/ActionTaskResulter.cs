@@ -1,8 +1,10 @@
 ﻿using ProjectEvent.Core.Action.Models;
+using ProjectEvent.Core.Action.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace ProjectEvent.Core.Action
 {
@@ -65,6 +67,38 @@ namespace ProjectEvent.Core.Action
                 }
             }
             return null;
+        }
+        /// <summary>
+        /// 通过输入字符串转换为最终执行返回结果
+        /// </summary>
+        /// <param name="taskid"></param>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public static string GetActionResultsString(int taskid, string content)
+        {
+            string result = content;
+            var taskResult = Get(taskid);
+            if (taskResult != null)
+            {
+
+                var variables = Regex.Matches(content, @"\{(?<id>[0-9]{1,5})\.(?<key>[a-zA-Z]{1,25})\}");
+                foreach (Match variable in variables)
+                {
+                    var id = variable.Groups["id"].Value;
+                    var key = variable.Groups["key"].Value;
+                    var actionResult = taskResult.Where(m => m.ID == int.Parse(id)).FirstOrDefault();
+                    if (actionResult != null)
+                    {
+                        int keyint = (int)Enum.Parse(typeof(CommonResultKeyType), key);
+                        if (actionResult.Result.ContainsKey(keyint))
+                        {
+                            result = result.Replace(variable.Value, actionResult.Result[keyint]);
+                        }
+                    }
+                }
+
+            }
+            return result;
         }
     }
 }

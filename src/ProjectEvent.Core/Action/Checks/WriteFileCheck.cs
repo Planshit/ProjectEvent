@@ -7,8 +7,8 @@ namespace ProjectEvent.Core.Action.Checks
 {
     public class WriteFileCheck : ICheck
     {
-        private readonly BaseParameterModel parameter;
-        public WriteFileCheck(BaseParameterModel parameter)
+        private readonly object parameter;
+        public WriteFileCheck(object parameter)
         {
             this.parameter = parameter;
         }

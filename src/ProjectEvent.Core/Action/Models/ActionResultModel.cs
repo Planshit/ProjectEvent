@@ -8,6 +8,7 @@ namespace ProjectEvent.Core.Action.Models
     {
         public int ID { get; set; }
 
-        public Dictionary<int, ActionResultValueModel> Result { get; set; }
+        public Dictionary<int, string> Result { get; set; }
+        //public Dictionary<int, ActionResultValueModel> Result { get; set; }
     }
 }

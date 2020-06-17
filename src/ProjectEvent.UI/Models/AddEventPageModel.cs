@@ -17,7 +17,7 @@ namespace ProjectEvent.UI.Models
             get { return Conditions_; }
             set { Conditions_ = value; OnPropertyChanged(); }
         }
-        public ObservableCollection<ActionItemModel> Actions { get; set; }
+        //public ObservableCollection<ActionItemModel> Actions { get; set; }
         public ObservableCollection<ItemModel> Events { get; set; }
         public ObservableCollection<ComBoxActionModel> ComBoxActions { get; set; }
 

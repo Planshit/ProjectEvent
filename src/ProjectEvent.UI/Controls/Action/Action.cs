@@ -12,6 +12,9 @@ namespace ProjectEvent.UI.Controls.Action
         private List<ActionInputModel> inputs;
         private StackPanel container;
         private int ID;
+        public object Data { get; set; }
+
+        public ActionContainer ActionContainer { get; set; }
         public Action(int ID, List<ActionInputModel> inputs)
         {
             DefaultStyleKey = typeof(Action);
@@ -42,6 +45,9 @@ namespace ProjectEvent.UI.Controls.Action
                 label.VerticalAlignment = System.Windows.VerticalAlignment.Center;
                 var input = new ActionInput();
                 input.ActionID = ID;
+                input.Data = Data;
+                input.ActionContainer = ActionContainer;
+                input.BindingName = item.BindingName;
                 input.InputType = item.InputType;
                 input.SelectItems = item.SelectItems;
                 input.VerticalAlignment = System.Windows.VerticalAlignment.Center;

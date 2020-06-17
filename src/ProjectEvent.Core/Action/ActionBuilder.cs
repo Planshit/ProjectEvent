@@ -12,8 +12,8 @@ namespace ProjectEvent.Core.Action
     public class ActionBuilder
     {
         private readonly ActionType actionType;
-        private readonly BaseParameterModel parameter;
-        public ActionBuilder(ActionType actionType, BaseParameterModel parameter)
+        private readonly object parameter;
+        public ActionBuilder(ActionType actionType, object parameter)
         {
             this.actionType = actionType;
             this.parameter = parameter;

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ProjectEvent.Core.Action.Models
 {
-    public class WriteFileActionParameterModel : BaseParameterModel
+    public class WriteFileActionParameterModel
     {
         public string FilePath { get; set; }
 

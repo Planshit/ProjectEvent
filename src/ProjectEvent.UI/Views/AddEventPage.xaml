@@ -42,19 +42,20 @@
                                         SelectedItem="{Binding ComBoxSelectedAction}"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="20">
-                                    <Button Command="{Binding AddActionCommand}" Width="120" Height="30" Content="确定"/>
+                                    <Button Command="{Binding AddActionCommand}" CommandParameter="{Binding ElementName=container}" Width="120" Height="30" Content="确定"/>
                                     <Button Command="{Binding ActionDialogStateCommand}" CommandParameter="false" Width="120" Height="30" Content="取消" Margin="10,0,0,0"/>
                                 </StackPanel>
                             </Grid>
                         </Border>
                         <Border Background="Black" Opacity=".5"/>
                     </Grid>
-                    <Action:ActionContainer Grid.Row="1" Items="{Binding Actions,Mode=TwoWay}" AddActionCommand="{Binding ShowActionDialogCommand}"/>
+                    <Action:ActionContainer x:Name="container" Grid.Row="1" AddActionCommand="{Binding ShowActionDialogCommand}"/>
                 </Grid>
             </TabItem>
         </TabControl>
         <StackPanel Orientation="Horizontal" Grid.Row="1">
-            <Button Content="Add" Width="120" Height="30" Command="{Binding AddCommand}"/>
+            <Button Content="Export" Width="120" Height="30" Command="{Binding AddCommand}" CommandParameter="{Binding ElementName=container}"/>
+            <Button Content="Import" Width="120" Height="30" Command="{Binding ImportCommand}" CommandParameter="{Binding ElementName=container}"/>
         </StackPanel>
     </Grid>
 </Page>

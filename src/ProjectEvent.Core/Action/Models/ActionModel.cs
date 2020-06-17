@@ -20,6 +20,7 @@ namespace ProjectEvent.Core.Action.Models
         /// <summary>
         /// 操作参数
         /// </summary>
-        public BaseParameterModel Parameter { get; set; }
+        public object Parameter { get; set; }
+        //public BaseParameterModel Parameter { get; set; }
     }
 }

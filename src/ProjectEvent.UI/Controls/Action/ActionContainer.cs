@@ -1,4 +1,8 @@
-﻿using ProjectEvent.UI.Models.DataModels;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ProjectEvent.Core.Action.Models;
+using ProjectEvent.UI.Controls.Action.Models;
+using ProjectEvent.UI.Models.DataModels;
 using ProjectEvent.UI.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -29,62 +33,62 @@ namespace ProjectEvent.UI.Controls.Action
                 typeof(ICommand),
                 typeof(ActionContainer));
 
-        protected static PropertyChangedCallback ItemsPropertyChangedCallback = new PropertyChangedCallback(ItemsPropertyChanged);
+        //protected static PropertyChangedCallback ItemsPropertyChangedCallback = new PropertyChangedCallback(ItemsPropertyChanged);
 
-        public static DependencyProperty ItemsProperty = DependencyProperty.RegisterAttached("Items", typeof(ObservableCollection<ActionItemModel>), typeof(ActionContainer), new PropertyMetadata(null, ItemsPropertyChangedCallback));
+        //public static DependencyProperty ItemsProperty = DependencyProperty.RegisterAttached("Items", typeof(ObservableCollection<ActionItemModel>), typeof(ActionContainer), new PropertyMetadata(null, ItemsPropertyChangedCallback));
 
-        private static void ItemsPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            var control = (ActionContainer)sender;
-            if (control == null)
-            {
-                return;
-            }
-            control.UnregisterItems(e.OldValue as ObservableCollection<ActionItemModel>);
-            control.RegisterItems(e.NewValue as ObservableCollection<ActionItemModel>);
-        }
+        //private static void ItemsPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        //{
+        //    var control = (ActionContainer)sender;
+        //    if (control == null)
+        //    {
+        //        return;
+        //    }
+        //    control.UnregisterItems(e.OldValue as ObservableCollection<ActionItemModel>);
+        //    control.RegisterItems(e.NewValue as ObservableCollection<ActionItemModel>);
+        //}
 
-        public ObservableCollection<ActionItemModel> Items
-        {
-            get
-            {
-                return (ObservableCollection<ActionItemModel>)GetValue(ItemsProperty);
-            }
-            set
-            {
-                SetValue(ItemsProperty, value);
-            }
-        }
+        //public ObservableCollection<ActionItemModel> Items
+        //{
+        //    get
+        //    {
+        //        return (ObservableCollection<ActionItemModel>)GetValue(ItemsProperty);
+        //    }
+        //    set
+        //    {
+        //        SetValue(ItemsProperty, value);
+        //    }
+        //}
 
-        protected void UnregisterItems(ObservableCollection<ActionItemModel> items)
-        {
-            if (items == null)
-            {
-                return;
-            }
-            items.CollectionChanged -= ItemsChanged;
-        }
+        //protected void UnregisterItems(ObservableCollection<ActionItemModel> items)
+        //{
+        //    if (items == null)
+        //    {
+        //        return;
+        //    }
+        //    items.CollectionChanged -= ItemsChanged;
+        //}
 
-        protected void RegisterItems(ObservableCollection<ActionItemModel> items)
-        {
-            if (items == null)
-            {
-                return;
-            }
-            items.CollectionChanged += ItemsChanged;
-        }
+        //protected void RegisterItems(ObservableCollection<ActionItemModel> items)
+        //{
+        //    if (items == null)
+        //    {
+        //        return;
+        //    }
+        //    items.CollectionChanged += ItemsChanged;
+        //}
 
-        protected virtual void ItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                foreach (var item in e.NewItems)
-                {
-                    var itemAction = item as ActionItemModel;
-                    AddItem(itemAction);
-                }
-            }
-        }
+        //protected virtual void ItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        //{
+        //    if (e.Action == NotifyCollectionChangedAction.Add)
+        //    {
+        //        foreach (var item in e.NewItems)
+        //        {
+        //            var itemAction = item as ActionItemModel;
+        //            AddItem(itemAction);
+        //        }
+        //    }
+        //}
 
         #endregion
 
@@ -92,12 +96,15 @@ namespace ProjectEvent.UI.Controls.Action
         private Grid ActionPanel;
         private Point oldPoint;
         private Button AddActionBtn;
+        private int count = 0;
         //控件列表
-        private List<ActionItem> actionItems;
+        public List<ActionItem> ActionItems { get; set; }
         /// <summary>
         /// 等待添加入容器的控件列表
         /// </summary>
         private List<ActionItemModel> appendList;
+        private List<object> appendInputDataList;
+
         private bool isRendering;
         public Command RemoveCommand { get; set; }
         private double oldMoveItemY;
@@ -110,11 +117,11 @@ namespace ProjectEvent.UI.Controls.Action
         {
             DefaultStyleKey = typeof(ActionContainer);
             oldPoint = new Point();
-            actionItems = new List<ActionItem>();
+            ActionItems = new List<ActionItem>();
             appendList = new List<ActionItemModel>();
             ifActionItems = new List<ActionItem>();
             RemoveCommand = new Command(new Action<object>(OnRemoveCommand));
-
+            appendInputDataList = new List<object>();
             isRendering = false;
         }
 
@@ -138,34 +145,38 @@ namespace ProjectEvent.UI.Controls.Action
         }
 
         #region 添加控件
-        private void AddItem(ActionItemModel action)
+        public void AddItem(ActionItemModel action, object inputdata = null)
         {
             if (!appendList.Contains(action))
             {
                 appendList.Add(action);
+                appendInputDataList.Add(inputdata);
+                count++;
             }
 
             if (isRendering)
             {
                 return;
             }
-            AddItemControl(action);
+            AddItemControl(action, inputdata);
         }
-        private void AddItemControl(ActionItemModel action)
+        private void AddItemControl(ActionItemModel action, object inputdata = null)
         {
             isRendering = true;
             double Y = 0;
 
-            if (actionItems.Count > 0)
+            if (ActionItems.Count > 0)
             {
-                var lastItem = actionItems.Last();
+                var lastItem = ActionItems.Last();
                 var lastItemTTF = lastItem.RenderTransform as TranslateTransform;
                 Y = lastItemTTF.Y + lastItem.ActualHeight;
             }
 
             var item = new ActionItem();
+            item.ActionContainer = this;
             item.DataContext = this;
             item.ID = action.ID;
+            item.InputDataModel = inputdata == null ? GetCreateDefaultInputData(action.ActionType) : inputdata;
             item.Action = action;
             item.VerticalAlignment = VerticalAlignment.Top;
             var ttf = item.RenderTransform as TranslateTransform;
@@ -193,26 +204,45 @@ namespace ProjectEvent.UI.Controls.Action
                 }
 
                 //继续队列
-                appendList.Remove(action);
+                //appendList.Remove(action);
+                appendList.RemoveAt(0);
+                appendInputDataList.RemoveAt(0);
+
                 isRendering = false;
                 if (appendList.Count > 0)
                 {
-                    AddItem(appendList[0]);
+                    AddItem(appendList[0], appendInputDataList[0]);
                 }
             };
             ActionPanel.Children.Add(item);
-            actionItems.Add(item);
+            ActionItems.Add(item);
             SortAction();
+        }
+
+        private object GetCreateDefaultInputData(UI.Types.ActionType actionType)
+        {
+            object result = null;
+            switch (actionType)
+            {
+                case UI.Types.ActionType.IF:
+                    result = new IFActionInputModel();
+                    break;
+                case UI.Types.ActionType.WriteFile:
+                    result = new WriteFileActionInputModel();
+
+                    break;
+            }
+            return result;
         }
         #endregion
 
         #region 移除控件
         private void Remove(int id)
         {
-            var action = actionItems.Where(m => m.Action.ID == id).FirstOrDefault();
+            var action = ActionItems.Where(m => m.Action.ID == id).FirstOrDefault();
             if (action.Action.ActionType == UI.Types.ActionType.IF)
             {
-                var actions = actionItems.Where(m => m.Action.ID == id || m.Action.ParentID == id).ToList();
+                var actions = ActionItems.Where(m => m.Action.ID == id || m.Action.ParentID == id).ToList();
                 foreach (var item in actions)
                 {
                     Remove(item);
@@ -226,9 +256,10 @@ namespace ProjectEvent.UI.Controls.Action
         private void Remove(ActionItem item)
         {
             ActionPanel.Children.Remove(item);
-            actionItems.Remove(item);
+            ActionItems.Remove(item);
             SortAction();
             UpdateActionsLocation();
+            count--;
         }
         #endregion
 
@@ -238,16 +269,16 @@ namespace ProjectEvent.UI.Controls.Action
         /// </summary>
         private void SortAction()
         {
-            actionItems = actionItems.OrderBy(m => m.Y).ToList();
+            ActionItems = ActionItems.OrderBy(m => m.Y).ToList();
 
-            for (int i = 0; i < actionItems.Count; i++)
+            for (int i = 0; i < ActionItems.Count; i++)
             {
-                var item = Items.Where(m => m.ID == actionItems[i].ID).FirstOrDefault();
-                if (item != null)
-                {
-                    item.Index = i;
-                }
-                actionItems[i].Action.Index = i;
+                //var item = Items.Where(m => m.ID == actionItems[i].ID).FirstOrDefault();
+                //if (item != null)
+                //{
+                //    item.Index = i;
+                //}
+                ActionItems[i].Action.Index = i;
             }
             ItemIndexChanged?.Invoke(this, null);
         }
@@ -261,7 +292,7 @@ namespace ProjectEvent.UI.Controls.Action
             action.Y = moveY;
 
             //查找相邻的action
-            var items = actionItems.Where(m => m.Y > moveY).OrderBy(m => m.Y);
+            var items = ActionItems.Where(m => m.Y > moveY).OrderBy(m => m.Y);
             //相邻的action
             ActionItem item = null;
             //移动的距离
@@ -275,7 +306,7 @@ namespace ProjectEvent.UI.Controls.Action
                 //向上拖动
                 moveUp = true;
                 //向上拖动，查找小于移动位置的action
-                items = actionItems.Where(m => m.Y < moveY).OrderBy(m => m.Y);
+                items = ActionItems.Where(m => m.Y < moveY).OrderBy(m => m.Y);
             }
             if (items.Count() > 0)
             {
@@ -312,7 +343,7 @@ namespace ProjectEvent.UI.Controls.Action
 
                         //更新Y
                         item.Y = (item.RenderTransform as TranslateTransform).Y;
-                        if (actionItems.Where(m => m.Y < item.Y && m.Visibility != Visibility.Hidden && m != item).ToList().Count() == 0)
+                        if (ActionItems.Where(m => m.Y < item.Y && m.Visibility != Visibility.Hidden && m != item).ToList().Count() == 0)
                         {
                             (item.RenderTransform as TranslateTransform).Y = 0;
                             item.Y = 0;
@@ -336,7 +367,7 @@ namespace ProjectEvent.UI.Controls.Action
             //调整控件自身的位置对齐
 
             //查找当前控件的上一个控件
-            var topActionItems = actionItems.
+            var topActionItems = ActionItems.
                 Where(
                 m => m.Visibility != Visibility.Hidden &&
                 m.Y < actionPoint.Y
@@ -385,7 +416,7 @@ namespace ProjectEvent.UI.Controls.Action
             if (action.Action.ActionType == UI.Types.ActionType.IF)
             {
                 //查找if action下方的action
-                var bottomActions = actionItems.Where(m => m.Y > actionPoint.Y && m.Visibility != Visibility.Hidden).OrderBy(m => m.Y).ToList();
+                var bottomActions = ActionItems.Where(m => m.Y > actionPoint.Y && m.Visibility != Visibility.Hidden).OrderBy(m => m.Y).ToList();
 
                 //调整子级的位置
                 for (int i = 0; i < ifActionItems.Count; i++)
@@ -447,14 +478,14 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 //移动的是if action时需要将它的子级全部隐藏
                 int start = action.Action.Index + 1;
-                int end = actionItems.Where(m => m.Action.ParentID == action.Action.ID).Last().Action.Index + 1;
+                int end = ActionItems.Where(m => m.Action.ParentID == action.Action.ID).Last().Action.Index + 1;
                 for (int i = start; i < end; i++)
                 {
-                    actionItems[i].Visibility = Visibility.Hidden;
-                    actionItems[i].Margin = new Thickness(0);
-                    ifActionItems.Add(actionItems[i]);
+                    ActionItems[i].Visibility = Visibility.Hidden;
+                    ActionItems[i].Margin = new Thickness(0);
+                    ifActionItems.Add(ActionItems[i]);
                 }
-                var bottomItems = actionItems.Where(m => m.Y > action.Y && m.Visibility != Visibility.Hidden).ToList();
+                var bottomItems = ActionItems.Where(m => m.Y > action.Y && m.Visibility != Visibility.Hidden).ToList();
                 for (int i = 0; i < bottomItems.Count; i++)
                 {
                     var item = bottomItems[i];
@@ -482,7 +513,7 @@ namespace ProjectEvent.UI.Controls.Action
         {
             var actionPoint = action.RenderTransform as TranslateTransform;
             //查找当前控件的上一个控件
-            var topActionItems = actionItems.
+            var topActionItems = ActionItems.
                 Where(
                 m => m.Visibility != Visibility.Hidden &&
                 m.Y < actionPoint.Y
@@ -506,7 +537,7 @@ namespace ProjectEvent.UI.Controls.Action
 
 
             //调整间距
-            var ifactions = actionItems.Where(m => m.Action.ID == action.Action.ID || m.Action.ParentID == action.Action.ID).OrderBy(m => m.Y).ToList();
+            var ifactions = ActionItems.Where(m => m.Action.ID == action.Action.ID || m.Action.ParentID == action.Action.ID).OrderBy(m => m.Y).ToList();
             foreach (var ifaction in ifactions)
             {
                 var newmarigin = addMargin;
@@ -528,7 +559,7 @@ namespace ProjectEvent.UI.Controls.Action
         #region 调整所有action位置
         private void UpdateActionsLocation()
         {
-            var actions = actionItems.OrderBy(m => m.Y).ToList();
+            var actions = ActionItems.OrderBy(m => m.Y).ToList();
 
             for (int i = 0; i < actions.Count; i++)
             {
@@ -608,6 +639,247 @@ namespace ProjectEvent.UI.Controls.Action
         }
         #endregion
 
-        
+        #region 生成actions
+        public string GenerateActionsJson()
+        {
+            SortAction();
+            var actions = GenerateActions(ActionItems);
+            return JsonConvert.SerializeObject(actions);
+            //Debug.WriteLine(JsonConvert.SerializeObject(actions));
+        }
+
+        /// <summary>
+        /// 将list中的action生成可执行的actionlist
+        /// </summary>
+        /// <param name="actionItems"></param>
+        private List<Core.Action.Models.ActionModel> GenerateActions(List<ActionItem> actionItems)
+        {
+            var actions = new List<Core.Action.Models.ActionModel>();
+            int ifID = 0;
+            foreach (var action in actionItems)
+            {
+                if (ifID == 0)
+                {
+                    actions.Add(GenerateAction(action));
+                }
+                else
+                {
+                    if (ifID != action.Action.ParentID)
+                    {
+                        actions.Add(GenerateAction(action));
+                    }
+                }
+
+                if (action.Action.ActionType == UI.Types.ActionType.IF)
+                {
+                    ifID = action.Action.ID;
+                }
+            }
+            return actions;
+        }
+        /// <summary>
+        /// 生成普通action
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        private Core.Action.Models.ActionModel GenerateAction(ActionItem action)
+        {
+            var result = new Core.Action.Models.ActionModel();
+            if (action.Action.ActionType == UI.Types.ActionType.IF)
+            {
+                result = GenerateIFAction(action);
+            }
+            else
+            {
+                switch (action.Action.ActionType)
+                {
+                    case UI.Types.ActionType.WriteFile:
+                        var inputdata = action.GetInputData() as WriteFileActionInputModel;
+                        result.Action = Core.Action.Types.ActionType.WriteFile;
+                        result.Parameter = new WriteFileActionParameterModel()
+                        {
+                            FilePath = inputdata.FilePath,
+                            Content = inputdata.Content
+                        };
+                        result.Num = 1;
+                        break;
+                }
+            }
+            return result;
+        }
+
+
+        /// <summary>
+        /// 生成if action
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        private Core.Action.Models.ActionModel GenerateIFAction(ActionItem action)
+        {
+            //action input
+            var inputdata = action.GetInputData() as IFActionInputModel;
+
+            //else item
+            var elseActionItem = ActionItems.Where(m => m.Action.ParentID == action.Action.ID && m.Action.ActionType == UI.Types.ActionType.IFElse).FirstOrDefault();
+            //end item
+            var endActionItem = ActionItems.Where(m => m.Action.ParentID == action.Action.ID && m.Action.ActionType == UI.Types.ActionType.IFEnd).FirstOrDefault();
+            //pass actions
+            var passActionItems = ActionItems.Where(m => m.Action.ParentID == action.Action.ID && m.Y > action.Y && m.Y < elseActionItem.Y).ToList();
+            var passActions = GenerateActions(passActionItems);
+
+            //unpass actions
+            var unpassActionItems = ActionItems.Where(m => m.Action.ParentID == action.Action.ID && m.Y > elseActionItem.Y && m.Y < endActionItem.Y).ToList();
+            var unpassActions = GenerateActions(unpassActionItems);
+
+            var result = new Core.Action.Models.ActionModel()
+            {
+                Action = Core.Action.Types.ActionType.IF,
+                Parameter = new Core.Action.Models.IFActionParameterModel()
+                {
+                    LeftInput = inputdata.Left,
+                    RightInput = inputdata.Right,
+                    Condition = GetIFActioinCondition(inputdata.Condition.ID),
+                    PassActions = passActions,
+                    NoPassActions = unpassActions
+                },
+                Num = 1
+            };
+            return result;
+        }
+        private Core.Action.Types.IFActionConditionType GetIFActioinCondition(int id)
+        {
+            var result = Core.Action.Types.IFActionConditionType.Equal;
+            switch (id)
+            {
+                case 1:
+                    result = Core.Action.Types.IFActionConditionType.Equal;
+                    break;
+                case 2:
+                    result = Core.Action.Types.IFActionConditionType.UnEqual;
+                    break;
+            }
+            return result;
+        }
+        #endregion
+
+        #region 导入actions
+        public void ImportActionsJson(string json)
+        {
+            List<Core.Action.Models.ActionModel> actions = JsonConvert.DeserializeObject<List<Core.Action.Models.ActionModel>>(json);
+            if (actions == null)
+            {
+                return;
+            }
+            foreach (var action in actions)
+            {
+                ImportAction(action);
+            }
+        }
+
+        private void ImportAction(Core.Action.Models.ActionModel action, int parentID = 0)
+        {
+            if (action.Action == Core.Action.Types.ActionType.IF)
+            {
+                ImportIFAction(action);
+                return;
+            }
+            var actionModel = new ActionItemModel();
+            actionModel.ID = GetCreateActionID();
+            actionModel.ParentID = parentID;
+            object inputdata = null;
+            switch (action.Action)
+            {
+                case Core.Action.Types.ActionType.WriteFile:
+                    actionModel.ActionType = UI.Types.ActionType.WriteFile;
+                    actionModel.ActionName = "创建文件";
+                    actionModel.Icon = "\xF2E6";
+                    var parameterjobject = action.Parameter as JObject;
+                    var parameter = parameterjobject.ToObject<WriteFileActionParameterModel>();
+                    //var parameter =JsonConvert.DeserializeObject(action.Parameter) as WriteFileActionParameterModel;
+                    if (parameter != null)
+                    {
+                        inputdata = new WriteFileActionInputModel()
+                        {
+                            FilePath = parameter.FilePath,
+                            Content = parameter.Content
+                        };
+                    }
+                    break;
+            }
+            AddItem(actionModel, inputdata);
+        }
+        private void ImportIFAction(Core.Action.Models.ActionModel action)
+        {
+            if (action.Action != Core.Action.Types.ActionType.IF)
+            {
+                return;
+            }
+            //创建if action
+            var parameterjobject = action.Parameter as JObject;
+            var ifParameter = parameterjobject.ToObject<IFActionParameterModel>();
+
+            //var ifParameter = action.Parameter as IFActionParameterModel;
+            var ifActionModel = new ActionItemModel();
+            ifActionModel.ID = GetCreateActionID();
+            ifActionModel.ActionName = "判断";
+            ifActionModel.ActionType = UI.Types.ActionType.IF;
+            ifActionModel.Icon = "\xE9D4";
+            var ifActionInputData = new IFActionInputModel();
+            ifActionInputData.Left = ifParameter.LeftInput;
+            ifActionInputData.Right = ifParameter.RightInput;
+            ifActionInputData.Condition = GetComboxModel(ifParameter.Condition);
+            AddItem(ifActionModel);
+            //创建pass子级
+            if (ifParameter.PassActions.Count > 0)
+            {
+                foreach (var passaction in ifParameter.PassActions)
+                {
+                    ImportAction(passaction, ifActionModel.ID);
+                }
+            }
+            //创建else action
+            var elseActionModel = new ActionItemModel();
+            elseActionModel.ID = GetCreateActionID();
+            elseActionModel.ActionName = "否则";
+            elseActionModel.ActionType = UI.Types.ActionType.IFElse;
+            elseActionModel.ParentID = ifActionModel.ID;
+            AddItem(elseActionModel);
+            //创建unpass子级
+            if (ifParameter.NoPassActions.Count > 0)
+            {
+                foreach (var passaction in ifParameter.NoPassActions)
+                {
+                    ImportAction(passaction, ifActionModel.ID);
+                }
+            }
+            //创建end action
+            var endActionModel = new ActionItemModel();
+            endActionModel.ID = GetCreateActionID();
+            endActionModel.ActionName = "判断结束";
+            endActionModel.ParentID = ifActionModel.ID;
+            endActionModel.ActionType = UI.Types.ActionType.IFEnd;
+            AddItem(endActionModel);
+        }
+        public int GetCreateActionID()
+        {
+            return count + 1;
+        }
+        private ComBoxModel GetComboxModel(Core.Action.Types.IFActionConditionType condition)
+        {
+            var result = new ComBoxModel();
+            switch (condition)
+            {
+                case Core.Action.Types.IFActionConditionType.Equal:
+                    result.ID = 1;
+                    result.DisplayName = "等于";
+                    break;
+                case Core.Action.Types.IFActionConditionType.UnEqual:
+                    result.ID = 2;
+                    result.DisplayName = "不等于";
+                    break;
+            }
+            return result;
+        }
+        #endregion
     }
 }

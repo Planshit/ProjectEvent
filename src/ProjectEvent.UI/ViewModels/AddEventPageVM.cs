@@ -1,9 +1,11 @@
-﻿using ProjectEvent.UI.Controls.InputGroup.Models;
+﻿using ProjectEvent.UI.Controls.Action;
+using ProjectEvent.UI.Controls.InputGroup.Models;
 using ProjectEvent.UI.Models;
 using ProjectEvent.UI.Models.ConditionModels;
 using ProjectEvent.UI.Models.DataModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Controls;
@@ -17,10 +19,10 @@ namespace ProjectEvent.UI.ViewModels
         public Command AddCommand { get; set; }
         public Command ActionDialogStateCommand { get; set; }
         public Command ShowActionDialogCommand { get; set; }
-
+        public Command ImportCommand { get; set; }
         public AddEventPageVM()
         {
-            Actions = new System.Collections.ObjectModel.ObservableCollection<ActionItemModel>();
+            //Actions = new System.Collections.ObjectModel.ObservableCollection<ActionItemModel>();
             Events = new System.Collections.ObjectModel.ObservableCollection<Controls.ItemSelect.Models.ItemModel>();
             ComBoxActions = new System.Collections.ObjectModel.ObservableCollection<ComBoxActionModel>();
 
@@ -28,7 +30,7 @@ namespace ProjectEvent.UI.ViewModels
             AddCommand = new Command(new Action<object>(OnAddCommand));
             ActionDialogStateCommand = new Command(new Action<object>(OnActionDialogStateCommand));
             ShowActionDialogCommand = new Command(new Action<object>(OnShowActionDialogCommand));
-
+            ImportCommand = new Command(new Action<object>(OnImportCommandCommand));
             StepIndex = 0;
             AddACtionDialogVisibility = System.Windows.Visibility.Hidden;
             PropertyChanged += AddEventPageVM_PropertyChanged;
@@ -36,6 +38,13 @@ namespace ProjectEvent.UI.ViewModels
             InitEvents();
             InitConditions();
             InitComboxAcions();
+        }
+
+        private void OnImportCommandCommand(object obj)
+        {
+            var a = ConditionData;
+            var container = obj as ActionContainer;
+            container.ImportActionsJson(File.ReadAllText("d:\\action.json"));
         }
 
         private void OnShowActionDialogCommand(object obj)
@@ -58,7 +67,8 @@ namespace ProjectEvent.UI.ViewModels
         private void OnAddCommand(object obj)
         {
             var a = ConditionData;
-
+            var container = obj as ActionContainer;
+            File.WriteAllText("d:\\action.json", container.GenerateActionsJson());
         }
 
         private void AddEventPageVM_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -75,7 +85,7 @@ namespace ProjectEvent.UI.ViewModels
         {
             StepIndex = 1;
             InitConditions();
-            Actions.Clear();
+            //Actions.Clear();
         }
         private void InitEvents()
         {
@@ -134,20 +144,21 @@ namespace ProjectEvent.UI.ViewModels
 
             Conditions = cds;
         }
-        private int CreateActionID()
-        {
-            //int count = Actions.Where(m => m.ParentID == 0).Count();
+        //private int CreateActionID()
+        //{
+        //    //int count = Actions.Where(m => m.ParentID == 0).Count();
 
-            return Actions.Count + 1;
-        }
+        //    return Actions.Count + 1;
+        //}
         private void OnAddActionCommand(object obj)
         {
+            var container = obj as ActionContainer;
             switch (ComBoxSelectedAction.ID)
             {
                 case 1:
-                    Actions.Add(new ActionItemModel()
+                    container.AddItem(new ActionItemModel()
                     {
-                        ID = CreateActionID(),
+                        ID = container.GetCreateActionID(),
                         ActionName = "写文件",
                         ActionType = Types.ActionType.WriteFile,
                         Icon = "\xF2E6",
@@ -155,24 +166,24 @@ namespace ProjectEvent.UI.ViewModels
                     });
                     break;
                 case 2:
-                    int id = CreateActionID();
-                    Actions.Add(new ActionItemModel()
+                    int id = container.GetCreateActionID();
+                    container.AddItem(new ActionItemModel()
                     {
                         ID = id,
                         ActionName = "判断",
                         ActionType = Types.ActionType.IF,
                         Icon = "\xE9D4",
                     });
-                    Actions.Add(new ActionItemModel()
+                    container.AddItem(new ActionItemModel()
                     {
-                        ID = CreateActionID(),
+                        ID = container.GetCreateActionID(),
                         ActionName = "否则",
                         ActionType = Types.ActionType.IFElse,
                         ParentID = id
                     });
-                    Actions.Add(new ActionItemModel()
+                    container.AddItem(new ActionItemModel()
                     {
-                        ID = CreateActionID(),
+                        ID = container.GetCreateActionID(),
                         ActionName = "判断结束",
                         ActionType = Types.ActionType.IFEnd,
                         ParentID = id
