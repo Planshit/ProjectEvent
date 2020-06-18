@@ -20,10 +20,7 @@ namespace ProjectEvent.Core.Action
                 Task.Factory.StartNew(() =>
                 {
                     int taskID = _index++;
-
-                    int actionID = 0;
-
-                    InvokeAction(taskID, ev.Actions, actionID);
+                    InvokeAction(taskID, ev.Actions);
 
                 });
                 isSuccess = true;
@@ -39,14 +36,12 @@ namespace ProjectEvent.Core.Action
             return isSuccess;
         }
 
-        public static void InvokeAction(int taskID, IEnumerable<ActionModel> actions, int actionID = 0)
+        public static void InvokeAction(int taskID, IEnumerable<ActionModel> actions)
         {
             foreach (var action in actions)
             {
-                actionID++;
-
                 var actionBuilder = new ActionBuilder(action.Action, action.Parameter);
-                var actionTask = actionBuilder.Builer(taskID, actionID);
+                var actionTask = actionBuilder.Builer(taskID, action.ID);
 
                 for (int i = 0; i < action.Num; i++)
                 {

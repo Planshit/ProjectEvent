@@ -8,6 +8,10 @@ namespace ProjectEvent.Core.Action.Models
     public class ActionModel
     {
         /// <summary>
+        /// action id
+        /// </summary>
+        public int ID { get; set; }
+        /// <summary>
         /// 执行次数
         /// </summary>
         public int Num { get; set; }

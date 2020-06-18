@@ -96,7 +96,7 @@ namespace ProjectEvent.UI.Controls.Action
         private Grid ActionPanel;
         private Point oldPoint;
         private Button AddActionBtn;
-        private int count = 0;
+        private int importCount = 0;
         //控件列表
         public List<ActionItem> ActionItems { get; set; }
         /// <summary>
@@ -151,7 +151,6 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 appendList.Add(action);
                 appendInputDataList.Add(inputdata);
-                count++;
             }
 
             if (isRendering)
@@ -213,6 +212,10 @@ namespace ProjectEvent.UI.Controls.Action
                 {
                     AddItem(appendList[0], appendInputDataList[0]);
                 }
+                else
+                {
+                    ResetAllActionsMarigin();
+                }
             };
             ActionPanel.Children.Add(item);
             ActionItems.Add(item);
@@ -225,10 +228,18 @@ namespace ProjectEvent.UI.Controls.Action
             switch (actionType)
             {
                 case UI.Types.ActionType.IF:
-                    result = new IFActionInputModel();
+                    result = new IFActionInputModel()
+                    {
+                        Condition = GetComboxModel(Core.Action.Types.IFActionConditionType.Equal)
+                    };
+
                     break;
                 case UI.Types.ActionType.WriteFile:
-                    result = new WriteFileActionInputModel();
+                    result = new WriteFileActionInputModel()
+                    {
+                        FilePath = "",
+                        Content = ""
+                    };
 
                     break;
             }
@@ -242,7 +253,8 @@ namespace ProjectEvent.UI.Controls.Action
             var action = ActionItems.Where(m => m.Action.ID == id).FirstOrDefault();
             if (action.Action.ActionType == UI.Types.ActionType.IF)
             {
-                var actions = ActionItems.Where(m => m.Action.ID == id || m.Action.ParentID == id).ToList();
+                var endaction = ActionItems.Where(m => m.Action.ParentID == id && m.Action.ActionType == UI.Types.ActionType.IFEnd).FirstOrDefault();
+                var actions = ActionItems.Where(m => m.Y >= action.Y && m.Y <= endaction.Y).ToList();
                 foreach (var item in actions)
                 {
                     Remove(item);
@@ -259,7 +271,6 @@ namespace ProjectEvent.UI.Controls.Action
             ActionItems.Remove(item);
             SortAction();
             UpdateActionsLocation();
-            count--;
         }
         #endregion
 
@@ -556,6 +567,18 @@ namespace ProjectEvent.UI.Controls.Action
         }
         #endregion
 
+        #region 调整所有action的间距
+        private void ResetAllActionsMarigin()
+        {
+            foreach (var item in ActionItems)
+            {
+                if (item.Action.ActionType == UI.Types.ActionType.IF && item.Action.ParentID == 0)
+                {
+                    ResetIfActionMargin(item);
+                }
+            }
+        }
+        #endregion
         #region 调整所有action位置
         private void UpdateActionsLocation()
         {
@@ -660,13 +683,21 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 if (ifID == 0)
                 {
-                    actions.Add(GenerateAction(action));
+                    var actionData = GenerateAction(action);
+                    if (actionData != null)
+                    {
+                        actions.Add(actionData);
+                    }
                 }
                 else
                 {
                     if (ifID != action.Action.ParentID)
                     {
-                        actions.Add(GenerateAction(action));
+                        var actionData = GenerateAction(action);
+                        if (actionData != null)
+                        {
+                            actions.Add(actionData);
+                        }
                     }
                 }
 
@@ -684,7 +715,7 @@ namespace ProjectEvent.UI.Controls.Action
         /// <returns></returns>
         private Core.Action.Models.ActionModel GenerateAction(ActionItem action)
         {
-            var result = new Core.Action.Models.ActionModel();
+            Core.Action.Models.ActionModel result = null;
             if (action.Action.ActionType == UI.Types.ActionType.IF)
             {
                 result = GenerateIFAction(action);
@@ -694,8 +725,10 @@ namespace ProjectEvent.UI.Controls.Action
                 switch (action.Action.ActionType)
                 {
                     case UI.Types.ActionType.WriteFile:
+                        result = new Core.Action.Models.ActionModel();
                         var inputdata = action.GetInputData() as WriteFileActionInputModel;
                         result.Action = Core.Action.Types.ActionType.WriteFile;
+                        result.ID = action.Action.ID;
                         result.Parameter = new WriteFileActionParameterModel()
                         {
                             FilePath = inputdata.FilePath,
@@ -733,12 +766,13 @@ namespace ProjectEvent.UI.Controls.Action
 
             var result = new Core.Action.Models.ActionModel()
             {
+                ID = action.Action.ID,
                 Action = Core.Action.Types.ActionType.IF,
                 Parameter = new Core.Action.Models.IFActionParameterModel()
                 {
                     LeftInput = inputdata.Left,
                     RightInput = inputdata.Right,
-                    Condition = GetIFActioinCondition(inputdata.Condition.ID),
+                    Condition = GetIFActioinCondition(inputdata.Condition == null ? 1 : inputdata.Condition.ID),
                     PassActions = passActions,
                     NoPassActions = unpassActions
                 },
@@ -770,9 +804,37 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 return;
             }
+            //先计算总数
+            foreach (var action in actions)
+            {
+                importCount += GetCount(action);
+            }
+            //导入容器
             foreach (var action in actions)
             {
                 ImportAction(action);
+            }
+        }
+        private int GetIFChildrenCount(Core.Action.Models.ActionModel action)
+        {
+            var parameterjobject = action.Parameter as JObject;
+            var parameter = parameterjobject.ToObject<IFActionParameterModel>();
+            int count = 3;
+            foreach (var paction in parameter.PassActions.Concat(parameter.NoPassActions))
+            {
+                count += GetCount(paction);
+            }
+            return count;
+        }
+        private int GetCount(Core.Action.Models.ActionModel action)
+        {
+            if (action.Action == Core.Action.Types.ActionType.IF)
+            {
+                return GetIFChildrenCount(action);
+            }
+            else
+            {
+                return 1;
             }
         }
 
@@ -784,7 +846,8 @@ namespace ProjectEvent.UI.Controls.Action
                 return;
             }
             var actionModel = new ActionItemModel();
-            actionModel.ID = GetCreateActionID();
+            //actionModel.ID = GetCreateActionID();
+            actionModel.ID = action.ID;
             actionModel.ParentID = parentID;
             object inputdata = null;
             switch (action.Action)
@@ -820,7 +883,8 @@ namespace ProjectEvent.UI.Controls.Action
 
             //var ifParameter = action.Parameter as IFActionParameterModel;
             var ifActionModel = new ActionItemModel();
-            ifActionModel.ID = GetCreateActionID();
+            //ifActionModel.ID = GetCreateActionID();
+            ifActionModel.ID = action.ID;
             ifActionModel.ActionName = "判断";
             ifActionModel.ActionType = UI.Types.ActionType.IF;
             ifActionModel.Icon = "\xE9D4";
@@ -828,7 +892,7 @@ namespace ProjectEvent.UI.Controls.Action
             ifActionInputData.Left = ifParameter.LeftInput;
             ifActionInputData.Right = ifParameter.RightInput;
             ifActionInputData.Condition = GetComboxModel(ifParameter.Condition);
-            AddItem(ifActionModel);
+            AddItem(ifActionModel, ifActionInputData);
             //创建pass子级
             if (ifParameter.PassActions.Count > 0)
             {
@@ -862,7 +926,15 @@ namespace ProjectEvent.UI.Controls.Action
         }
         public int GetCreateActionID()
         {
-            return count + 1;
+            if (ActionItems.Count == 0)
+            {
+                return 1;
+            }
+            else
+            {
+                importCount++;
+                return importCount;
+            }
         }
         private ComBoxModel GetComboxModel(Core.Action.Types.IFActionConditionType condition)
         {

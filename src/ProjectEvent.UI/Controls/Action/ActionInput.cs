@@ -131,15 +131,15 @@ namespace ProjectEvent.UI.Controls.Action
                     }
                     //绑定数据
                     SelectComboBox.ItemsSource = ComboBoxItemsSource;
-                    //SelectComboBox.SelectedValuePath = "ID";
+                    SelectComboBox.SelectedValuePath = "ID";
                     SelectComboBox.DisplayMemberPath = "DisplayName";
-                    //BindingOperations.SetBinding(SelectComboBox, ComboBox.SelectedValueProperty, new Binding()
-                    //{
-                    //    Source = Data,
-                    //    Path = new PropertyPath("ID"),
-                    //    Mode = BindingMode.TwoWay,
+                    BindingOperations.SetBinding(SelectComboBox, ComboBox.SelectedValueProperty, new Binding()
+                    {
+                        Source = Data,
+                        Path = new PropertyPath(BindingName + ".ID"),
+                        Mode = BindingMode.TwoWay,
 
-                    //});
+                    });
                     BindingOperations.SetBinding(SelectComboBox, ComboBox.SelectedItemProperty, new Binding()
                     {
                         Source = Data,
@@ -148,8 +148,10 @@ namespace ProjectEvent.UI.Controls.Action
 
                     });
 
-                    SelectComboBox.SelectedIndex = 0;
-
+                    if (Data == null)
+                    {
+                        SelectComboBox.SelectedIndex = 0;
+                    }
                     break;
             }
         }

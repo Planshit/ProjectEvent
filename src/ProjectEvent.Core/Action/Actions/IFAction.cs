@@ -34,11 +34,11 @@ namespace ProjectEvent.Core.Action.Actions
 
                 if (isPass)
                 {
-                    ActionTask.InvokeAction(taskID, p.PassActions, actionID);
+                    ActionTask.InvokeAction(taskID, p.PassActions);
                 }
                 else
                 {
-                    ActionTask.InvokeAction(taskID, p.NoPassActions, actionID);
+                    ActionTask.InvokeAction(taskID, p.NoPassActions);
                 }
 
                 var result = new ActionResultModel();
