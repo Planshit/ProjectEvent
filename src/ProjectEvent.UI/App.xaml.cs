@@ -37,7 +37,8 @@ namespace ProjectEvent
             services.AddSingleton<ITimerService, TimerService>();
             services.AddSingleton<ITimerTaskService, TimerTaskService>();
             services.AddSingleton<ITrayService, TrayService>();
-            
+            services.AddSingleton<IApp, ProjectEvent.UI.Services.App>();
+
 
             //services.AddTransient<PageContainer>();
 
@@ -59,8 +60,10 @@ namespace ProjectEvent
 
         private void OnStartup(object sender, StartupEventArgs e)
         {
-            var tray = _serviceProvider.GetService<ITrayService>();
-            tray.Init();
+            //var tray = _serviceProvider.GetService<ITrayService>();
+            //tray.Init();
+            var app = _serviceProvider.GetService<IApp>();
+            app.Run();
         }
 
     }
