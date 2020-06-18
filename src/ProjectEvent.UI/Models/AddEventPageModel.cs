@@ -43,6 +43,24 @@ namespace ProjectEvent.UI.Models
             set { ConditionData_ = value; OnPropertyChanged(); }
         }
 
+        private string ProjectName_ = "新的Project";
+        public string ProjectName
+        {
+            get { return ProjectName_; }
+            set { ProjectName_ = value; OnPropertyChanged(); }
+        }
+        private string Title_ = "创建Project";
+        public string Title
+        {
+            get { return Title_; }
+            set { Title_ = value; OnPropertyChanged(); }
+        }
+        private string ButtonSaveName_ = "创建";
+        public string ButtonSaveName
+        {
+            get { return ButtonSaveName_; }
+            set { ButtonSaveName_ = value; OnPropertyChanged(); }
+        }
         private Visibility AddACtionDialogVisibility_;
         public Visibility AddACtionDialogVisibility
         {

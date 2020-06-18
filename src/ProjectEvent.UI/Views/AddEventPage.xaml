@@ -6,15 +6,31 @@
       xmlns:local="clr-namespace:ProjectEvent.UI.Views"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+
       Title="AddEventPage">
 
-    <Grid>
+    <Grid Margin="10">
         <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+
             <RowDefinition Height="*"/>
             <RowDefinition Height="50"/>
 
         </Grid.RowDefinitions>
-        <TabControl SelectedIndex="{Binding StepIndex,Mode=TwoWay}">
+        <StackPanel Orientation="Horizontal" >
+
+            <Button Content="返回" Command="{Binding RedirectCommand}" CommandParameter="IndexPage" Width="120" Height="30" VerticalAlignment="Center"/>
+            <Label  Margin="20,0,0,0" Content="{Binding Title}" FontSize="20"  VerticalAlignment="Center"/>
+        </StackPanel>
+        
+        <TabControl SelectedIndex="{Binding StepIndex,Mode=TwoWay}" Grid.Row="1">
+            <TabItem Header="描述">
+                <StackPanel>
+                    <Label Content="Project名称"/>
+                    <TextBox Text="{Binding ProjectName,Mode=TwoWay}"/>
+                </StackPanel>
+            </TabItem>
             <TabItem Header="事件">
                 <ItemSelect:ItemSelect Items="{Binding Events,Mode=TwoWay}" SelectID="{Binding SelectedEventID,Mode=TwoWay}"/>
             </TabItem>
@@ -49,13 +65,19 @@
                         </Border>
                         <Border Background="Black" Opacity=".5"/>
                     </Grid>
-                    <Action:ActionContainer x:Name="container" Grid.Row="1" AddActionCommand="{Binding ShowActionDialogCommand}"/>
+                    <Action:ActionContainer x:Name="container" Grid.Row="1" AddActionCommand="{Binding ShowActionDialogCommand}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Loaded">
+                                <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=container}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Action:ActionContainer>
                 </Grid>
             </TabItem>
         </TabControl>
-        <StackPanel Orientation="Horizontal" Grid.Row="1">
-            <Button Content="Export" Width="120" Height="30" Command="{Binding AddCommand}" CommandParameter="{Binding ElementName=container}"/>
-            <Button Content="Import" Width="120" Height="30" Command="{Binding ImportCommand}" CommandParameter="{Binding ElementName=container}"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="2">
+            <Button Content="{Binding ButtonSaveName}" Width="120" Height="30" Command="{Binding AddCommand}" CommandParameter="{Binding ElementName=container}"/>
+            <!--<Button Content="Import" Width="120" Height="30" Command="{Binding ImportCommand}" CommandParameter="{Binding ElementName=container}"/>-->
         </StackPanel>
     </Grid>
 </Page>

@@ -22,6 +22,13 @@ namespace ProjectEvent.UI.Models
             get { return Uri_; }
             set { Uri_ = value; OnPropertyChanged(); }
         }
-       
+
+        private object Data_;
+        public object Data
+        {
+            get { return Data_; }
+            set { Data_ = value; OnPropertyChanged(); }
+        }
+
     }
 }

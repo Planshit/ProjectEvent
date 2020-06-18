@@ -92,6 +92,7 @@ namespace ProjectEvent.UI.Controls.Action
 
         #endregion
 
+        public event RoutedEventHandler RenderDone;
         public event EventHandler ItemIndexChanged;
         private Grid ActionPanel;
         private Point oldPoint;
@@ -123,6 +124,7 @@ namespace ProjectEvent.UI.Controls.Action
             RemoveCommand = new Command(new Action<object>(OnRemoveCommand));
             appendInputDataList = new List<object>();
             isRendering = false;
+
         }
 
 
@@ -142,6 +144,8 @@ namespace ProjectEvent.UI.Controls.Action
             ActionPanel.VerticalAlignment = VerticalAlignment.Top;
 
             AddActionBtn.Command = AddActionCommand;
+
+            RenderDone?.Invoke(this, null);
         }
 
         #region 添加控件
@@ -188,7 +192,7 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 item.Y = ttf.Y;
             };
-            item.Loaded += (e, c) =>
+            item.OnRenderDone += (e, c) =>
             {
                 if (item.Tag != null)
                 {
@@ -665,12 +669,18 @@ namespace ProjectEvent.UI.Controls.Action
         #region 生成actions
         public string GenerateActionsJson()
         {
+            return JsonConvert.SerializeObject(GenerateActions());
+        }
+        public List<Core.Action.Models.ActionModel> GenerateActions()
+        {
+            if (ActionItems.Count == 0)
+            {
+                return null;
+            }
             SortAction();
             var actions = GenerateActions(ActionItems);
-            return JsonConvert.SerializeObject(actions);
-            //Debug.WriteLine(JsonConvert.SerializeObject(actions));
+            return actions;
         }
-
         /// <summary>
         /// 将list中的action生成可执行的actionlist
         /// </summary>
@@ -800,6 +810,10 @@ namespace ProjectEvent.UI.Controls.Action
         public void ImportActionsJson(string json)
         {
             List<Core.Action.Models.ActionModel> actions = JsonConvert.DeserializeObject<List<Core.Action.Models.ActionModel>>(json);
+            ImportActions(actions);
+        }
+        public void ImportActions(List<Core.Action.Models.ActionModel> actions)
+        {
             if (actions == null)
             {
                 return;

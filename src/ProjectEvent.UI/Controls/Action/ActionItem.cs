@@ -77,6 +77,8 @@ namespace ProjectEvent.UI.Controls.Action
                 }
             }
         }
+        public event EventHandler OnRenderDone;
+
         public event EventHandler OnClick;
         public object InputDataModel { get; set; }
 
@@ -127,6 +129,10 @@ namespace ProjectEvent.UI.Controls.Action
                 Icon = Action.Icon;
                 Input.Child = item;
                 item.OnClick += Item_OnClick;
+                item.Loaded += (e, c) =>
+                {
+                    OnRenderDone?.Invoke(this, null);
+                };
             }
             if (Action.ActionType == ActionType.IFElse || Action.ActionType == ActionType.IFEnd)
             {
