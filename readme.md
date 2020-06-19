@@ -17,5 +17,7 @@ Runtime:[.NET Core3.0或更高](https://dotnet.microsoft.com/download/dotnet-cor
 [Todo](https://github.com/Planshit/ProjectEvent/projects)
 
 *当前还在开发中，功能尚未完善可用，欢迎在Issues提交你的想法和需求。*
+
 *目前添加和更新Project需要重启软件才能生效*
+
 *目前程序每次启动都会设置开机自启，请谨慎添加关闭电脑操作*
