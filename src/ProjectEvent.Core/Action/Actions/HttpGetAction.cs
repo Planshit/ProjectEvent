@@ -24,20 +24,24 @@ namespace ProjectEvent.Core.Action.Actions
                 result.ID = actionID;
                 result.Result = new Dictionary<int, string>();
                 result.Result.Add((int)HttpResultType.IsSuccess, "false");
-                p.Url = ActionTaskResulter.GetActionResultsString(taskID, p.Url);
-                Debug.WriteLine("http get:" + p.Url);
-                var http = new HttpRequest();
-                http.Url = p.Url;
-                try
+                if (p != null)
                 {
-                    var content = http.GetAsync().Result;
-                    result.Result.Add((int)HttpResultType.StatusCode, content.StatusCode.ToString());
-                    result.Result.Add((int)HttpResultType.Content, content.Content);
-                    result.Result[(int)HttpResultType.IsSuccess] = content.IsSuccess.ToString().ToLower();
+                    p.Url = ActionTaskResulter.GetActionResultsString(taskID, p.Url);
+                    Debug.WriteLine("http get:" + p.Url);
+                    var http = new HttpRequest();
+                    http.Url = p.Url;
+                    try
+                    {
+                        var content = http.GetAsync().Result;
+                        result.Result.Add((int)HttpResultType.StatusCode, content.StatusCode.ToString());
+                        result.Result.Add((int)HttpResultType.Content, content.Content);
+                        result.Result[(int)HttpResultType.IsSuccess] = content.IsSuccess.ToString().ToLower();
+                    }
+                    catch
+                    {
+                    }
                 }
-                catch
-                {
-                }
+
                 return result;
             });
             return task;

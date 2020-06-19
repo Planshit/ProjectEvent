@@ -24,7 +24,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
             {
                 ActionType.WriteFile,"创建文件"
             },
-
+            {
+                ActionType.Shutdown,"关闭电脑"
+            },
         };
     }
 }

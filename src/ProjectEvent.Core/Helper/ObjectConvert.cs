@@ -15,6 +15,10 @@ namespace ProjectEvent.Core.Helper
         /// <returns></returns>
         public static T Get<T>(object obj) where T : class
         {
+            if (obj == null)
+            {
+                return null;
+            }
             var result = obj as T;
             if (result == null)
             {

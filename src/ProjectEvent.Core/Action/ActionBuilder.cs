@@ -48,6 +48,9 @@ namespace ProjectEvent.Core.Action
                 case ActionType.HttpGet:
                     result = true;
                     break;
+                case ActionType.Shutdown:
+                    result = true;
+                    break;
             }
             return result;
         }
@@ -71,6 +74,8 @@ namespace ProjectEvent.Core.Action
                     return new IFAction().GenerateAction(taskID, actionID, parameter);
                 case ActionType.HttpGet:
                     return new HttpGetAction().GenerateAction(taskID, actionID, parameter);
+                case ActionType.Shutdown:
+                    return new ShutdownAction().GenerateAction(taskID, actionID, parameter);
 
                 default:
                     return null;

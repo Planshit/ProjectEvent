@@ -703,6 +703,12 @@ namespace ProjectEvent.UI.Controls.Action
                         };
                         result.Num = 1;
                         break;
+                    case UI.Types.ActionType.Shutdown:
+                        result = new Core.Action.Models.ActionModel();
+                        result.Action = Core.Action.Types.ActionType.Shutdown;
+                        result.ID = action.Action.ID;
+                        result.Num = 1;
+                        break;
                 }
             }
             return result;
@@ -827,6 +833,9 @@ namespace ProjectEvent.UI.Controls.Action
                             Url = httpgetParameter.Url
                         };
                     }
+                    break;
+                case Core.Action.Types.ActionType.Shutdown:
+                    actionModel = ActionItemsData.Get(UI.Types.ActionType.Shutdown);
                     break;
             }
             if (actionModel == null)

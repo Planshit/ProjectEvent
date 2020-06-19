@@ -22,5 +22,9 @@ namespace ProjectEvent.Core.Action.Types
         /// HTTP GET
         /// </summary>
         HttpGet = 4,
+        /// <summary>
+        /// 关机
+        /// </summary>
+        Shutdown=5,
     }
 }

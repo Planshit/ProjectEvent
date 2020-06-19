@@ -29,6 +29,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
                 case ActionType.WriteFile:
                     action.Icon = "\xF2E6";
                     break;
+                case ActionType.Shutdown:
+                    action.Icon = "\xF2E6";
+                    break;
             }
 
             return action;

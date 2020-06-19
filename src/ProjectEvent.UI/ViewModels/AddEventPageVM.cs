@@ -138,17 +138,22 @@ namespace ProjectEvent.UI.ViewModels
             ComBoxActions.Add(new ComBoxActionModel()
             {
                 ID = (int)Types.ActionType.WriteFile,
-                Name = "创建文件"
+                Name = ActionNameData.Names[Types.ActionType.WriteFile]
             });
             ComBoxActions.Add(new ComBoxActionModel()
             {
                 ID = (int)Types.ActionType.IF,
-                Name = "判断"
+                Name = ActionNameData.Names[Types.ActionType.IF]
             });
             ComBoxActions.Add(new ComBoxActionModel()
             {
                 ID = (int)Types.ActionType.HttpGet,
-                Name = "HTTP GET请求"
+                Name = ActionNameData.Names[Types.ActionType.HttpGet]
+            });
+            ComBoxActions.Add(new ComBoxActionModel()
+            {
+                ID = (int)Types.ActionType.Shutdown,
+                Name = ActionNameData.Names[Types.ActionType.Shutdown]
             });
             ComBoxSelectedAction = ComBoxActions[0];
         }
