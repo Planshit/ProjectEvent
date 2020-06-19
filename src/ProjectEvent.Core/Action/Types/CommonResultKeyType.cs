@@ -5,13 +5,13 @@ using System.Text;
 namespace ProjectEvent.Core.Action.Types
 {
     /// <summary>
-    /// 通用返回键名
+    /// 通用返回
     /// </summary>
     public enum CommonResultKeyType
     {
         /// <summary>
-        /// 状态（true,false）
+        /// 是否成功（true,false）
         /// </summary>
-        Status = 0
+        IsSuccess = 1
     }
 }
