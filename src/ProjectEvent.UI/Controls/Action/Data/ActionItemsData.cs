@@ -17,24 +17,16 @@ namespace ProjectEvent.UI.Controls.Action.Data
         {
             var action = new ActionItemModel();
             action.ActionType = uiactionType;
+            action.ActionName = ActionNameData.Names[uiactionType];
             switch (uiactionType)
             {
                 case ActionType.HttpGet:
-                    action.ActionName = "HTTP GET请求";
                     action.Icon = "\xEC27";
                     break;
                 case ActionType.IF:
-                    action.ActionName = "判断";
                     action.Icon = "\xE9D4";
                     break;
-                case ActionType.IFElse:
-                    action.ActionName = "否则";
-                    break;
-                case ActionType.IFEnd:
-                    action.ActionName = "判断结束";
-                    break;
                 case ActionType.WriteFile:
-                    action.ActionName = "创建文件";
                     action.Icon = "\xF2E6";
                     break;
             }
