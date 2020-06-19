@@ -20,8 +20,8 @@ namespace ProjectEvent.Core.Action
             {
                 Task.Factory.StartNew(() =>
                 {
-                    int taskID = _index++;
-                    InvokeAction(taskID, ev.Actions);
+                    _index++;
+                    InvokeAction(_index, ev.Actions);
 
                 });
                 isSuccess = true;
