@@ -13,10 +13,10 @@ namespace ProjectEvent.Core.Action
     public static class ActionTask
     {
         private static int _index = 0;
-        public static bool Invoke(EventModel ev)
+        public static bool Invoke(EventModel ev, object data = null)
         {
             bool isSuccess = false;
-            if (ev.Condition.IsPass())
+            if (ev.Condition.IsPass(data))
             {
                 Task.Factory.StartNew(() =>
                 {

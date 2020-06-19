@@ -11,7 +11,7 @@ namespace ProjectEvent.Core.Condition
         /// 判断当前是否满足执行条件
         /// </summary>
         /// <returns>true是，false否</returns>
-        bool IsPass();
+        bool IsPass(object data = null);
 
         /// <summary>
         /// 提供给外部检查条件是否输入正确

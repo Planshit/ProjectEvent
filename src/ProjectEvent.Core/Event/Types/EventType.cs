@@ -30,9 +30,9 @@ namespace ProjectEvent.Core.Event.Types
         OnNetworkDisconnection = 4,
 
         /// <summary>
-        /// 进程启动
+        /// 进程创建
         /// </summary>
-        OnProcessStartup = 5,
+        OnProcessCreated = 5,
 
         /// <summary>
         /// 进程关闭

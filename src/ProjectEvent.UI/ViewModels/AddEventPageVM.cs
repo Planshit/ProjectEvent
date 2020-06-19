@@ -29,7 +29,7 @@ namespace ProjectEvent.UI.ViewModels
         public Command RedirectCommand { get; set; }
         public Command LoadedCommand { get; set; }
         private ActionContainer actionContainer;
-
+        private ProjectModel project;
         public AddEventPageVM(MainViewModel mainVM)
         {
             this.mainVM = mainVM;
@@ -48,16 +48,16 @@ namespace ProjectEvent.UI.ViewModels
             InitEvents();
             InitConditions();
             InitAcions();
-
+            HandleEdit();
         }
 
         private void OnLoadedCommand(object obj)
         {
             actionContainer = obj as ActionContainer;
-
-            HandleEdit();
-            //Thread.Sleep(1000);
-            //HandleEdit();
+            if (project != null && mainVM.Data != null)
+            {
+                actionContainer.ImportActions(project.Actions);
+            }
         }
 
         private void OnRedirectCommand(object obj)
@@ -106,9 +106,8 @@ namespace ProjectEvent.UI.ViewModels
 
         private void HandleEventIDChanged()
         {
-            StepIndex = 2;
+            IsConditionTabItemSelected = true;
             InitConditions();
-            //Actions.Clear();
         }
 
         #region 初始化事件
@@ -122,11 +121,11 @@ namespace ProjectEvent.UI.ViewModels
             Events.Add(new Controls.ItemSelect.Models.ItemModel()
             {
                 ID = (int)EventType.OnDeviceStartup,
-                Title = "开机事件",
+                Title = "设备启动",
             });
             Events.Add(new Controls.ItemSelect.Models.ItemModel()
             {
-                ID = (int)EventType.OnProcessStartup,
+                ID = (int)EventType.OnProcessCreated,
                 Title = "进程创建",
             });
         }
@@ -187,6 +186,31 @@ namespace ProjectEvent.UI.ViewModels
                         Title = "循环次数（0时永远）"
                     });
                     break;
+                case EventType.OnProcessCreated:
+                    //进程创建
+                    ConditionData = new ProcessCreatedConditionModel();
+                    cds.Add(new InputModel()
+                    {
+                        Type = Controls.InputGroup.InputType.Text,
+                        BindingName = "ProcessName",
+                        BindingProperty = TextBox.TextProperty,
+                        Title = "进程名"
+                    });
+                    cds.Add(new InputModel()
+                    {
+                        Type = Controls.InputGroup.InputType.Bool,
+                        BindingName = "Caseinsensitive",
+                        BindingProperty = CheckBox.IsCheckedProperty,
+                        Title = "不区分大小写"
+                    });
+                    cds.Add(new InputModel()
+                    {
+                        Type = Controls.InputGroup.InputType.Bool,
+                        BindingName = "FuzzyMatch",
+                        BindingProperty = CheckBox.IsCheckedProperty,
+                        Title = "模糊匹配"
+                    });
+                    break;
             }
 
             Conditions = cds;
@@ -197,16 +221,6 @@ namespace ProjectEvent.UI.ViewModels
             var container = obj as ActionContainer;
             switch ((Types.ActionType)ComBoxSelectedAction.ID)
             {
-                //case 1:
-                //    container.AddItem(new ActionItemModel()
-                //    {
-                //        ID = container.GetCreateActionID(),
-                //        ActionName = "创建文件",
-                //        ActionType = Types.ActionType.WriteFile,
-                //        Icon = "\xF2E6",
-                //        //Index = new Random().Next(10)
-                //    });
-                //    break;
                 //特殊action 单独处理
                 case Types.ActionType.IF:
                     int id = container.GetCreateActionID();
@@ -258,13 +272,26 @@ namespace ProjectEvent.UI.ViewModels
                     ButtonSaveName = "保存";
 
                     //导入
-                    var project = JsonConvert.DeserializeObject<ProjectModel>(File.ReadAllText(IOHelper.GetFullPath($"Projects\\{projectName}.project.json")));
+                    project = JsonConvert.DeserializeObject<ProjectModel>(File.ReadAllText(IOHelper.GetFullPath($"Projects\\{projectName}.project.json")));
+
+                    object cdata = null;
+                    switch ((EventType)project.EventID)
+                    {
+                        case EventType.OnProcessCreated:
+                            cdata = ObjectConvert.Get<ProcessCreatedConditionModel>(project.ConditionData);
+                            break;
+                        case EventType.OnIntervalTimer:
+                            cdata = ObjectConvert.Get<IntervalTimerConditionModel>(project.ConditionData);
+                            break;
+                        default:
+                            cdata = project.ConditionData;
+                            break;
+                    }
                     if (project != null)
                     {
                         ProjectName = project.ProjectName;
                         SelectedEventID = project.EventID;
-                        ConditionData = project.ConditionData;
-                        actionContainer.ImportActions(project.Actions);
+                        ConditionData = cdata;
                     }
 
                 }
@@ -272,6 +299,7 @@ namespace ProjectEvent.UI.ViewModels
             else
             {
                 IsInfoTabItemSelected = true;
+                IsActionsTabItemSelected = false;
             }
         }
     }

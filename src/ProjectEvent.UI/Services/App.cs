@@ -68,12 +68,20 @@ namespace ProjectEvent.UI.Services
                     condition = new OnDeviceStartupCondition();
                     break;
                 case EventType.OnIntervalTimer:
-                    var jobject = project.ConditionData as JObject;
-                    var conditionData = jobject.ToObject<IntervalTimerConditionModel>();
+                    var ttimerconditionData = ObjectConvert.Get<IntervalTimerConditionModel>(project.ConditionData);
                     condition = new OnIntervalTimerCondition()
                     {
-                        Num = int.Parse(conditionData.Num),
-                        Seconds = int.Parse(conditionData.Second)
+                        Num = int.Parse(ttimerconditionData.Num),
+                        Seconds = int.Parse(ttimerconditionData.Second)
+                    };
+                    break;
+                case EventType.OnProcessCreated:
+                    var pcconditionData = ObjectConvert.Get<ProcessCreatedConditionModel>(project.ConditionData);
+                    condition = new OnProcessCreatedCondition()
+                    {
+                        ProcessName = pcconditionData.ProcessName,
+                        Caseinsensitive = pcconditionData.Caseinsensitive,
+                        FuzzyMatch = pcconditionData.FuzzyMatch
                     };
                     break;
             }

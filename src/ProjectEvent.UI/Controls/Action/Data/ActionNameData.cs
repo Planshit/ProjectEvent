@@ -13,7 +13,7 @@ namespace ProjectEvent.UI.Controls.Action.Data
                 ActionType.HttpGet,"HTTP GET请求"
             },
             {
-                ActionType.IF,"判断开始"
+                ActionType.IF,"判断"
             },
             {
                 ActionType.IFElse,"否则"

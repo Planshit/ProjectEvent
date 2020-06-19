@@ -10,6 +10,7 @@ namespace ProjectEvent.UI.Controls.InputGroup
         Number,
         Date,
         Time,
-        DateTime
+        DateTime,
+        Bool
     }
 }

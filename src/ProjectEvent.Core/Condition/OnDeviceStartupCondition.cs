@@ -17,7 +17,7 @@ namespace ProjectEvent.Core.Condition
             return result;
         }
 
-        public bool IsPass()
+        public bool IsPass(object data = null)
         {
             return Environment.GetCommandLineArgs().Contains("-autorun");
         }

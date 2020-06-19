@@ -64,6 +64,9 @@ namespace ProjectEvent.UI.Controls.InputGroup
                     case InputType.Text:
                         control = new TextBox();
                         break;
+                    case InputType.Bool:
+                        control = new CheckBox();
+                        break;
                 }
                 //binding input
                 BindingOperations.SetBinding(control, input.BindingProperty, new Binding()

@@ -216,6 +216,7 @@ namespace ProjectEvent.UI.Controls.Action
         }
         private void Remove(ActionItem item)
         {
+            ActionPanel.Height -= item.ActualHeight;
             ActionPanel.Children.Remove(item);
             ActionItems.Remove(item);
             SortAction();

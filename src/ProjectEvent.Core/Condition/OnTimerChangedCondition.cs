@@ -33,7 +33,7 @@ namespace ProjectEvent.Core.Condition
             return result;
         }
 
-        public bool IsPass()
+        public bool IsPass(object data = null)
         {
             if (!Check().IsValid)
             {

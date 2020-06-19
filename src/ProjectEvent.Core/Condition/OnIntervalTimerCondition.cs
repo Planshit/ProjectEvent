@@ -36,7 +36,7 @@ namespace ProjectEvent.Core.Condition
             return result;
         }
 
-        public bool IsPass()
+        public bool IsPass(object data = null)
         {
             var eventLogs = EventLoger.Get(Event.Types.EventType.OnIntervalTimer);
             if (Num > 0 && eventLogs.Count >= Num)

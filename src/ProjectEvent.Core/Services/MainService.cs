@@ -10,12 +10,15 @@ namespace ProjectEvent.Core.Services
     {
         private readonly IDeviceTaskService deviceTaskService;
         private readonly ITimerTaskService timerTaskService;
+        private readonly IProcessTaskService processTaskService;
 
         public MainService(IDeviceTaskService deviceTaskService,
-             ITimerTaskService timerTaskService)
+             ITimerTaskService timerTaskService,
+             IProcessTaskService processTaskService)
         {
             this.deviceTaskService = deviceTaskService;
             this.timerTaskService = timerTaskService;
+            this.processTaskService = processTaskService;
 
         }
         public void Run()
@@ -23,6 +26,7 @@ namespace ProjectEvent.Core.Services
             //启动所有task service
             deviceTaskService.Run();
             timerTaskService.Run();
+            processTaskService.Run();
         }
     }
 }

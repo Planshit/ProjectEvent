@@ -38,15 +38,17 @@ namespace ProjectEvent.Core.Services
             }
 
             //检查action是否输入正确
-            foreach (var action in ev.Actions)
+            if (ev.Actions != null)
             {
-                var actionCheck = new ActionBuilder(action.Action, action.Parameter).Check();
-                if (!actionCheck)
+                foreach (var action in ev.Actions)
                 {
-                    return false;
+                    var actionCheck = new ActionBuilder(action.Action, action.Parameter).Check();
+                    if (!actionCheck)
+                    {
+                        return false;
+                    }
                 }
             }
-
             _events.Add(ev.ID, ev);
 
             OnAddEvent?.Invoke(ev);
