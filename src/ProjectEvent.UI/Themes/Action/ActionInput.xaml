@@ -19,10 +19,10 @@
                                 <Popup x:Name="Popup" AllowsTransparency="True" IsOpen="{TemplateBinding PopupIsOpen}" PlacementTarget="{Binding ElementName=Border}" Placement="Bottom">
                                     <Border Width="200" Background="White" Padding="10" BorderBrush="#ccc" BorderThickness="1">
                                         <StackPanel>
-                                            <TextBlock Text="操作返回"/>
-                                            <TextBlock Text="操作ID" Margin="0,10,0,0"/>
+                                            <TextBlock Text="变量"/>
+                                            <TextBlock Text="Action" Margin="0,10,0,0"/>
                                             <ComboBox Name="ActionIDComboBox" Margin="0,10,0,0"/>
-                                            <TextBlock Text="获取返回字段" Margin="0,10,0,0"/>
+                                            <TextBlock Text="获取返回" Margin="0,10,0,0"/>
                                             <ComboBox Name="ActionResultsComboBox" Margin="0,10,0,0"/>
                                             <Button x:Name="AddActionResultBtn" Content="添加" Height="25" Margin="0,10,0,0"/>
                                         </StackPanel>

@@ -45,6 +45,9 @@ namespace ProjectEvent.Core.Action
                 case ActionType.WriteFile:
                     result = true;
                     break;
+                case ActionType.HttpGet:
+                    result = true;
+                    break;
             }
             return result;
         }

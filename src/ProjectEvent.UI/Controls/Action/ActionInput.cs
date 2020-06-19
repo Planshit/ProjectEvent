@@ -1,7 +1,11 @@
-﻿using ProjectEvent.UI.Controls.Action.Models;
+﻿using ProjectEvent.Core.Action.Types;
+using ProjectEvent.Core.Action.Types.ResultTypes;
+using ProjectEvent.UI.Controls.Action.Data;
+using ProjectEvent.UI.Controls.Action.Models;
 using ProjectEvent.UI.Controls.Action.Types;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -60,8 +64,20 @@ namespace ProjectEvent.UI.Controls.Action
         public object Data { get; set; }
         public string BindingName { get; set; }
         public List<ComBoxModel> ComboBoxItemsSource { get; set; }
+        /// <summary>
+        /// 当前可选Action Result
+        /// </summary>
+        public ObservableCollection<ComBoxModel> ActionResultItemsSource { get; set; }
+        /// <summary>
+        /// 当前可选的Action ID
+        /// </summary>
+        public ObservableCollection<ComBoxModel> ActionItemsSource { get; set; }
+
         public int ActionID { get; set; }
-        private Dictionary<int, List<string>> actionResults;
+        /// <summary>
+        /// 容器中所有Action的Result
+        /// </summary>
+        private Dictionary<int, List<ComBoxModel>> actionResults;
         private TextBox inputTextBox;
         private ComboBox ActionIDComboBox;
         private ComboBox ActionResultsComboBox;
@@ -76,9 +92,10 @@ namespace ProjectEvent.UI.Controls.Action
         {
             DefaultStyleKey = typeof(ActionInput);
             isEnterPopup = false;
-            actionResults = new Dictionary<int, List<string>>();
+            actionResults = new Dictionary<int, List<ComBoxModel>>();
             ComboBoxItemsSource = new List<ComBoxModel>();
-
+            ActionResultItemsSource = new ObservableCollection<ComBoxModel>();
+            ActionItemsSource = new ObservableCollection<ComBoxModel>();
         }
         public override void OnApplyTemplate()
         {
@@ -120,14 +137,6 @@ namespace ProjectEvent.UI.Controls.Action
                     });
                     break;
                 case InputType.Select:
-                    //for (int i = 0; i < SelectItems.Count; i++)
-                    //{
-                    //    ComboBoxItemsSource.Add(new ComBoxModel()
-                    //    {
-                    //        ID = (i + 1),
-                    //        DisplayName = SelectItems[i]
-                    //    });
-                    //}
                     //绑定数据
                     SelectComboBox.ItemsSource = ComboBoxItemsSource;
                     SelectComboBox.SelectedValuePath = "ID";
@@ -153,6 +162,14 @@ namespace ProjectEvent.UI.Controls.Action
                     }
                     break;
             }
+
+            //绑定action result combobox
+            ActionResultsComboBox.ItemsSource = ActionResultItemsSource;
+            ActionResultsComboBox.DisplayMemberPath = "DisplayName";
+            //绑定action combobox
+            ActionIDComboBox.ItemsSource = ActionItemsSource;
+            ActionIDComboBox.DisplayMemberPath = "DisplayName";
+
         }
         private void AddActionResultBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -160,7 +177,7 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 return;
             }
-            inputTextBox.AppendText($"{{{ActionIDComboBox.SelectedItem}.{ActionResultsComboBox.SelectedItem}}}");
+            inputTextBox.AppendText($"{{{(ActionIDComboBox.SelectedItem as ComBoxModel).ID}.{(ActionResultsComboBox.SelectedItem as ComBoxModel).ID}}}");
             inputTextBox.Focus();
             Valid();
         }
@@ -203,15 +220,16 @@ namespace ProjectEvent.UI.Controls.Action
             PopupIsOpen = true;
         }
 
+        //选择的Action ID改变时重新更新Result box
         private void ActionIDComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ActionResultsComboBox.Items.Clear();
+            ActionResultItemsSource.Clear();
             if (ActionIDComboBox.SelectedItem != null)
             {
-                var results = actionResults[(int)ActionIDComboBox.SelectedItem];
-                foreach (var name in results)
+                var results = actionResults[(ActionIDComboBox.SelectedItem as ComBoxModel).ID];
+                foreach (var item in results)
                 {
-                    ActionResultsComboBox.Items.Add(name);
+                    ActionResultItemsSource.Add(item);
                 }
                 if (ActionResultsComboBox.Items.Count > 0)
                 {
@@ -226,17 +244,12 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 UpdateActionResults();
 
-                ActionIDComboBox.Items.Clear();
-                foreach (var result in actionResults)
-                {
-                    ActionIDComboBox.Items.Add(result.Key);
-                }
+                //更新ActionIDComboBox
+
                 if (ActionIDComboBox.Items.Count > 0)
                 {
                     ActionIDComboBox.SelectedIndex = 0;
                 }
-
-
             }
             //else if (InputType == InputType.Select)
             //{
@@ -253,35 +266,72 @@ namespace ProjectEvent.UI.Controls.Action
 
         private void UpdateActionResults()
         {
+            ActionItemsSource.Clear();
             actionResults.Clear();
             var selfItem = ActionContainer.ActionItems.Where(m => m.Action.ID == ActionID).FirstOrDefault();
-            if (selfItem == null || selfItem.Action.ParentID > 0)
+            if (selfItem == null)
             {
                 return;
             }
-            foreach (var item in ActionContainer.ActionItems)
+
+            //查找符合条件的action item
+            var actionItems = ActionContainer.
+                ActionItems.
+                Where(m =>
+                m.Action.ActionType != UI.Types.ActionType.IF &&
+                    m.Action.ActionType != UI.Types.ActionType.IFElse &&
+                    m.Action.ActionType != UI.Types.ActionType.IFEnd).
+                ToList();
+            foreach (var item in actionItems)
             {
                 var action = item.Action;
-                //排除自身
-                if (action.ID != ActionID &&
-                    action.Index < selfItem.Action.Index &&
-                    action.ID > 0)
+                actionResults.Add(action.ID, new List<ComBoxModel>());
+                var results = actionResults[action.ID];
+                switch (action.ActionType)
                 {
-                    actionResults.Add(action.ID, new List<string>());
-                    var results = actionResults[action.ID];
-                    switch (action.ActionType)
-                    {
-                        case UI.Types.ActionType.WriteFile:
-                            results.Add("Status");
-                            break;
+                    case UI.Types.ActionType.WriteFile:
+                        results.Add(new ComBoxModel()
+                        {
+                            ID = (int)CommonResultKeyType.IsSuccess,
+                            DisplayName = "是否成功"
+                        });
+                        break;
+                    case UI.Types.ActionType.HttpGet:
+                        results.Add(new ComBoxModel()
+                        {
+                            ID = (int)HttpResultType.IsSuccess,
+                            DisplayName = "是否成功"
+                        });
+                        results.Add(new ComBoxModel()
+                        {
+                            ID = (int)HttpResultType.StatusCode,
+                            DisplayName = "状态码"
+                        });
+                        results.Add(new ComBoxModel()
+                        {
+                            ID = (int)HttpResultType.Content,
+                            DisplayName = "响应内容"
+                        });
+                        break;
 
-                    }
+                }
+                if (item != selfItem &&
+                    action.Index < selfItem.Action.Index)
+                {
+                    ActionItemsSource.Add(new ComBoxModel()
+                    {
+                        ID = action.ID,
+                        DisplayName = $"[{action.ID}] {ActionNameData.Names[action.ActionType]}"
+                    });
                 }
             }
             Valid();
         }
 
 
+        /// <summary>
+        /// 验证输入是否有效
+        /// </summary>
         private void Valid()
         {
             IsValidInput = true;
@@ -289,24 +339,22 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 return;
             }
-            //var self = actionContainer.Items.Where(m => m.ID == ActionID).FirstOrDefault();
-            //var topActions = actionContainer.Items.Where(m => m.Index < self.Index).ToList();
-            var matchs = Regex.Matches(inputTextBox.Text, @"\{([0-9]{1,3}?)\.(.*?)\}");
+            var matchs = Regex.Matches(inputTextBox.Text, @"\{(?<id>[0-9]{1,5})\.(?<key>[0-9]{1,25})\}");
             foreach (Match match in matchs)
             {
-                var actionID = int.Parse(match.Groups[1].Value);
-                var actionResultKey = match.Groups[2].Value;
-                if (ActionIDComboBox.Items.IndexOf(actionID) == -1 || ActionResultsComboBox.Items.IndexOf(actionResultKey) == -1)
+                var id = int.Parse(match.Groups["id"].Value);
+                var key = int.Parse(match.Groups["key"].Value);
+                if (!actionResults.ContainsKey(id))
                 {
                     IsValidInput = false;
                     break;
-
                 }
-                //if (topActions.Where(m => m.ID == actionID).Count() == 0)
-                //{
-                //    IsValidInput = false;
-                //    break;
-                //}
+                var ars = actionResults[id];
+                if (!ActionItemsSource.Where(m => m.ID == id).Any() || !ars.Where(m => m.ID == key).Any())
+                {
+                    IsValidInput = false;
+                    break;
+                }
             }
         }
 

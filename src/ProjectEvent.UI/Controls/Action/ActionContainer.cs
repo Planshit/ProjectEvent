@@ -42,7 +42,7 @@ namespace ProjectEvent.UI.Controls.Action
         private Grid ActionPanel;
         private Point oldPoint;
         private Button AddActionBtn;
-        private int importCount = 0;
+        private int seedID = 0;
         //控件列表
         public List<ActionItem> ActionItems { get; set; }
         /// <summary>
@@ -764,7 +764,7 @@ namespace ProjectEvent.UI.Controls.Action
             //先计算总数
             foreach (var action in actions)
             {
-                importCount += GetCount(action);
+                GetMaxID(action);
             }
             //导入容器
             foreach (var action in actions)
@@ -772,26 +772,24 @@ namespace ProjectEvent.UI.Controls.Action
                 ImportAction(action);
             }
         }
-        private int GetIFChildrenCount(Core.Action.Models.ActionModel action)
+        private void GetIFChildrenMaxID(Core.Action.Models.ActionModel action)
         {
             var parameterjobject = action.Parameter as JObject;
             var parameter = parameterjobject.ToObject<IFActionParameterModel>();
-            int count = 3;
             foreach (var paction in parameter.PassActions.Concat(parameter.NoPassActions))
             {
-                count += GetCount(paction);
+                GetMaxID(paction);
             }
-            return count;
         }
-        private int GetCount(Core.Action.Models.ActionModel action)
+        private void GetMaxID(Core.Action.Models.ActionModel action)
         {
             if (action.Action == Core.Action.Types.ActionType.IF)
             {
-                return GetIFChildrenCount(action);
+                GetIFChildrenMaxID(action);
             }
             else
             {
-                return 1;
+                seedID = action.ID > seedID ? action.ID : seedID;
             }
         }
 
@@ -888,8 +886,8 @@ namespace ProjectEvent.UI.Controls.Action
         #region 生成action id
         public int GetCreateActionID()
         {
-            importCount++;
-            return importCount;
+            seedID++;
+            return seedID;
         }
         #endregion
     }
