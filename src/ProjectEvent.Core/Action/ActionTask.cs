@@ -1,6 +1,7 @@
 ﻿using ProjectEvent.Core.Action.Models;
 using ProjectEvent.Core.Event;
 using ProjectEvent.Core.Event.Models;
+using ProjectEvent.Core.Helper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -42,15 +43,21 @@ namespace ProjectEvent.Core.Action
             {
                 var actionBuilder = new ActionBuilder(action.Action, action.Parameter);
                 var actionTask = actionBuilder.Builer(taskID, action.ID);
-
-                for (int i = 0; i < action.Num; i++)
+                if (actionTask != null)
                 {
-                    actionTask.Start();
-                    if (actionBuilder.IsHasResult())
+                    for (int i = 0; i < action.Num; i++)
                     {
-                        var actionResult = actionTask.Result;
-                        ActionTaskResulter.Add(taskID, actionResult);
+                        actionTask.Start();
+                        if (actionBuilder.IsHasResult())
+                        {
+                            var actionResult = actionTask.Result;
+                            ActionTaskResulter.Add(taskID, actionResult);
+                        }
                     }
+                }
+                else
+                {
+                    LogHelper.Warning($"找不到Action Type：{action.Action}");
                 }
             }
         }

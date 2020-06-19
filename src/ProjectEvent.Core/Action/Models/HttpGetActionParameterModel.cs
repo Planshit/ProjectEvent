@@ -4,8 +4,8 @@ using System.Text;
 
 namespace ProjectEvent.Core.Action.Models
 {
-    public class BaseParameterModel
+    public class HttpGetActionParameterModel
     {
-        
+        public string Url { get; set; }
     }
 }

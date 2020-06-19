@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ProjectEvent.Core.Action.Models;
+using ProjectEvent.Core.Helper;
 using ProjectEvent.UI.Controls.Action.Data;
 using ProjectEvent.UI.Controls.Action.Models;
 using ProjectEvent.UI.Models.DataModels;
@@ -33,63 +34,6 @@ namespace ProjectEvent.UI.Controls.Action
             DependencyProperty.Register("AddActionCommand",
                 typeof(ICommand),
                 typeof(ActionContainer));
-
-        //protected static PropertyChangedCallback ItemsPropertyChangedCallback = new PropertyChangedCallback(ItemsPropertyChanged);
-
-        //public static DependencyProperty ItemsProperty = DependencyProperty.RegisterAttached("Items", typeof(ObservableCollection<ActionItemModel>), typeof(ActionContainer), new PropertyMetadata(null, ItemsPropertyChangedCallback));
-
-        //private static void ItemsPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        //{
-        //    var control = (ActionContainer)sender;
-        //    if (control == null)
-        //    {
-        //        return;
-        //    }
-        //    control.UnregisterItems(e.OldValue as ObservableCollection<ActionItemModel>);
-        //    control.RegisterItems(e.NewValue as ObservableCollection<ActionItemModel>);
-        //}
-
-        //public ObservableCollection<ActionItemModel> Items
-        //{
-        //    get
-        //    {
-        //        return (ObservableCollection<ActionItemModel>)GetValue(ItemsProperty);
-        //    }
-        //    set
-        //    {
-        //        SetValue(ItemsProperty, value);
-        //    }
-        //}
-
-        //protected void UnregisterItems(ObservableCollection<ActionItemModel> items)
-        //{
-        //    if (items == null)
-        //    {
-        //        return;
-        //    }
-        //    items.CollectionChanged -= ItemsChanged;
-        //}
-
-        //protected void RegisterItems(ObservableCollection<ActionItemModel> items)
-        //{
-        //    if (items == null)
-        //    {
-        //        return;
-        //    }
-        //    items.CollectionChanged += ItemsChanged;
-        //}
-
-        //protected virtual void ItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
-        //{
-        //    if (e.Action == NotifyCollectionChangedAction.Add)
-        //    {
-        //        foreach (var item in e.NewItems)
-        //        {
-        //            var itemAction = item as ActionItemModel;
-        //            AddItem(itemAction);
-        //        }
-        //    }
-        //}
 
         #endregion
 
@@ -140,12 +84,8 @@ namespace ProjectEvent.UI.Controls.Action
             base.OnApplyTemplate();
             ActionPanel = GetTemplateChild("ActionPanel") as Grid;
             AddActionBtn = GetTemplateChild("AddActionBtn") as Button;
-
-            //ActionPanel.Height = 0;
             ActionPanel.VerticalAlignment = VerticalAlignment.Top;
-
             AddActionBtn.Command = AddActionCommand;
-
             RenderDone?.Invoke(this, null);
         }
 
@@ -154,7 +94,6 @@ namespace ProjectEvent.UI.Controls.Action
         {
             if (!appendList.Contains(action))
             {
-                Debug.WriteLine(action.ActionName);
                 appendList.Add(action);
                 appendInputDataList.Add(inputdata);
             }
@@ -202,7 +141,6 @@ namespace ProjectEvent.UI.Controls.Action
                     return;
                 }
                 item.Tag = string.Empty;
-                Debug.WriteLine(item.ActionName + "," + item.ActualHeight);
                 ActionPanel.Height += item.ActualHeight;
                 if (double.IsNaN(ActionPanel.Height))
                 {
@@ -210,7 +148,6 @@ namespace ProjectEvent.UI.Controls.Action
                 }
 
                 //继续队列
-                //appendList.Remove(action);
                 appendList.RemoveAt(0);
                 appendInputDataList.RemoveAt(0);
 
@@ -247,7 +184,12 @@ namespace ProjectEvent.UI.Controls.Action
                         FilePath = "",
                         Content = ""
                     };
-
+                    break;
+                case UI.Types.ActionType.HttpGet:
+                    result = new HttpGetActionInputModel()
+                    {
+                        Url = ""
+                    };
                     break;
             }
             return result;
@@ -735,6 +677,7 @@ namespace ProjectEvent.UI.Controls.Action
             }
             else
             {
+                //switch ActionType是UI中使用的Type，与Core使用的ActionType并不一致，这里需要转换
                 switch (action.Action.ActionType)
                 {
                     case UI.Types.ActionType.WriteFile:
@@ -746,6 +689,17 @@ namespace ProjectEvent.UI.Controls.Action
                         {
                             FilePath = inputdata.FilePath,
                             Content = inputdata.Content
+                        };
+                        result.Num = 1;
+                        break;
+                    case UI.Types.ActionType.HttpGet:
+                        result = new Core.Action.Models.ActionModel();
+                        var httpgetInputdata = action.GetInputData() as HttpGetActionInputModel;
+                        result.Action = Core.Action.Types.ActionType.HttpGet;
+                        result.ID = action.Action.ID;
+                        result.Parameter = new HttpGetActionParameterModel()
+                        {
+                            Url = httpgetInputdata.Url
                         };
                         result.Num = 1;
                         break;
@@ -848,30 +802,41 @@ namespace ProjectEvent.UI.Controls.Action
                 ImportIFAction(action);
                 return;
             }
-            var actionModel = new ActionItemModel();
-            //actionModel.ID = GetCreateActionID();
-            actionModel.ID = action.ID;
-            actionModel.ParentID = parentID;
+            ActionItemModel actionModel = null;
             object inputdata = null;
+            //switch Core Type，和UI Type并不一致，这里需要转换
             switch (action.Action)
             {
                 case Core.Action.Types.ActionType.WriteFile:
-                    actionModel.ActionType = UI.Types.ActionType.WriteFile;
-                    actionModel.ActionName = "创建文件";
-                    actionModel.Icon = "\xF2E6";
-                    var parameterjobject = action.Parameter as JObject;
-                    var parameter = parameterjobject.ToObject<WriteFileActionParameterModel>();
-                    //var parameter =JsonConvert.DeserializeObject(action.Parameter) as WriteFileActionParameterModel;
-                    if (parameter != null)
+                    actionModel = ActionItemsData.Get(UI.Types.ActionType.WriteFile);
+                    var writefileParameter = ObjectConvert.Get<WriteFileActionParameterModel>(action.Parameter);
+                    if (writefileParameter != null)
                     {
                         inputdata = new WriteFileActionInputModel()
                         {
-                            FilePath = parameter.FilePath,
-                            Content = parameter.Content
+                            FilePath = writefileParameter.FilePath,
+                            Content = writefileParameter.Content
+                        };
+                    }
+                    break;
+                case Core.Action.Types.ActionType.HttpGet:
+                    actionModel = ActionItemsData.Get(UI.Types.ActionType.HttpGet);
+                    var httpgetParameter = ObjectConvert.Get<HttpGetActionParameterModel>(action.Parameter);
+                    if (httpgetParameter != null)
+                    {
+                        inputdata = new HttpGetActionInputModel()
+                        {
+                            Url = httpgetParameter.Url
                         };
                     }
                     break;
             }
+            if (actionModel == null)
+            {
+                return;
+            }
+            actionModel.ID = action.ID;
+            actionModel.ParentID = parentID;
             AddItem(actionModel, inputdata);
         }
         private void ImportIFAction(Core.Action.Models.ActionModel action)
@@ -884,13 +849,8 @@ namespace ProjectEvent.UI.Controls.Action
             var parameterjobject = action.Parameter as JObject;
             var ifParameter = parameterjobject.ToObject<IFActionParameterModel>();
 
-            //var ifParameter = action.Parameter as IFActionParameterModel;
-            var ifActionModel = new ActionItemModel();
-            //ifActionModel.ID = GetCreateActionID();
+            var ifActionModel = ActionItemsData.Get(UI.Types.ActionType.IF);
             ifActionModel.ID = action.ID;
-            ifActionModel.ActionName = "判断";
-            ifActionModel.ActionType = UI.Types.ActionType.IF;
-            ifActionModel.Icon = "\xE9D4";
             var ifActionInputData = new IFActionInputModel();
             ifActionInputData.Left = ifParameter.LeftInput;
             ifActionInputData.Right = ifParameter.RightInput;
@@ -905,10 +865,8 @@ namespace ProjectEvent.UI.Controls.Action
                 }
             }
             //创建else action
-            var elseActionModel = new ActionItemModel();
+            var elseActionModel = ActionItemsData.Get(UI.Types.ActionType.IFElse);
             elseActionModel.ID = GetCreateActionID();
-            elseActionModel.ActionName = "否则";
-            elseActionModel.ActionType = UI.Types.ActionType.IFElse;
             elseActionModel.ParentID = ifActionModel.ID;
             AddItem(elseActionModel);
             //创建unpass子级
@@ -920,11 +878,9 @@ namespace ProjectEvent.UI.Controls.Action
                 }
             }
             //创建end action
-            var endActionModel = new ActionItemModel();
+            var endActionModel = ActionItemsData.Get(UI.Types.ActionType.IFEnd);
             endActionModel.ID = GetCreateActionID();
-            endActionModel.ActionName = "判断结束";
             endActionModel.ParentID = ifActionModel.ID;
-            endActionModel.ActionType = UI.Types.ActionType.IFEnd;
             AddItem(endActionModel);
         }
         #endregion

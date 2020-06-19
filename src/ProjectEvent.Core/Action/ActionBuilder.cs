@@ -66,6 +66,9 @@ namespace ProjectEvent.Core.Action
 
                 case ActionType.IF:
                     return new IFAction().GenerateAction(taskID, actionID, parameter);
+                case ActionType.HttpGet:
+                    return new HttpGetAction().GenerateAction(taskID, actionID, parameter);
+
                 default:
                     return null;
             }

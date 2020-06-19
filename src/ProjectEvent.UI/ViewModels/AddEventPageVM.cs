@@ -2,6 +2,7 @@
 using ProjectEvent.Core.Event.Types;
 using ProjectEvent.Core.Helper;
 using ProjectEvent.UI.Controls.Action;
+using ProjectEvent.UI.Controls.Action.Data;
 using ProjectEvent.UI.Controls.InputGroup.Models;
 using ProjectEvent.UI.Models;
 using ProjectEvent.UI.Models.ConditionModels;
@@ -46,7 +47,7 @@ namespace ProjectEvent.UI.ViewModels
             IsActionsTabItemSelected = true;
             InitEvents();
             InitConditions();
-            InitComboxAcions();
+            InitAcions();
 
         }
 
@@ -109,13 +110,10 @@ namespace ProjectEvent.UI.ViewModels
             InitConditions();
             //Actions.Clear();
         }
+
+        #region 初始化事件
         private void InitEvents()
         {
-            //Events.Add(new Controls.ItemSelect.Models.ItemModel()
-            //{
-            //    ID = 1,
-            //    Title = "日期更改",
-            //});
             Events.Add(new Controls.ItemSelect.Models.ItemModel()
             {
                 ID = (int)EventType.OnIntervalTimer,
@@ -132,21 +130,34 @@ namespace ProjectEvent.UI.ViewModels
                 Title = "进程创建",
             });
         }
+        #endregion
 
-        private void InitComboxAcions()
+        #region 初始化Actions
+        private void InitAcions()
         {
             ComBoxActions.Add(new ComBoxActionModel()
             {
-                ID = 1,
+                ID = (int)Types.ActionType.WriteFile,
                 Name = "创建文件"
             });
             ComBoxActions.Add(new ComBoxActionModel()
             {
-                ID = 2,
+                ID = (int)Types.ActionType.IF,
                 Name = "判断"
+            });
+            ComBoxActions.Add(new ComBoxActionModel()
+            {
+                ID = (int)Types.ActionType.HttpGet,
+                Name = "HTTP GET请求"
             });
             ComBoxSelectedAction = ComBoxActions[0];
         }
+        #endregion
+
+        #region 初始化事件条件
+        /// <summary>
+        /// 初始化事件条件
+        /// </summary>
         private void InitConditions()
         {
             var cds = new List<InputModel>();
@@ -175,45 +186,44 @@ namespace ProjectEvent.UI.ViewModels
 
             Conditions = cds;
         }
-
+        #endregion
         private void OnAddActionCommand(object obj)
         {
             var container = obj as ActionContainer;
-            switch (ComBoxSelectedAction.ID)
+            switch ((Types.ActionType)ComBoxSelectedAction.ID)
             {
-                case 1:
-                    container.AddItem(new ActionItemModel()
-                    {
-                        ID = container.GetCreateActionID(),
-                        ActionName = "创建文件",
-                        ActionType = Types.ActionType.WriteFile,
-                        Icon = "\xF2E6",
-                        //Index = new Random().Next(10)
-                    });
-                    break;
-                case 2:
+                //case 1:
+                //    container.AddItem(new ActionItemModel()
+                //    {
+                //        ID = container.GetCreateActionID(),
+                //        ActionName = "创建文件",
+                //        ActionType = Types.ActionType.WriteFile,
+                //        Icon = "\xF2E6",
+                //        //Index = new Random().Next(10)
+                //    });
+                //    break;
+                //特殊action 单独处理
+                case Types.ActionType.IF:
                     int id = container.GetCreateActionID();
-                    container.AddItem(new ActionItemModel()
-                    {
-                        ID = id,
-                        ActionName = "判断",
-                        ActionType = Types.ActionType.IF,
-                        Icon = "\xE9D4",
-                    });
-                    container.AddItem(new ActionItemModel()
-                    {
-                        ID = container.GetCreateActionID(),
-                        ActionName = "否则",
-                        ActionType = Types.ActionType.IFElse,
-                        ParentID = id
-                    });
-                    container.AddItem(new ActionItemModel()
-                    {
-                        ID = container.GetCreateActionID(),
-                        ActionName = "判断结束",
-                        ActionType = Types.ActionType.IFEnd,
-                        ParentID = id
-                    });
+                    var ifmodel = ActionItemsData.Get((Types.ActionType)ComBoxSelectedAction.ID);
+                    ifmodel.ID = id;
+                    container.AddItem(ifmodel);
+
+                    var elsemodel = ActionItemsData.Get(Types.ActionType.IFElse);
+                    elsemodel.ID = container.GetCreateActionID();
+                    elsemodel.ParentID = id;
+                    container.AddItem(elsemodel);
+
+                    var endmodel = ActionItemsData.Get(Types.ActionType.IFEnd);
+                    endmodel.ID = container.GetCreateActionID();
+                    endmodel.ParentID = id;
+                    container.AddItem(endmodel);
+                    break;
+                default:
+                    //非特殊action
+                    var model = ActionItemsData.Get((Types.ActionType)ComBoxSelectedAction.ID);
+                    model.ID = container.GetCreateActionID();
+                    container.AddItem(model);
                     break;
             }
 

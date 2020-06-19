@@ -208,6 +208,14 @@ namespace ProjectEvent.UI.Controls.Action
                         BindingName = "Right"
                     });
                     break;
+                case ActionType.HttpGet:
+                    inputs.Add(new ActionInputModel()
+                    {
+                        Title = "URL",
+                        InputType = Types.InputType.Text,
+                        BindingName = "Url"
+                    });
+                    break;
             }
             return inputs;
         }
