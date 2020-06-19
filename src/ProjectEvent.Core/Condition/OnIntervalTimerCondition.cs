@@ -39,7 +39,7 @@ namespace ProjectEvent.Core.Condition
         public bool IsPass()
         {
             var eventLogs = EventLoger.Get(Event.Types.EventType.OnIntervalTimer);
-            if (eventLogs.Count >= Num)
+            if (Num > 0 && eventLogs.Count >= Num)
             {
                 return false;
             }

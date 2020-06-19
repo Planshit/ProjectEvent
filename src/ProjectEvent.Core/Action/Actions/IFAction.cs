@@ -1,5 +1,6 @@
 ﻿using ProjectEvent.Core.Action.Models;
 using ProjectEvent.Core.Action.Types;
+using ProjectEvent.Core.Helper;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,7 +15,7 @@ namespace ProjectEvent.Core.Action.Actions
             var task = new Task<ActionResultModel>(() =>
             {
                 bool isPass = false;
-                var p = parameter as IFActionParameterModel;
+                var p = ObjectConvert.Get<IFActionParameterModel>(parameter);
                 string left, right;
                 //获取左输入
                 left = ActionTaskResulter.GetActionResultsString(taskID, p.LeftInput);

@@ -118,6 +118,10 @@ namespace ProjectEvent.UI.Controls.Action
             if (Action.ActionType == ActionType.IFElse || Action.ActionType == ActionType.IFEnd)
             {
                 ActionName = $"{Action.ActionName}";
+                Loaded += (e, c) =>
+                {
+                    OnRenderDone?.Invoke(this, null);
+                };
             }
             else
             {

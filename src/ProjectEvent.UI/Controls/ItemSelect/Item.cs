@@ -9,6 +9,7 @@ namespace ProjectEvent.UI.Controls.ItemSelect
 {
     public class Item : Control
     {
+        public int ID { get; set; }
         public string Title
         {
             get { return (string)GetValue(TitleProperty); }

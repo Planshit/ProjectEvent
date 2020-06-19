@@ -22,6 +22,10 @@ namespace ProjectEvent.Core.Action
         /// <param name="value">action result</param>
         public static void Add(int id, ActionResultModel value)
         {
+            if (id <= 0)
+            {
+                return;
+            }
             var taskActionRes = new List<ActionResultModel>();
             if (_actionResults.ContainsKey(id))
             {

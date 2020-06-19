@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using ProjectEvent.Core.Helper;
+using ProjectEvent.UI.Controls.ItemSelect.Models;
 using ProjectEvent.UI.Models;
 using ProjectEvent.UI.Models.DataModels;
 using System;
@@ -20,17 +22,28 @@ namespace ProjectEvent.UI.ViewModels
             RedirectCommand = new Command(new Action<object>(OnRedirectCommand));
             PropertyChanged += IndexPageVM_PropertyChanged;
             Projects = new System.Collections.ObjectModel.ObservableCollection<Controls.ItemSelect.Models.ItemModel>();
+            Projects.CollectionChanged += Projects_CollectionChanged;
             ImportProjects();
             mainVM.Data = null;
         }
 
+        private void Projects_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
+            {
+                foreach (var item in e.OldItems)
+                {
+                    var data = item as ItemModel;
+                    string project = $"Projects\\{data.Title}.project.json";
+                    IOHelper.FileDelete(project);
+                }
+
+            }
+        }
+
         private void ImportProjects()
         {
-            if (!Directory.Exists("Projects"))
-            {
-                Directory.CreateDirectory("Projects");
-            }
-            DirectoryInfo folder = new DirectoryInfo("Projects");
+            DirectoryInfo folder = IOHelper.GetDirectoryInfo("Projects");
             int i = 0;
             foreach (FileInfo file in folder.GetFiles("*.project.json"))
             {

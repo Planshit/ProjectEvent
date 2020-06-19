@@ -58,6 +58,15 @@
     <Page Update="Themes\ItemSelect\ItemSelect.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Themes\TabContainer\TabHeaderButton.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\TabContainer\TabItem.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\TabContainer\TabContainer.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>

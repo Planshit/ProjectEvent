@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using ProjectEvent.Core.Event.Types;
+using ProjectEvent.Core.Helper;
 using ProjectEvent.UI.Controls.Action;
 using ProjectEvent.UI.Controls.InputGroup.Models;
 using ProjectEvent.UI.Models;
@@ -22,7 +24,6 @@ namespace ProjectEvent.UI.ViewModels
         public Command AddCommand { get; set; }
         public Command ActionDialogStateCommand { get; set; }
         public Command ShowActionDialogCommand { get; set; }
-        public Command ImportCommand { get; set; }
         private readonly MainViewModel mainVM;
         public Command RedirectCommand { get; set; }
         public Command LoadedCommand { get; set; }
@@ -39,10 +40,10 @@ namespace ProjectEvent.UI.ViewModels
             AddCommand = new Command(new Action<object>(OnAddCommand));
             ActionDialogStateCommand = new Command(new Action<object>(OnActionDialogStateCommand));
             ShowActionDialogCommand = new Command(new Action<object>(OnShowActionDialogCommand));
-            ImportCommand = new Command(new Action<object>(OnImportCommandCommand));
-            StepIndex = 0;
             AddACtionDialogVisibility = System.Windows.Visibility.Hidden;
             PropertyChanged += AddEventPageVM_PropertyChanged;
+
+            IsActionsTabItemSelected = true;
             InitEvents();
             InitConditions();
             InitComboxAcions();
@@ -52,11 +53,8 @@ namespace ProjectEvent.UI.ViewModels
         private void OnLoadedCommand(object obj)
         {
             actionContainer = obj as ActionContainer;
-            StepIndex = 3;
-            actionContainer.RenderDone += (e, c) =>
-            {
-                HandleEdit();
-            };
+
+            HandleEdit();
             //Thread.Sleep(1000);
             //HandleEdit();
         }
@@ -64,13 +62,6 @@ namespace ProjectEvent.UI.ViewModels
         private void OnRedirectCommand(object obj)
         {
             mainVM.Uri = obj.ToString();
-        }
-
-        private void OnImportCommandCommand(object obj)
-        {
-            var a = ConditionData;
-            var container = obj as ActionContainer;
-            container.ImportActionsJson(File.ReadAllText("d:\\action.json"));
         }
 
         private void OnShowActionDialogCommand(object obj)
@@ -94,8 +85,8 @@ namespace ProjectEvent.UI.ViewModels
         {
             var container = obj as ActionContainer;
             string json = GenerateJson(container);
-            File.WriteAllText($"Projects\\{ProjectName}.project.json", json);
-            MessageBox.Show("项目已保存！");
+            IOHelper.WriteFile($"Projects\\{ProjectName}.project.json", json);
+            MessageBox.Show(mainVM.Data == null ? "项目已创建！" : "项目已更新，部分设置重启应用生效！");
             if (mainVM.Data == null)
             {
                 mainVM.Uri = "IndexPage";
@@ -120,15 +111,25 @@ namespace ProjectEvent.UI.ViewModels
         }
         private void InitEvents()
         {
+            //Events.Add(new Controls.ItemSelect.Models.ItemModel()
+            //{
+            //    ID = 1,
+            //    Title = "日期更改",
+            //});
             Events.Add(new Controls.ItemSelect.Models.ItemModel()
             {
-                ID = 1,
-                Title = "日期更改",
+                ID = (int)EventType.OnIntervalTimer,
+                Title = "计时器",
             });
             Events.Add(new Controls.ItemSelect.Models.ItemModel()
             {
-                ID = 2,
-                Title = "循环计时",
+                ID = (int)EventType.OnDeviceStartup,
+                Title = "开机事件",
+            });
+            Events.Add(new Controls.ItemSelect.Models.ItemModel()
+            {
+                ID = (int)EventType.OnProcessStartup,
+                Title = "进程创建",
             });
         }
 
@@ -149,11 +150,10 @@ namespace ProjectEvent.UI.ViewModels
         private void InitConditions()
         {
             var cds = new List<InputModel>();
-            switch (SelectedEventID)
+            switch ((EventType)SelectedEventID)
             {
-                case 1:
-                    break;
-                case 2:
+
+                case EventType.OnIntervalTimer:
                     //循环计时
                     ConditionData = new IntervalTimerConditionModel();
                     cds.Add(new InputModel()
@@ -237,23 +237,26 @@ namespace ProjectEvent.UI.ViewModels
             if (mainVM.Data != null)
             {
                 string projectName = mainVM.Data.ToString();
-                if (File.Exists($"Projects\\{projectName}.project.json"))
+                if (IOHelper.FileExists($"Projects\\{projectName}.project.json"))
                 {
                     Title = $"编辑Project - {projectName}";
                     ButtonSaveName = "保存";
 
                     //导入
-                    var project = JsonConvert.DeserializeObject<ProjectModel>(File.ReadAllText($"Projects\\{projectName}.project.json"));
+                    var project = JsonConvert.DeserializeObject<ProjectModel>(File.ReadAllText(IOHelper.GetFullPath($"Projects\\{projectName}.project.json")));
                     if (project != null)
                     {
                         ProjectName = project.ProjectName;
                         SelectedEventID = project.EventID;
                         ConditionData = project.ConditionData;
                         actionContainer.ImportActions(project.Actions);
-                        StepIndex = 0;
                     }
 
                 }
+            }
+            else
+            {
+                IsInfoTabItemSelected = true;
             }
         }
     }

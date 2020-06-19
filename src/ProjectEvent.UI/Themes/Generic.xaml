@@ -14,5 +14,10 @@
         <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/ItemSelect/Item.xaml"/>
 
         <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/InputGroup/InputGroup.xaml"/>
+
+        <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/TabContainer/TabContainer.xaml" />
+        <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/TabContainer/TabItem.xaml"/>
+        <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/TabContainer/TabHeaderButton.xaml"/>
+
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

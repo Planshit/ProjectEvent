@@ -9,7 +9,11 @@
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
 
       Title="AddEventPage">
-
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=container}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -23,21 +27,21 @@
             <Button Content="返回" Command="{Binding RedirectCommand}" CommandParameter="IndexPage" Width="120" Height="30" VerticalAlignment="Center"/>
             <Label  Margin="20,0,0,0" Content="{Binding Title}" FontSize="20"  VerticalAlignment="Center"/>
         </StackPanel>
-        
-        <TabControl SelectedIndex="{Binding StepIndex,Mode=TwoWay}" Grid.Row="1">
-            <TabItem Header="描述">
+
+        <TabControl Grid.Row="1">
+            <TabItem Header="描述" IsSelected="{Binding IsInfoTabItemSelected,Mode=TwoWay}">
                 <StackPanel>
                     <Label Content="Project名称"/>
                     <TextBox Text="{Binding ProjectName,Mode=TwoWay}"/>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="事件">
+            <TabItem Header="事件" IsSelected="{Binding IsEventTabItemSelected,Mode=TwoWay}">
                 <ItemSelect:ItemSelect Items="{Binding Events,Mode=TwoWay}" SelectID="{Binding SelectedEventID,Mode=TwoWay}"/>
             </TabItem>
-            <TabItem Header="条件">
+            <TabItem Header="条件" IsSelected="{Binding IsConditionTabItemSelected,Mode=TwoWay}">
                 <InputGroup:InputGroup Groups="{Binding Conditions}" DataSource="{Binding ConditionData}"/>
             </TabItem>
-            <TabItem Header="操作">
+            <TabItem Header="操作" IsSelected="{Binding IsActionsTabItemSelected,Mode=TwoWay}">
                 <Grid>
                     <Grid Panel.ZIndex="2" Visibility="{Binding AddACtionDialogVisibility}">
                         <Border Background="White" Margin="20" Panel.ZIndex="1">
@@ -66,11 +70,7 @@
                         <Border Background="Black" Opacity=".5"/>
                     </Grid>
                     <Action:ActionContainer x:Name="container" Grid.Row="1" AddActionCommand="{Binding ShowActionDialogCommand}">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="Loaded">
-                                <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=container}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
+
                     </Action:ActionContainer>
                 </Grid>
             </TabItem>

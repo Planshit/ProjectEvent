@@ -1,5 +1,6 @@
 ﻿using ProjectEvent.Core.Action.Models;
 using ProjectEvent.Core.Action.Types;
+using ProjectEvent.Core.Helper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,11 +17,14 @@ namespace ProjectEvent.Core.Action.Actions
         {
             var task = new Task<ActionResultModel>(() =>
             {
-                var p = parameter as WriteFileActionParameterModel;
+                var p = ObjectConvert.Get<WriteFileActionParameterModel>(parameter);
                 var result = new ActionResultModel();
                 result.ID = actionID;
                 result.Result = new Dictionary<int, string>();
                 result.Result.Add((int)CommonResultKeyType.Status, "false");
+                p.FilePath = ActionTaskResulter.GetActionResultsString(taskID, p.FilePath);
+                p.Content = ActionTaskResulter.GetActionResultsString(taskID, p.Content);
+
                 Debug.WriteLine("write file:" + p.FilePath);
                 //Thread.Sleep(5000);
                 try

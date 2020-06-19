@@ -26,7 +26,7 @@ namespace ProjectEvent.Core.Services.TimerTask
             _eventContainerService = eventContainerService;
             _timerService = timerService;
 
-            _eventContainerService.OnAddEvent += _eventContainerService_OnAddEvent;
+            //_eventContainerService.OnAddEvent += _eventContainerService_OnAddEvent;
 
             _handledEventIDs = new List<int>();
         }

@@ -1,8 +1,11 @@
 ﻿using ProjectEvent.UI.Controls.ItemSelect.Models;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -68,6 +71,14 @@ namespace ProjectEvent.UI.Controls.ItemSelect
                     AddItem(data);
                 }
             }
+            else if(e.Action== NotifyCollectionChangedAction.Remove)
+            {
+                foreach (var item in e.OldItems)
+                {
+                    var data = item as ItemModel;
+                    Remove(data.ID);
+                }
+            }
         }
         #endregion
 
@@ -78,14 +89,26 @@ namespace ProjectEvent.UI.Controls.ItemSelect
             set { SetValue(SelectIDProperty, value); }
         }
         public static readonly DependencyProperty SelectIDProperty =
-            DependencyProperty.Register("SelectID", typeof(int), typeof(ItemSelect), new PropertyMetadata(1));
+            DependencyProperty.Register("SelectID", typeof(int), typeof(ItemSelect), new PropertyMetadata(1, new PropertyChangedCallback(OnSelectIDChanged)));
+
+        private static void OnSelectIDChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var control = (ItemSelect)d;
+            control.Select((int)e.NewValue);
+        }
         #endregion
         private WrapPanel container;
         private Dictionary<int, Item> itemControls;
+        ContextMenu contextMenu;
+        MenuItem menuItemDel = new MenuItem();
         public ItemSelect()
         {
             DefaultStyleKey = typeof(ItemSelect);
             itemControls = new Dictionary<int, Item>();
+            contextMenu = new ContextMenu();
+            menuItemDel = new MenuItem();
+            menuItemDel.Header = "删除";
+            contextMenu.Items.Add(menuItemDel);
         }
         public override void OnApplyTemplate()
         {
@@ -108,6 +131,7 @@ namespace ProjectEvent.UI.Controls.ItemSelect
         {
             var item = new Item();
             item.Title = data.Title;
+            item.ID = data.ID;
             item.Description = data.Description;
             item.Icon = data.Icon;
             item.IsSelected = data.IsSelected;
@@ -116,10 +140,25 @@ namespace ProjectEvent.UI.Controls.ItemSelect
                 item.IsSelected = !item.IsSelected;
                 Select(data.ID);
             };
+            item.MouseRightButtonUp += Item_MouseRightButtonUp;
             container.Children.Add(item);
             itemControls.Add(data.ID, item);
         }
 
+        private void Item_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            menuItemDel.Click += (e, c) =>
+            {
+                var item = sender as Item;
+                Items.Remove(Items.Where(m => m.ID == item.ID).FirstOrDefault());
+            };
+            contextMenu.IsOpen = true;
+        }
+        private void Remove(int id)
+        {
+            container.Children.Remove(itemControls[id]);
+            itemControls.Remove(id);
+        }
         private void Select(int id)
         {
             SelectID = id;

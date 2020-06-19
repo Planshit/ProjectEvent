@@ -12,41 +12,41 @@ namespace ProjectEvent.Core.Event.Types
         /// <summary>
         /// 时钟发生变化
         /// </summary>
-        OnTimerChanged,
-        
+        OnTimerChanged = 1,
+
         /// <summary>
         /// 设备启动
         /// </summary>
-        OnDeviceStartup,
+        OnDeviceStartup = 2,
 
         /// <summary>
         /// 设备关闭
         /// </summary>
-        OnDeviceShutdown,
+        OnDeviceShutdown = 3,
 
         /// <summary>
         /// 网络断开
         /// </summary>
-        OnNetworkDisconnection,
+        OnNetworkDisconnection = 4,
 
         /// <summary>
         /// 进程启动
         /// </summary>
-        OnProcessStartup,
+        OnProcessStartup = 5,
 
         /// <summary>
         /// 进程关闭
         /// </summary>
-        OnProcessShutdown,
+        OnProcessShutdown = 6,
 
         /// <summary>
         /// 鼠标单击
         /// </summary>
-        OnMouseClick,
+        OnMouseClick = 7,
 
         /// <summary>
-        /// 间隔重复计时
+        /// 计时器
         /// </summary>
-        OnIntervalTimer,
+        OnIntervalTimer = 8,
     }
 }

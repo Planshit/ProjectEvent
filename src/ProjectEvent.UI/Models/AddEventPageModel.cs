@@ -74,5 +74,30 @@ namespace ProjectEvent.UI.Models
             get { return ComBoxSelectedAction_; }
             set { ComBoxSelectedAction_ = value; OnPropertyChanged(); }
         }
+
+        private bool IsInfoTabItemSelected_ = false;
+        public bool IsInfoTabItemSelected
+        {
+            get { return IsInfoTabItemSelected_; }
+            set { IsInfoTabItemSelected_ = value; OnPropertyChanged(); }
+        }
+        private bool IsEventTabItemSelected_ = false;
+        public bool IsEventTabItemSelected
+        {
+            get { return IsEventTabItemSelected_; }
+            set { IsEventTabItemSelected_ = value; OnPropertyChanged(); }
+        }
+        private bool IsConditionTabItemSelected_ = false;
+        public bool IsConditionTabItemSelected
+        {
+            get { return IsConditionTabItemSelected_; }
+            set { IsConditionTabItemSelected_ = value; OnPropertyChanged(); }
+        }
+        private bool IsActionsTabItemSelected_ = false;
+        public bool IsActionsTabItemSelected
+        {
+            get { return IsActionsTabItemSelected_; }
+            set { IsActionsTabItemSelected_ = value; OnPropertyChanged(); }
+        }
     }
 }

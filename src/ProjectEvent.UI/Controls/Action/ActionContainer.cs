@@ -153,6 +153,7 @@ namespace ProjectEvent.UI.Controls.Action
         {
             if (!appendList.Contains(action))
             {
+                Debug.WriteLine(action.ActionName);
                 appendList.Add(action);
                 appendInputDataList.Add(inputdata);
             }
@@ -200,6 +201,7 @@ namespace ProjectEvent.UI.Controls.Action
                     return;
                 }
                 item.Tag = string.Empty;
+                Debug.WriteLine(item.ActionName + "," + item.ActualHeight);
                 ActionPanel.Height += item.ActualHeight;
                 if (double.IsNaN(ActionPanel.Height))
                 {
@@ -938,18 +940,7 @@ namespace ProjectEvent.UI.Controls.Action
             endActionModel.ActionType = UI.Types.ActionType.IFEnd;
             AddItem(endActionModel);
         }
-        public int GetCreateActionID()
-        {
-            if (ActionItems.Count == 0)
-            {
-                return 1;
-            }
-            else
-            {
-                importCount++;
-                return importCount;
-            }
-        }
+
         private ComBoxModel GetComboxModel(Core.Action.Types.IFActionConditionType condition)
         {
             var result = new ComBoxModel();
@@ -965,6 +956,14 @@ namespace ProjectEvent.UI.Controls.Action
                     break;
             }
             return result;
+        }
+        #endregion
+
+        #region 生成action id
+        public int GetCreateActionID()
+        {
+            importCount++;
+            return importCount;
         }
         #endregion
     }

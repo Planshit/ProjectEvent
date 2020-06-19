@@ -58,7 +58,7 @@ namespace ProjectEvent.Core.Services
             var timer = new Timer();
             timer.Interval = seconds * 1000;
 
-            Debug.WriteLine("任务在：" + timer.Interval + "秒后执行");
+            Debug.WriteLine("任务在：" + seconds + "秒后执行");
             timer.Elapsed += (e, c) =>
             {
                 action?.Invoke();

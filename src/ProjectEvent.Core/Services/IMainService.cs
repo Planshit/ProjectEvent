@@ -6,6 +6,9 @@ namespace ProjectEvent.Core.Services
 {
     public interface IMainService
     {
-        void Start();
+        /// <summary>
+        /// 启动
+        /// </summary>
+        void Run();
     }
 }

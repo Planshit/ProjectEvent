@@ -1,4 +1,6 @@
-﻿using ProjectEvent.Core.Action.Models;
+﻿using Newtonsoft.Json.Linq;
+using ProjectEvent.Core.Action.Models;
+using ProjectEvent.Core.Helper;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,7 +16,7 @@ namespace ProjectEvent.Core.Action.Checks
         }
         public bool IsCheck()
         {
-            var p = (parameter as WriteFileActionParameterModel);
+            var p = ObjectConvert.Get<WriteFileActionParameterModel>(parameter);
             if (p == null)
             {
                 return false;
