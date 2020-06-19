@@ -9,18 +9,18 @@ namespace ProjectEvent.Core.Action.Types
         /// <summary>
         /// 等于
         /// </summary>
-        Equal,
+        Equal = 1,
         /// <summary>
         /// 不等于
         /// </summary>
-        UnEqual,
+        UnEqual = 2,
         /// <summary>
         /// 包含
         /// </summary>
-        Has,
+        Has = 3,
         /// <summary>
         /// 不包含
         /// </summary>
-        Miss
+        Miss = 4
     }
 }

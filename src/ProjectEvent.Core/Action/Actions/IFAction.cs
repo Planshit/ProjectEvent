@@ -31,6 +31,12 @@ namespace ProjectEvent.Core.Action.Actions
                     case Types.IFActionConditionType.UnEqual:
                         isPass = left != right;
                         break;
+                    case Types.IFActionConditionType.Has:
+                        isPass = left.IndexOf(right) != -1;
+                        break;
+                    case Types.IFActionConditionType.Miss:
+                        isPass = left.IndexOf(right) == -1;
+                        break;
                 }
 
                 if (isPass)

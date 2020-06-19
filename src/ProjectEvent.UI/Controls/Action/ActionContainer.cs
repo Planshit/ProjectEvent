@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ProjectEvent.Core.Action.Models;
+using ProjectEvent.UI.Controls.Action.Data;
 using ProjectEvent.UI.Controls.Action.Models;
 using ProjectEvent.UI.Models.DataModels;
 using ProjectEvent.UI.ViewModels;
@@ -236,7 +237,7 @@ namespace ProjectEvent.UI.Controls.Action
                 case UI.Types.ActionType.IF:
                     result = new IFActionInputModel()
                     {
-                        Condition = GetComboxModel(Core.Action.Types.IFActionConditionType.Equal)
+                        Condition = IFActionConditionData.ComBoxData[0]
                     };
 
                     break;
@@ -784,26 +785,12 @@ namespace ProjectEvent.UI.Controls.Action
                 {
                     LeftInput = inputdata.Left,
                     RightInput = inputdata.Right,
-                    Condition = GetIFActioinCondition(inputdata.Condition == null ? 1 : inputdata.Condition.ID),
+                    Condition = inputdata.Condition == null ? Core.Action.Types.IFActionConditionType.Equal : (Core.Action.Types.IFActionConditionType)inputdata.Condition.ID,
                     PassActions = passActions,
                     NoPassActions = unpassActions
                 },
                 Num = 1
             };
-            return result;
-        }
-        private Core.Action.Types.IFActionConditionType GetIFActioinCondition(int id)
-        {
-            var result = Core.Action.Types.IFActionConditionType.Equal;
-            switch (id)
-            {
-                case 1:
-                    result = Core.Action.Types.IFActionConditionType.Equal;
-                    break;
-                case 2:
-                    result = Core.Action.Types.IFActionConditionType.UnEqual;
-                    break;
-            }
             return result;
         }
         #endregion
@@ -907,7 +894,7 @@ namespace ProjectEvent.UI.Controls.Action
             var ifActionInputData = new IFActionInputModel();
             ifActionInputData.Left = ifParameter.LeftInput;
             ifActionInputData.Right = ifParameter.RightInput;
-            ifActionInputData.Condition = GetComboxModel(ifParameter.Condition);
+            ifActionInputData.Condition = IFActionConditionData.GetCombox((int)ifParameter.Condition);
             AddItem(ifActionModel, ifActionInputData);
             //创建pass子级
             if (ifParameter.PassActions.Count > 0)
@@ -939,23 +926,6 @@ namespace ProjectEvent.UI.Controls.Action
             endActionModel.ParentID = ifActionModel.ID;
             endActionModel.ActionType = UI.Types.ActionType.IFEnd;
             AddItem(endActionModel);
-        }
-
-        private ComBoxModel GetComboxModel(Core.Action.Types.IFActionConditionType condition)
-        {
-            var result = new ComBoxModel();
-            switch (condition)
-            {
-                case Core.Action.Types.IFActionConditionType.Equal:
-                    result.ID = 1;
-                    result.DisplayName = "等于";
-                    break;
-                case Core.Action.Types.IFActionConditionType.UnEqual:
-                    result.ID = 2;
-                    result.DisplayName = "不等于";
-                    break;
-            }
-            return result;
         }
         #endregion
 

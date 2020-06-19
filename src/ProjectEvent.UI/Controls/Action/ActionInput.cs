@@ -71,7 +71,6 @@ namespace ProjectEvent.UI.Controls.Action
         private bool isEnterPopup;
         public ActionContainer ActionContainer { get; set; }
         private Button addActionResultBtn;
-        public List<string> SelectItems { get; set; }
         //public InputType InputType { get; set; }
         public ActionInput()
         {
@@ -121,14 +120,14 @@ namespace ProjectEvent.UI.Controls.Action
                     });
                     break;
                 case InputType.Select:
-                    for (int i = 0; i < SelectItems.Count; i++)
-                    {
-                        ComboBoxItemsSource.Add(new ComBoxModel()
-                        {
-                            ID = (i + 1),
-                            DisplayName = SelectItems[i]
-                        });
-                    }
+                    //for (int i = 0; i < SelectItems.Count; i++)
+                    //{
+                    //    ComboBoxItemsSource.Add(new ComBoxModel()
+                    //    {
+                    //        ID = (i + 1),
+                    //        DisplayName = SelectItems[i]
+                    //    });
+                    //}
                     //绑定数据
                     SelectComboBox.ItemsSource = ComboBoxItemsSource;
                     SelectComboBox.SelectedValuePath = "ID";

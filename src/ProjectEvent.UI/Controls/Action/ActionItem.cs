@@ -1,4 +1,5 @@
-﻿using ProjectEvent.UI.Controls.Action.Models;
+﻿using ProjectEvent.UI.Controls.Action.Data;
+using ProjectEvent.UI.Controls.Action.Models;
 using ProjectEvent.UI.Models.DataModels;
 using ProjectEvent.UI.Types;
 using System;
@@ -193,16 +194,12 @@ namespace ProjectEvent.UI.Controls.Action
                     {
                         Title = "如果",
                         InputType = Types.InputType.Text,
-                        BindingName="Left"
+                        BindingName = "Left"
                     });
                     inputs.Add(new ActionInputModel()
                     {
                         InputType = Types.InputType.Select,
-                        SelectItems = new List<string>()
-                        {
-                            "等于",
-                            "不等于",
-                        },
+                        SelectItems = IFActionConditionData.ComBoxData,
                         BindingName = "Condition"
                     });
                     inputs.Add(new ActionInputModel()

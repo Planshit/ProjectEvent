@@ -10,7 +10,7 @@ namespace ProjectEvent.UI.Controls.Action.Models
         public InputType InputType { get; set; }
         public string Title { get; set; }
         public string BindingName { get; set; }
-        public List<string> SelectItems { get; set; }
+        public List<ComBoxModel> SelectItems { get; set; }
 
     }
 }

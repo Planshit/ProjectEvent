@@ -49,7 +49,7 @@ namespace ProjectEvent.UI.Controls.Action
                 input.ActionContainer = ActionContainer;
                 input.BindingName = item.BindingName;
                 input.InputType = item.InputType;
-                input.SelectItems = item.SelectItems;
+                input.ComboBoxItemsSource = item.SelectItems;
                 input.VerticalAlignment = System.Windows.VerticalAlignment.Center;
                 container.Children.Add(label);
                 container.Children.Add(input);
