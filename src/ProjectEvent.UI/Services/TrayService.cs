@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ProjectEvent.UI.Controls.Window;
 using ProjectEvent.UI.ViewModels;
 using ProjectEvent.UI.Views;
 using System;
@@ -62,7 +63,7 @@ namespace ProjectEvent.UI.Services
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
-                Window mainWindow = _serviceProvider.GetService<MainWindow>();
+                DefaultWindow mainWindow = _serviceProvider.GetService<MainWindow>();
                 mainWindow.DataContext = _serviceProvider.GetService<MainViewModel>();
                 mainWindow.Show();
 

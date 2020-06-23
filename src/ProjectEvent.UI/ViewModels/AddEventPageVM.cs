@@ -117,16 +117,21 @@ namespace ProjectEvent.UI.ViewModels
             {
                 ID = (int)EventType.OnIntervalTimer,
                 Title = "计时器",
+                Icon= Controls.Base.IconTypes.Timer
             });
             Events.Add(new Controls.ItemSelect.Models.ItemModel()
             {
                 ID = (int)EventType.OnDeviceStartup,
                 Title = "设备启动",
+                Color = Base.Color.ColorTypes.Gold
+
             });
             Events.Add(new Controls.ItemSelect.Models.ItemModel()
             {
                 ID = (int)EventType.OnProcessCreated,
                 Title = "进程创建",
+                Color = Base.Color.ColorTypes.Violet
+
             });
         }
         #endregion
@@ -256,6 +261,7 @@ namespace ProjectEvent.UI.ViewModels
             project.ProjectName = ProjectName;
             project.EventID = SelectedEventID;
             project.ConditionData = ConditionData;
+            project.ProjectDescription = ProjectDescription;
             project.Actions = container.GenerateActions();
             var json = JsonConvert.SerializeObject(project);
             return json;
@@ -292,6 +298,7 @@ namespace ProjectEvent.UI.ViewModels
                         ProjectName = project.ProjectName;
                         SelectedEventID = project.EventID;
                         ConditionData = cdata;
+                        ProjectDescription = project.ProjectDescription;
                     }
 
                 }

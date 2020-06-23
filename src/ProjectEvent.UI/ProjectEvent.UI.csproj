@@ -21,12 +21,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Assets\Fonts\FabExMDL2.3.36.ttf" />
+    <None Remove="Assets\Fonts\fabricmdl2icons-2.47.ttf" />
+    <None Remove="Assets\Fonts\SegMDL2.ttf" />
     <None Remove="Assets\Icons\tray.ico" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Assets\Fonts\FabExMDL2.3.36.ttf" />
+    <Resource Include="Assets\Fonts\fabricmdl2icons-2.47.ttf" />
+    <Resource Include="Assets\Fonts\SegMDL2.ttf" />
     <Resource Include="Assets\Icons\tray.ico" />
   </ItemGroup>
 
@@ -53,10 +55,16 @@
     <Page Update="Themes\InputGroup\InputGroup.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Themes\Input\TextField.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Themes\ItemSelect\Item.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Themes\ItemSelect\ItemSelect.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\Navigation\Navigation.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Themes\TabContainer\TabHeaderButton.xaml">

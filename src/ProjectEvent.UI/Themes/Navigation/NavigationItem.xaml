@@ -1,0 +1,54 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:ProjectEvent.UI.Controls.Navigation"
+                    xmlns:base="clr-namespace:ProjectEvent.UI.Controls.Base">
+    <Style TargetType="{x:Type local:NavigationItem}">
+        <Setter Property="SnapsToDevicePixels"
+          Value="true" />
+        <Setter Property="MinWidth" Value="44"/>
+        <Setter Property="MinHeight" Value="44"/>
+        <Setter Property="Height" Value="44"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:NavigationItem}">
+                    <Border Background="{TemplateBinding Background}">
+                        <Grid>
+                            <Rectangle x:Name="Line" Height="1" Width="auto" Fill="{DynamicResource StandardColorBrush}" Visibility="Collapsed"/>
+                            <Grid x:Name="Content">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="15"/>
+                                    <ColumnDefinition Width="50"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="44"/>
+                                </Grid.ColumnDefinitions>
+                                <Rectangle x:Name="CheckMark" Width="2" Fill="{TemplateBinding IconColorBrush}" Visibility="Hidden" Margin="0,10"/>
+                                <!--图标-->
+                                <base:Icon IconType="{TemplateBinding Icon}" Foreground="{TemplateBinding IconColorBrush}" VerticalAlignment="Center" Grid.Column="1"/>
+                                <!--标题-->
+                                <TextBlock RenderOptions.EdgeMode="Aliased" Text="{TemplateBinding Title}" Grid.Column="2" VerticalAlignment="Center" FontSize="14" Foreground="Black"/>
+                                <!--徽标-->
+                                <TextBlock Text="{TemplateBinding BadgeText}" Grid.Column="3" VerticalAlignment="Center"/>
+
+                            </Grid>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Title" Value="">
+                            <Setter Property="Visibility" TargetName="Line" Value="Visible"/>
+                            <Setter Property="Visibility" TargetName="Content" Value="Collapsed"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#f8f9fa"/>
+                            <Setter Property="Visibility" TargetName="CheckMark" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#f5f7f7"/>
+                        </Trigger>
+                     
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

@@ -39,6 +39,10 @@ namespace ProjectEvent.Core.Action
 
         public static void InvokeAction(int taskID, IEnumerable<ActionModel> actions)
         {
+            if (actions == null)
+            {
+                return;
+            }
             foreach (var action in actions)
             {
                 var actionBuilder = new ActionBuilder(action.Action, action.Parameter);

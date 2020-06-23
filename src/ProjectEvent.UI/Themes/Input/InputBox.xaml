@@ -1,0 +1,74 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:ProjectEvent.UI.Controls.Input"
+                    xmlns:base="clr-namespace:ProjectEvent.UI.Controls.Base">
+    <Style TargetType="{x:Type local:InputBox}">
+        <Setter Property="SnapsToDevicePixels"
+          Value="true" />
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Width" Value="150"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Padding" Value="8,0"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Foreground" Value="{DynamicResource StandardTextBrush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:InputBox}">
+                    <Border Background="{TemplateBinding Background}">
+                        <Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition x:Name="IconWidth" Width="26"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid>
+                                    <ScrollViewer x:Name="PART_ContentHost" Panel.ZIndex="2"/>
+                                    <!--<TextBox x:Name="TextBox" OverridesDefaultStyle="True" Text="{TemplateBinding Content}" VerticalContentAlignment="Center" Panel.ZIndex="999" Foreground="{TemplateBinding Foreground}"/>-->
+                                    <TextBlock x:Name="Placeholder" Text="{TemplateBinding Placeholder}" Foreground="{DynamicResource PlaceholderBrush}" Visibility="Collapsed" Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
+                                </Grid>
+                                <base:Icon x:Name="Icon" IconType="{TemplateBinding IconType}" Grid.Column="1" Margin="0,0,8,0" Focusable="False"/>
+                            </Grid>
+                            <Border BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="2"
+                                    Panel.ZIndex="1"/>
+                        </Grid>
+
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Text" Value="" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Visibility" TargetName="Placeholder" Value="Visible"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="BorderBrush" Value="{DynamicResource InputBorderHoverBrush}"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition SourceName="Icon" Property="IconType" Value="None" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="Icon" Property="Visibility" Value="Collapsed"/>
+                            <Setter TargetName="IconWidth" Property="Width" Value="0"/>
+
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsFocused" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryColorBrush}"/>
+                            <Setter Property="BorderThickness" Value="2"/>
+
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

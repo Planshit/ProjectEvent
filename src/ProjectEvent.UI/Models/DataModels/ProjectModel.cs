@@ -7,9 +7,14 @@ namespace ProjectEvent.UI.Models.DataModels
     public class ProjectModel
     {
         /// <summary>
-        /// 项目名称
+        /// 方案名称
         /// </summary>
         public string ProjectName { get; set; }
+        /// <summary>
+        /// 方案描述
+        /// </summary>
+        public string ProjectDescription { get; set; }
+
         /// <summary>
         /// 事件ID
         /// </summary>

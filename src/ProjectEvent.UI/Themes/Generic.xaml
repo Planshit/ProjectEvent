@@ -19,5 +19,13 @@
         <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/TabContainer/TabItem.xaml"/>
         <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/TabContainer/TabHeaderButton.xaml"/>
 
+        <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Base/Icon.xaml"/>
+        <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Input/InputBox.xaml"/>
+        <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Input/TextField.xaml"/>
+        <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Window/DefaultWindow.xaml"/>
+
+        <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Navigation/NavigationItem.xaml"/>
+        <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Navigation/Navigation.xaml"/>
+
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

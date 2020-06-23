@@ -69,11 +69,14 @@ namespace ProjectEvent.UI.Services
                     break;
                 case EventType.OnIntervalTimer:
                     var ttimerconditionData = ObjectConvert.Get<IntervalTimerConditionModel>(project.ConditionData);
-                    condition = new OnIntervalTimerCondition()
+                    if (ttimerconditionData != null)
                     {
-                        Num = int.Parse(ttimerconditionData.Num),
-                        Seconds = int.Parse(ttimerconditionData.Second)
-                    };
+                        condition = new OnIntervalTimerCondition()
+                        {
+                            Num = int.Parse(ttimerconditionData.Num),
+                            Seconds = int.Parse(ttimerconditionData.Second)
+                        };
+                    }
                     break;
                 case EventType.OnProcessCreated:
                     var pcconditionData = ObjectConvert.Get<ProcessCreatedConditionModel>(project.ConditionData);

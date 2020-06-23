@@ -1,0 +1,49 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace ProjectEvent.UI.Controls.Base
+{
+    public class IconConverter
+    {
+        private static Dictionary<IconTypes, string> iconUnicodes = new Dictionary<IconTypes, string>()
+        {
+            {IconTypes.None,""},
+            {IconTypes.Back,"\xE72B"},
+            {IconTypes.Calendar,"\xE787"},
+            {IconTypes.ChevronDown,"\xE70D"},
+            {IconTypes.CheckMark,"\xE73E"},
+            {IconTypes.CompletedSolid,"\xEC61"},
+            {IconTypes.RadioBtnOn,"\xECCB"},
+            {IconTypes.StatusCircleOuter,"\xF136"},
+            {IconTypes.AcceptMedium,"\xF78C"},
+            {IconTypes.Accept,"\xE8FB"},
+            {IconTypes.Timer,"\xE91E"},
+            {IconTypes.StatusCircleQuestionMark,"\xF142"},
+            {IconTypes.ProjectDocument,"\xF759"},
+            {IconTypes.AutomateFlow,"\xE3F5"},
+            {IconTypes.FlashAuto,"\xE95C"},
+            {IconTypes.ProductVariant,"\xEE30"},
+            {IconTypes.AppIconDefault,"\xECAA"},
+            {IconTypes.ChromeMinimize,"\xE921"},
+            {IconTypes.ChromeClose,"\xE8BB"},
+            {IconTypes.ChromeRestore,"\xE923"},
+            {IconTypes.CalculatorMultiply,"\xE947"},
+            {IconTypes.SquareShape,"\xF1A6"},
+            {IconTypes.More,"\xE712"},
+
+            {IconTypes.ChevronUp,"\xE70E"}
+
+        };
+        public static string ToUnicode(IconTypes iconType)
+        {
+            return iconUnicodes[iconType];
+        }
+        public static IconTypes ToType(string unicode)
+        {
+            var type = iconUnicodes.Where(m => m.Value == unicode).Select(s => s.Key).FirstOrDefault();
+            return type;
+        }
+    }
+}

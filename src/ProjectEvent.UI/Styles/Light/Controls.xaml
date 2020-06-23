@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:ProjectEvent.UI.Styles.Light">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Styles/Light/Button/DefaultButton.xaml" />
+        <ResourceDictionary Source="/Styles/Light/Base/Text.xaml" />
+        <ResourceDictionary Source="/Styles/Light/Base/ComboBox.xaml" />
+        <ResourceDictionary Source="/Styles/Light/Base/CheckBox.xaml" />
+
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

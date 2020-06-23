@@ -1,26 +1,31 @@
-﻿<Page x:Class="ProjectEvent.UI.Views.IndexPage"
+﻿<Page xmlns:Base="clr-namespace:ProjectEvent.UI.Controls.Base" 
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ProjectEvent.UI.Views"
       xmlns:ItemSelect="clr-namespace:ProjectEvent.UI.Controls.ItemSelect"
+      xmlns:Navigation="clr-namespace:ProjectEvent.UI.Controls.Navigation" x:Class="ProjectEvent.UI.Views.IndexPage"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="IndexPage">
+    <Page.Background>
+        <SolidColorBrush Color="{DynamicResource PrimaryColor}" Opacity=".1"/>
+    </Page.Background>
 
-    <Grid Margin="10">
+    <Grid Margin="10,32,0,0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
 
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" >
-            <TextBlock Text="Project Event" FontSize="20" VerticalAlignment="Center"/>
+        <Grid Margin="20,0">
+            <TextBlock Text="Project Event" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left"/>
 
-            <Button Margin="20,0,0,0" Content="创建Project" Command="{Binding RedirectCommand}" CommandParameter="AddEventPage" Width="120" Height="30" VerticalAlignment="Center"/>
-        </StackPanel>
-        <ItemSelect:ItemSelect Grid.Row="1" Items="{Binding Projects,Mode=TwoWay}" SelectID="{Binding SelectedProjectID,Mode=TwoWay}"/>
-
+            <Button  HorizontalAlignment="Right" Command="{Binding RedirectCommand}" Width="28" Height="28" Padding="0" CommandParameter="AddEventPage"  VerticalAlignment="Center" Style="{DynamicResource Primary}">
+                <Base:Icon IconType="More" FontSize="12"/>
+            </Button>
+        </Grid>
+        <ItemSelect:ItemSelect Grid.Row="1" Items="{Binding Projects, Mode=TwoWay}" SelectID="{Binding SelectedProjectID, Mode=TwoWay}"/>
     </Grid>
 </Page>

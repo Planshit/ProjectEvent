@@ -25,6 +25,17 @@ namespace ProjectEvent.UI.ViewModels
             Projects.CollectionChanged += Projects_CollectionChanged;
             ImportProjects();
             mainVM.Data = null;
+            NavigationItems = new System.Collections.ObjectModel.ObservableCollection<Controls.Navigation.Models.NavigationItemModel>()
+            {
+
+                new Controls.Navigation.Models.NavigationItemModel()
+                {
+                    BadgeText = "1",
+                Icon = Controls.Base.IconTypes.Timer,
+                Title = "Test",
+
+                }
+            };
         }
 
         private void Projects_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -52,7 +63,8 @@ namespace ProjectEvent.UI.ViewModels
                 Projects.Add(new Controls.ItemSelect.Models.ItemModel
                 {
                     ID = i,
-                    Title = project.ProjectName
+                    Title = project.ProjectName,
+                    Description=project.ProjectDescription
                 });
             }
         }

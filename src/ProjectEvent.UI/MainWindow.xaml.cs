@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjectEvent.UI.Controls.Window;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -15,7 +16,7 @@ namespace ProjectEvent.UI
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : DefaultWindow
     {
         public MainWindow()
         {

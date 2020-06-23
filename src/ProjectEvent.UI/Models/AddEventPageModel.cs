@@ -49,6 +49,13 @@ namespace ProjectEvent.UI.Models
             get { return ProjectName_; }
             set { ProjectName_ = value; OnPropertyChanged(); }
         }
+        private string ProjectDescription_ = "";
+        public string ProjectDescription
+        {
+            get { return ProjectDescription_; }
+            set { ProjectDescription_ = value; OnPropertyChanged(); }
+        }
+
         private string Title_ = "创建Project";
         public string Title
         {

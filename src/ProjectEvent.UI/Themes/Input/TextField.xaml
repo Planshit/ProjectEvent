@@ -1,0 +1,23 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:ProjectEvent.UI.Controls.Input"
+                    xmlns:base="clr-namespace:ProjectEvent.UI.Controls.Base">
+    <Style TargetType="{x:Type local:TextField}">
+        <Setter Property="SnapsToDevicePixels"
+          Value="true" />
+        <Setter Property="Width" Value="298"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:TextField}">
+                    <Border Background="{TemplateBinding Background}">
+                        <StackPanel>
+                            <Label Content="{TemplateBinding LabelName}" FontWeight="600" Foreground="{DynamicResource StandardTextBrush}" HorizontalAlignment="Left" Focusable="False"/>
+                            <local:InputBox Text="{TemplateBinding Text}" Placeholder="{TemplateBinding Placeholder}" IconType="{TemplateBinding IconType}" InputType="{TemplateBinding InputType}" Width="{TemplateBinding Width}"/>
+                        </StackPanel>
+
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
