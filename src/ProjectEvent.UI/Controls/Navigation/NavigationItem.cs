@@ -22,6 +22,26 @@ namespace ProjectEvent.UI.Controls.Navigation
             DependencyProperty.Register("ID",
                 typeof(int),
                 typeof(NavigationItem));
+
+        public ICommand Command
+        {
+            get { return (ICommand)GetValue(CommandProperty); }
+            set { SetValue(CommandProperty, value); }
+        }
+        public static readonly DependencyProperty CommandProperty =
+            DependencyProperty.Register("Command",
+                typeof(ICommand),
+                typeof(NavigationItem));
+
+        public object CommandParameter
+        {
+            get { return (object)GetValue(CommandParameterProperty); }
+            set { SetValue(CommandParameterProperty, value); }
+        }
+        public static readonly DependencyProperty CommandParameterProperty =
+            DependencyProperty.Register("CommandParameter",
+                typeof(object),
+                typeof(NavigationItem));
         public IconTypes Icon
         {
             get { return (IconTypes)GetValue(IconProperty); }
@@ -99,6 +119,10 @@ namespace ProjectEvent.UI.Controls.Navigation
         {
             base.OnMouseUp(e);
             MouseUp?.Invoke(this, e);
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                Command?.Execute(CommandParameter);
+            }
         }
     }
 }

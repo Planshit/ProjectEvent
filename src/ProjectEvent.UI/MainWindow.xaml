@@ -13,18 +13,19 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Margin="0,32,0,0">
-            <Navigation:Navigation x:Name="Navigation" Data="{Binding Items,Mode=TwoWay}" Width="220" WindowWidth="{Binding ElementName=Window,Path=ActualWidth}">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="OnSelected">
-                        <i:InvokeCommandAction Command="{Binding OnSelectedCommand}" CommandParameter="{Binding ElementName=Navigation}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-                <!--<Navigation:Navigation.TopExtContent>
+        <Navigation:Navigation x:Name="Navigation" Margin="0,32,0,0" Data="{Binding Items,Mode=TwoWay}" Width="220" WindowWidth="{Binding ElementName=Window,Path=ActualWidth}" IsShowNavigation="{Binding IsShowNavigation,Mode=TwoWay}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="OnSelected">
+                    <i:InvokeCommandAction Command="{Binding OnSelectedCommand}" CommandParameter="{Binding ElementName=Navigation}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <!--<Navigation:Navigation.TopExtContent>
                     <TextBlock Text="test"/>
                 </Navigation:Navigation.TopExtContent>-->
-            </Navigation:Navigation>
-        </StackPanel>
+            <Navigation:Navigation.BottomExtContent>
+                <Navigation:NavigationItem Icon="Settings" Title="设置" Uri="SettingsPage" Command="{Binding GotoPageCommand}" CommandParameter="SettingsPage"/>
+            </Navigation:Navigation.BottomExtContent>
+        </Navigation:Navigation>
 
         <Border Grid.Column="1" >
             <Controls:PageContainer  ServiceProvider="{Binding ServiceProvider}" Uri="{Binding Uri}"/>

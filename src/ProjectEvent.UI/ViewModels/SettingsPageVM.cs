@@ -12,7 +12,7 @@ namespace ProjectEvent.UI.ViewModels
         public SettingsPageVM(MainViewModel mainVM)
         {
             this.mainVM = mainVM;
-
+            mainVM.IsShowNavigation = false;
             Goback = new Command(new Action<object>(OnGoback));
         }
 

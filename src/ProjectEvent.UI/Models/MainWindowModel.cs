@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Windows;
 
 namespace ProjectEvent.UI.Models
 {
@@ -38,6 +39,13 @@ namespace ProjectEvent.UI.Models
         {
             get { return NavigationWidth_; }
             set { NavigationWidth_ = value; OnPropertyChanged(); }
+        }
+
+        private bool IsShowNavigation_ = true;
+        public bool IsShowNavigation
+        {
+            get { return IsShowNavigation_; }
+            set { IsShowNavigation_ = value; OnPropertyChanged(); }
         }
     }
 }

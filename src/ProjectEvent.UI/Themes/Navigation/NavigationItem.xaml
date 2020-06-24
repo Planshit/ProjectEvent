@@ -6,7 +6,7 @@
         <Setter Property="SnapsToDevicePixels"
           Value="true" />
         <Setter Property="MinWidth" Value="44"/>
-        <Setter Property="MinHeight" Value="44"/>
+        <!--<Setter Property="MinHeight" Value="44"/>-->
         <Setter Property="Height" Value="44"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Template">
@@ -14,27 +14,29 @@
                 <ControlTemplate TargetType="{x:Type local:NavigationItem}">
                     <Border Background="{TemplateBinding Background}">
                         <Grid>
-                            <Rectangle x:Name="Line" Height="1" Width="auto" Fill="{DynamicResource StandardColorBrush}" Visibility="Collapsed"/>
+                            <Rectangle x:Name="Line" Height="1" Width="auto" Fill="{DynamicResource SubBorderBrush}" Visibility="Collapsed" Margin="20,0"/>
                             <Grid x:Name="Content">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="15"/>
-                                    <ColumnDefinition Width="50"/>
+                                    <ColumnDefinition Width="25"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="44"/>
                                 </Grid.ColumnDefinitions>
                                 <Rectangle x:Name="CheckMark" Width="2" Fill="{TemplateBinding IconColorBrush}" Visibility="Hidden" Margin="0,10"/>
                                 <!--图标-->
-                                <base:Icon IconType="{TemplateBinding Icon}" Foreground="{TemplateBinding IconColorBrush}" VerticalAlignment="Center" Grid.Column="1"/>
+                                <base:Icon IconType="{TemplateBinding Icon}" Foreground="{TemplateBinding IconColorBrush}" VerticalAlignment="Center" Grid.Column="1" HorizontalAlignment="Center"/>
                                 <!--标题-->
-                                <TextBlock RenderOptions.EdgeMode="Aliased" Text="{TemplateBinding Title}" Grid.Column="2" VerticalAlignment="Center" FontSize="14" Foreground="Black"/>
+                                <TextBlock RenderOptions.EdgeMode="Aliased" Text="{TemplateBinding Title}" Grid.Column="2" VerticalAlignment="Center" FontSize="14" Foreground="Black" Margin="10,0,0,0"/>
                                 <!--徽标-->
-                                <TextBlock Text="{TemplateBinding BadgeText}" Grid.Column="3" VerticalAlignment="Center"/>
+                                <TextBlock Text="{TemplateBinding BadgeText}" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,20,0"/>
 
                             </Grid>
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="Title" Value="">
+                        <Trigger Property="Title" Value="{x:Null}">
+                            <Setter Property="Height" Value="15"/>
+
                             <Setter Property="Visibility" TargetName="Line" Value="Visible"/>
                             <Setter Property="Visibility" TargetName="Content" Value="Collapsed"/>
                         </Trigger>
@@ -42,9 +44,14 @@
                             <Setter Property="Background" Value="#f8f9fa"/>
                             <Setter Property="Visibility" TargetName="CheckMark" Value="Visible"/>
                         </Trigger>
-                        <Trigger Property="IsMouseOver" Value="True">
+                      
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="Visibility" SourceName="Line" Value="Collapsed"/>
+                            </MultiTrigger.Conditions>
                             <Setter Property="Background" Value="#f5f7f7"/>
-                        </Trigger>
+                        </MultiTrigger>
                      
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

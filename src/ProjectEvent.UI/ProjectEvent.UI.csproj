@@ -21,13 +21,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Assets\Fonts\fabricmdl2icons-2.47.ttf" />
+    <None Remove="Assets\Fonts\fabric-icons.ttf" />
     <None Remove="Assets\Fonts\SegMDL2.ttf" />
     <None Remove="Assets\Icons\tray.ico" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Assets\Fonts\fabricmdl2icons-2.47.ttf" />
+    <Resource Include="Assets\Fonts\fabric-icons.ttf" />
     <Resource Include="Assets\Fonts\SegMDL2.ttf" />
     <Resource Include="Assets\Icons\tray.ico" />
   </ItemGroup>

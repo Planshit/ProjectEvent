@@ -25,6 +25,7 @@ namespace ProjectEvent.UI.ViewModels
             Projects.CollectionChanged += Projects_CollectionChanged;
             ImportProjects();
             mainVM.Data = null;
+            mainVM.IsShowNavigation = true;
             NavigationItems = new System.Collections.ObjectModel.ObservableCollection<Controls.Navigation.Models.NavigationItemModel>()
             {
 

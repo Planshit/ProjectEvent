@@ -32,6 +32,9 @@ namespace ProjectEvent.UI.Controls.Base
             {IconTypes.CalculatorMultiply,"\xE947"},
             {IconTypes.SquareShape,"\xF1A6"},
             {IconTypes.More,"\xE712"},
+            {IconTypes.AppIconDefaultList,"\xEFDE"},
+            {IconTypes.ClipboardList,"\xF0E3"},
+            {IconTypes.Settings,"\xE713"},
 
             {IconTypes.ChevronUp,"\xE70E"}
 

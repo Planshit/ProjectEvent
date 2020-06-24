@@ -16,6 +16,8 @@ namespace ProjectEvent.UI.ViewModels
     {
         private readonly IServiceProvider serviceProvider;
         public Command OnSelectedCommand { get; set; }
+        public Command GotoPageCommand { get; set; }
+
         public MainViewModel(
             IServiceProvider serviceProvider
             )
@@ -24,26 +26,43 @@ namespace ProjectEvent.UI.ViewModels
             ServiceProvider = serviceProvider;
             Uri = "IndexPage";
             OnSelectedCommand = new Command(new Action<object>(OnSelectedCommandHandle));
+            GotoPageCommand = new Command(new Action<object>(OnGotoPageCommand));
             Items = new System.Collections.ObjectModel.ObservableCollection<Controls.Navigation.Models.NavigationItemModel>();
-            r();
+            InitNavigation();
+        }
+
+        private void OnGotoPageCommand(object obj)
+        {
+            Uri = obj.ToString();
         }
 
         private void OnSelectedCommandHandle(object obj)
         {
             var navigation = obj as Navigation;
+            if (!string.IsNullOrEmpty(navigation.SelectedItem.Uri))
+            {
+                Uri = navigation.SelectedItem.Uri;
+            }
             Debug.Write(navigation.SelectedItem.ID);
         }
 
-        private void r()
+        private void InitNavigation()
         {
             Items.Add(new Controls.Navigation.Models.NavigationItemModel()
             {
-                BadgeText = "1",
-                Icon = Controls.Base.IconTypes.Timer,
-                Title = "全部",
+                Icon = Controls.Base.IconTypes.AppIconDefaultList,
+                Title = "所有自动化方案",
+                Uri = "IndexPage"
 
             });
-
+            Items.Add(new Controls.Navigation.Models.NavigationItemModel()
+            {
+                Icon = Controls.Base.IconTypes.ClipboardList,
+                Title = "触发日志",
+            });
+            Items.Add(new Controls.Navigation.Models.NavigationItemModel()
+            {
+            });
             Items.Add(new Controls.Navigation.Models.NavigationItemModel()
             {
                 BadgeText = "1",

@@ -45,6 +45,7 @@ namespace ProjectEvent.UI.ViewModels
             PropertyChanged += AddEventPageVM_PropertyChanged;
 
             IsActionsTabItemSelected = true;
+            mainVM.IsShowNavigation = false;
             InitEvents();
             InitConditions();
             InitAcions();

@@ -56,6 +56,9 @@ namespace ProjectEvent.UI.Controls.Base
         ChromeRestore,
         CalculatorMultiply,
         SquareShape,
-        More
+        More,
+        AppIconDefaultList,
+        ClipboardList,
+        Settings
     }
 }

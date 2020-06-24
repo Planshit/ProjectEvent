@@ -12,6 +12,30 @@ namespace ProjectEvent.UI.Controls.Navigation
 {
     public class Navigation : Control
     {
+        public bool IsShowNavigation
+        {
+            get { return (bool)GetValue(IsShowNavigationProperty); }
+            set { SetValue(IsShowNavigationProperty, value); }
+        }
+        public static readonly DependencyProperty IsShowNavigationProperty =
+            DependencyProperty.Register("IsShowNavigation", typeof(bool), typeof(Navigation), new PropertyMetadata(true, new PropertyChangedCallback(OnIsShowNavigationChanged)));
+
+        private static void OnIsShowNavigationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var control = d as Navigation;
+            if (e.NewValue != e.OldValue)
+            {
+                if (control.IsShowNavigation && control.Visibility == Visibility.Collapsed && control.WindowWidth > 700)
+                {
+                    control.Visibility = Visibility.Visible;
+                }
+                if (!control.IsShowNavigation && control.Visibility == Visibility.Visible)
+                {
+                    control.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+
         public object TopExtContent
         {
             get { return (object)GetValue(TopExtContentProperty); }
@@ -19,6 +43,13 @@ namespace ProjectEvent.UI.Controls.Navigation
         }
         public static readonly DependencyProperty TopExtContentProperty =
             DependencyProperty.Register("TopExtContent", typeof(object), typeof(Navigation));
+        public object BottomExtContent
+        {
+            get { return (object)GetValue(BottomExtContentProperty); }
+            set { SetValue(BottomExtContentProperty, value); }
+        }
+        public static readonly DependencyProperty BottomExtContentProperty =
+            DependencyProperty.Register("BottomExtContent", typeof(object), typeof(Navigation));
         public ObservableCollection<NavigationItemModel> Data
         {
             get
@@ -62,14 +93,17 @@ namespace ProjectEvent.UI.Controls.Navigation
         private static void OnWindowWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = d as Navigation;
-            if ((double)e.NewValue <= 700)
+            if (control.IsShowNavigation)
             {
-                control.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                control.Visibility = Visibility.Visible;
+                if ((double)e.NewValue <= 700)
+                {
+                    control.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
 
+                    control.Visibility = Visibility.Visible;
+                }
             }
         }
 
@@ -186,7 +220,10 @@ namespace ProjectEvent.UI.Controls.Navigation
                 {
                     SelectedID = id;
                 }
-                navItem.MouseUp += NavItem_MouseUp;
+                if (!string.IsNullOrEmpty(item.Title))
+                {
+                    navItem.MouseUp += NavItem_MouseUp;
+                }
                 ItemsPanel.Children.Add(navItem);
                 ItemsDictionary.Add(id, navItem);
             }

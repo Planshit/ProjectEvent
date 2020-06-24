@@ -16,12 +16,14 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="*"/>
+                                <RowDefinition Height="auto"/>
 
                             </Grid.RowDefinitions>
                             <ContentPresenter Content="{TemplateBinding TopExtContent}"/>
                             <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
                                 <StackPanel x:Name="ItemsPanel"/>
                             </ScrollViewer>
+                            <ContentPresenter Content="{TemplateBinding BottomExtContent}" Grid.Row="2"/>
                         </Grid>
                     </Border>
 
