@@ -46,6 +46,8 @@ namespace ProjectEvent.UI.ViewModels
 
             IsActionsTabItemSelected = true;
             mainVM.IsShowNavigation = false;
+            mainVM.IsShowTitleBar = true;
+            mainVM.Title = "创建自动化方案";
             InitEvents();
             InitConditions();
             InitAcions();
@@ -118,7 +120,7 @@ namespace ProjectEvent.UI.ViewModels
             {
                 ID = (int)EventType.OnIntervalTimer,
                 Title = "计时器",
-                Icon= Controls.Base.IconTypes.Timer
+                Icon = Controls.Base.IconTypes.Timer
             });
             Events.Add(new Controls.ItemSelect.Models.ItemModel()
             {
@@ -275,7 +277,7 @@ namespace ProjectEvent.UI.ViewModels
                 string projectName = mainVM.Data.ToString();
                 if (IOHelper.FileExists($"Projects\\{projectName}.project.json"))
                 {
-                    Title = $"编辑Project - {projectName}";
+                    mainVM.Title = $"编辑方案 - {projectName}";
                     ButtonSaveName = "保存";
 
                     //导入

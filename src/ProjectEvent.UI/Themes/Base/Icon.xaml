@@ -16,7 +16,7 @@
                 <ControlTemplate TargetType="{x:Type local:Icon}">
                     <Border Background="{TemplateBinding Background}">
 
-                        <TextBlock Text="{TemplateBinding Unicode}" FontFamily="{TemplateBinding FontFamily}" FontSize="{TemplateBinding FontSize}" VerticalAlignment="Center" HorizontalAlignment="Center" TextOptions.TextFormattingMode="Display"/>
+                        <TextBlock Text="{TemplateBinding Unicode}" FontFamily="{TemplateBinding FontFamily}" FontSize="{TemplateBinding FontSize}" VerticalAlignment="Center" HorizontalAlignment="Center" TextOptions.TextFormattingMode="Ideal" SnapsToDevicePixels="True"  />
                     </Border>
 
                 </ControlTemplate>

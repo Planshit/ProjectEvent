@@ -8,17 +8,13 @@ namespace ProjectEvent.UI.ViewModels
     {
         private readonly MainViewModel mainVM;
 
-        public Command Goback { get; set; }
         public SettingsPageVM(MainViewModel mainVM)
         {
             this.mainVM = mainVM;
             mainVM.IsShowNavigation = false;
-            Goback = new Command(new Action<object>(OnGoback));
+            mainVM.IsShowTitleBar = true;
+            mainVM.Title = "设置";
         }
 
-        private void OnGoback(object obj)
-        {
-            mainVM.Uri = "IndexPage";
-        }
     }
 }

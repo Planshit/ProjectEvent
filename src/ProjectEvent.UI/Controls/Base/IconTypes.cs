@@ -59,6 +59,7 @@ namespace ProjectEvent.UI.Controls.Base
         More,
         AppIconDefaultList,
         ClipboardList,
-        Settings
+        Settings,
+        ChromeBack
     }
 }

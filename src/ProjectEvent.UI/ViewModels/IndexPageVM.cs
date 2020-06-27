@@ -26,17 +26,7 @@ namespace ProjectEvent.UI.ViewModels
             ImportProjects();
             mainVM.Data = null;
             mainVM.IsShowNavigation = true;
-            NavigationItems = new System.Collections.ObjectModel.ObservableCollection<Controls.Navigation.Models.NavigationItemModel>()
-            {
-
-                new Controls.Navigation.Models.NavigationItemModel()
-                {
-                    BadgeText = "1",
-                Icon = Controls.Base.IconTypes.Timer,
-                Title = "Test",
-
-                }
-            };
+            mainVM.IsShowTitleBar = false;
         }
 
         private void Projects_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

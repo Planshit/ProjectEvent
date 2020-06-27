@@ -1,4 +1,4 @@
-﻿<Page xmlns:Input="clr-namespace:ProjectEvent.UI.Controls.Input"  xmlns:Base="clr-namespace:ProjectEvent.UI.Controls.Base"  xmlns:InputGroup="clr-namespace:ProjectEvent.UI.Controls.InputGroup"  xmlns:ItemSelect="clr-namespace:ProjectEvent.UI.Controls.ItemSelect"  xmlns:Action="clr-namespace:ProjectEvent.UI.Controls.Action"  x:Class="ProjectEvent.UI.Views.AddEventPage"
+﻿<Page  xmlns:Input="clr-namespace:ProjectEvent.UI.Controls.Input"  xmlns:Base="clr-namespace:ProjectEvent.UI.Controls.Base"  xmlns:InputGroup="clr-namespace:ProjectEvent.UI.Controls.InputGroup"  xmlns:ItemSelect="clr-namespace:ProjectEvent.UI.Controls.ItemSelect"  xmlns:Action="clr-namespace:ProjectEvent.UI.Controls.Action"  x:Class="ProjectEvent.UI.Views.AddEventPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -8,7 +8,8 @@
       d:DesignHeight="450" d:DesignWidth="800"
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
 
-      Title="AddEventPage">
+      Title="AddEventPage"
+       Margin="0,30,0,0">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=container}"/>
@@ -22,14 +23,15 @@
             <RowDefinition Height="50"/>
 
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" >
+        
+        <!--<StackPanel Orientation="Horizontal" >
 
             <Button Command="{Binding RedirectCommand}" CommandParameter="IndexPage" VerticalAlignment="Center" Style="{DynamicResource Icon}">
                 <Base:Icon IconType="Back" />
             </Button>
             <Label  Margin="20,0,0,0" Content="{Binding Title}" FontSize="20"  VerticalAlignment="Center"/>
 
-        </StackPanel>
+        </StackPanel>-->
 
         <TabControl Grid.Row="1">
             <TabItem Header="描述" IsSelected="{Binding IsInfoTabItemSelected,Mode=TwoWay}">

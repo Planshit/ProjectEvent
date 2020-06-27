@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ProjectEvent.UI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,6 +19,16 @@ namespace ProjectEvent.UI.Controls
     public class PageContainer : Control
     {
         #region 依赖属性
+        public string Title
+        {
+            get { return (string)GetValue(TitleProperty); }
+            set { SetValue(TitleProperty, value); }
+        }
+        public static readonly DependencyProperty TitleProperty =
+            DependencyProperty.Register("Title",
+                typeof(string),
+                typeof(PageContainer));
+
         public IServiceProvider ServiceProvider
         {
             get { return (IServiceProvider)GetValue(ServiceProviderProperty); }
@@ -50,15 +61,66 @@ namespace ProjectEvent.UI.Controls
                 control.LoadPage();
             }
         }
+
+        public bool IsShowTilteBar
+        {
+            get { return (bool)GetValue(IsShowTilteBarProperty); }
+            set { SetValue(IsShowTilteBarProperty, value); }
+        }
+        public static readonly DependencyProperty IsShowTilteBarProperty =
+            DependencyProperty.Register("IsShowTilteBar",
+                typeof(bool),
+                typeof(PageContainer), new PropertyMetadata(false, new PropertyChangedCallback(OnIsShowTitleBarChanged)));
+
+        private static void OnIsShowTitleBarChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var control = d as PageContainer;
+            if (e.NewValue != e.OldValue)
+            {
+                control.TitleBarVisibility = control.IsShowTilteBar ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+        public Visibility TitleBarVisibility
+        {
+            get { return (Visibility)GetValue(TitleBarVisibilityProperty); }
+            set { SetValue(TitleBarVisibilityProperty, value); }
+        }
+        public static readonly DependencyProperty TitleBarVisibilityProperty =
+            DependencyProperty.Register("TitleBarVisibility",
+                typeof(Visibility),
+                typeof(PageContainer), new PropertyMetadata(Visibility.Collapsed));
+
+        public Command BackCommand
+        {
+            get { return (Command)GetValue(BackCommandProperty); }
+            set { SetValue(BackCommandProperty, value); }
+        }
+        public static readonly DependencyProperty BackCommandProperty =
+            DependencyProperty.Register("BackCommand",
+                typeof(Command),
+                typeof(PageContainer));
         #endregion
 
         private readonly string ProjectName;
+        private List<string> Historys;
+        private int Index = -1, OldIndex = -1;
         public PageContainer()
         {
             DefaultStyleKey = typeof(PageContainer);
-
             ProjectName = App.Current.GetType().Assembly.GetName().Name;
+            Historys = new List<string>();
+            BackCommand = new Command(new Action<object>(OnBackCommand));
+        }
 
+        private void OnBackCommand(object obj)
+        {
+            if (Index - 1 >= 0)
+            {
+                OldIndex = Index;
+                Index--;
+                Uri = Historys[Index];
+                Historys.RemoveRange(Index + 1, Historys.Count - (Index + 1));
+            }
         }
 
         private void LoadPage()
@@ -79,10 +141,18 @@ namespace ProjectEvent.UI.Controls
                             page.DataContext = pageVM;
                         }
                         Content = page;
+                        //处理历史记录
+                        if (OldIndex == Index)
+                        {
+                            //新开
+                            Historys.Add(Uri);
+                            Index++;
+                        }
+                        OldIndex = Index;
                     }
                     else
                     {
-                        Debug.WriteLine("找不到Page：" + Uri+"，请确认已被注入");
+                        Debug.WriteLine("找不到Page：" + Uri + "，请确认已被注入");
                     }
 
                 }

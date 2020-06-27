@@ -47,5 +47,19 @@ namespace ProjectEvent.UI.Models
             get { return IsShowNavigation_; }
             set { IsShowNavigation_ = value; OnPropertyChanged(); }
         }
+
+        private string Title_;
+        public string Title
+        {
+            get { return Title_; }
+            set { Title_ = value; OnPropertyChanged(); }
+        }
+        private bool IsShowTitleBar_ = false;
+        public bool IsShowTitleBar
+        {
+            get { return IsShowTitleBar_; }
+            set { IsShowTitleBar_ = value; OnPropertyChanged(); }
+        }
+
     }
 }

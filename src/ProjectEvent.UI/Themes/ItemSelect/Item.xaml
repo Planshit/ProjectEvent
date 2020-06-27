@@ -64,7 +64,7 @@
                                     <TextBlock Text="{TemplateBinding Description}" Grid.Row="1" TextWrapping="Wrap" Margin="10,0" Foreground="{DynamicResource PlaceholderBrush}"/>
                                 </Grid>
                                 <Border Grid.Row="1" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0,1,0,0"  Padding="0,10,0,0">
-                                    <TextBlock HorizontalAlignment="Center" TextWrapping="WrapWithOverflow" Text="{TemplateBinding Title}" FontSize="14" FontWeight="Bold"/>
+                                    <TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis" Text="{TemplateBinding Title}" FontSize="14" FontWeight="Bold" ToolTip="{TemplateBinding Title}"/>
                                 </Border>
                             </Grid>
                         </Border>

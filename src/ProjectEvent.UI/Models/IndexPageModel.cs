@@ -10,7 +10,6 @@ namespace ProjectEvent.UI.Models
     public class IndexPageModel : UINotifyPropertyChanged
     {
         public ObservableCollection<ItemModel> Projects { get; set; }
-        public ObservableCollection<NavigationItemModel> NavigationItems { get; set; }
 
         private int SelectedProjectID_ = 0;
         public int SelectedProjectID

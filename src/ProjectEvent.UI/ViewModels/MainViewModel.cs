@@ -25,6 +25,7 @@ namespace ProjectEvent.UI.ViewModels
             this.serviceProvider = serviceProvider;
             ServiceProvider = serviceProvider;
             Uri = "IndexPage";
+            Title = "Project Event";
             OnSelectedCommand = new Command(new Action<object>(OnSelectedCommandHandle));
             GotoPageCommand = new Command(new Action<object>(OnGotoPageCommand));
             Items = new System.Collections.ObjectModel.ObservableCollection<Controls.Navigation.Models.NavigationItemModel>();

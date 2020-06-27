@@ -7,7 +7,8 @@
         xmlns:ui="clr-namespace:ProjectEvent.UI.Controls.Window" xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                   mc:Ignorable="d"
         x:Name="Window"
-        Title="Project Event" Height="640" Width="850">
+                  SnapsToDevicePixels="True"
+        Title="Project Event" Height="640" Width="902">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
@@ -28,7 +29,7 @@
         </Navigation:Navigation>
 
         <Border Grid.Column="1" >
-            <Controls:PageContainer  ServiceProvider="{Binding ServiceProvider}" Uri="{Binding Uri}"/>
+            <Controls:PageContainer  ServiceProvider="{Binding ServiceProvider}" Uri="{Binding Uri,Mode=TwoWay}" Title="{Binding Title}" IsShowTilteBar="{Binding IsShowTitleBar,Mode=TwoWay}"/>
         </Border>
 
     </Grid>

@@ -9,10 +9,6 @@
       Title="SettingsPage">
 
     <Grid>
-        <StackPanel>
-            <TextBlock Text="setting"/>
-
-            <Button Command="{Binding Goback}" Width="120" Height="30" Content="返回"/>
-        </StackPanel>
+      
     </Grid>
 </Page>
