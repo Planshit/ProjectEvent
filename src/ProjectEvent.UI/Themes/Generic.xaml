@@ -26,6 +26,7 @@
 
         <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Navigation/NavigationItem.xaml"/>
         <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Navigation/Navigation.xaml"/>
+        <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Toast/Toast.xaml"/>
 
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
