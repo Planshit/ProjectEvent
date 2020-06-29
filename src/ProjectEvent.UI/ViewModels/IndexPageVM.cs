@@ -1,10 +1,12 @@
 ﻿using Newtonsoft.Json;
 using ProjectEvent.Core.Helper;
 using ProjectEvent.UI.Controls.ItemSelect.Models;
+using ProjectEvent.UI.Controls.Navigation;
 using ProjectEvent.UI.Models;
 using ProjectEvent.UI.Models.DataModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,18 +17,28 @@ namespace ProjectEvent.UI.ViewModels
     {
         private readonly MainViewModel mainVM;
         public Command RedirectCommand { get; set; }
-
+        private GroupModel group;
         public IndexPageVM(MainViewModel mainVM)
         {
             this.mainVM = mainVM;
+
             RedirectCommand = new Command(new Action<object>(OnRedirectCommand));
             PropertyChanged += IndexPageVM_PropertyChanged;
             Projects = new System.Collections.ObjectModel.ObservableCollection<Controls.ItemSelect.Models.ItemModel>();
             Projects.CollectionChanged += Projects_CollectionChanged;
-            ImportProjects();
-            mainVM.Data = null;
+            mainVM.PropertyChanged += MainVM_PropertyChanged;
             mainVM.IsShowNavigation = true;
             mainVM.IsShowTitleBar = false;
+
+            Init();
+        }
+
+        private void MainVM_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(mainVM.Data))
+            {
+                Init();
+            }
         }
 
         private void Projects_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -43,20 +55,43 @@ namespace ProjectEvent.UI.ViewModels
             }
         }
 
+        private void Init()
+        {
+            HandleGroupInfo();
+            ImportProjects();
+        }
+
+        private void HandleGroupInfo()
+        {
+
+            group = mainVM.Data as GroupModel;
+            if (group != null)
+            {
+                Title = group.Name;
+            }
+            else
+            {
+                Title = "所有自动化方案";
+            }
+        }
         private void ImportProjects()
         {
+            Projects.Clear();
             DirectoryInfo folder = IOHelper.GetDirectoryInfo("Projects");
             int i = 0;
             foreach (FileInfo file in folder.GetFiles("*.project.json"))
             {
                 i++;
                 var project = JsonConvert.DeserializeObject<ProjectModel>(File.ReadAllText(file.FullName));
-                Projects.Add(new Controls.ItemSelect.Models.ItemModel
+                if (group == null || group.ID == project.GroupID)
                 {
-                    ID = i,
-                    Title = project.ProjectName,
-                    Description=project.ProjectDescription
-                });
+                    Projects.Add(new Controls.ItemSelect.Models.ItemModel
+                    {
+                        ID = i,
+                        Title = project.ProjectName,
+                        Description = project.ProjectDescription
+                    });
+                }
             }
         }
         private void IndexPageVM_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

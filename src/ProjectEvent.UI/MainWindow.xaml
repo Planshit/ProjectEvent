@@ -1,36 +1,86 @@
-﻿<ui:DefaultWindow xmlns:Navigation="clr-namespace:ProjectEvent.UI.Controls.Navigation"  xmlns:Controls="clr-namespace:ProjectEvent.UI.Controls"  x:Class="ProjectEvent.UI.MainWindow"
+﻿<ui:DefaultWindow xmlns:Toast="clr-namespace:ProjectEvent.UI.Controls.Toast"  xmlns:Navigation="clr-namespace:ProjectEvent.UI.Controls.Navigation"  xmlns:Controls="clr-namespace:ProjectEvent.UI.Controls"  x:Class="ProjectEvent.UI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjectEvent.UI"
+                  xmlns:input="clr-namespace:ProjectEvent.UI.Controls.Input"
+                  xmlns:base="clr-namespace:ProjectEvent.UI.Controls.Base"
         xmlns:ui="clr-namespace:ProjectEvent.UI.Controls.Window" xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                   mc:Ignorable="d"
         x:Name="Window"
                   SnapsToDevicePixels="True"
         Title="Project Event" Height="640" Width="902">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Navigation:Navigation x:Name="Navigation" Margin="0,32,0,0" Data="{Binding Items,Mode=TwoWay}" Width="220" WindowWidth="{Binding ElementName=Window,Path=ActualWidth}" IsShowNavigation="{Binding IsShowNavigation,Mode=TwoWay}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="OnSelected">
-                    <i:InvokeCommandAction Command="{Binding OnSelectedCommand}" CommandParameter="{Binding ElementName=Navigation}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            <!--<Navigation:Navigation.TopExtContent>
+        <!--主要功能-->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Navigation:Navigation x:Name="Navigation" Margin="0,32,0,0" Data="{Binding Items,Mode=TwoWay}" Width="220" WindowWidth="{Binding ElementName=Window,Path=ActualWidth}" IsShowNavigation="{Binding IsShowNavigation,Mode=TwoWay}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="OnSelected">
+                        <i:InvokeCommandAction Command="{Binding OnSelectedCommand}" CommandParameter="{Binding ElementName=Navigation}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="OnMouseRightButtonUP">
+                        <i:InvokeCommandAction Command="{Binding OnMouseRightButtonUPCommand}" CommandParameter="{Binding ElementName=Navigation}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <!--<Navigation:Navigation.TopExtContent>
                     <TextBlock Text="test"/>
                 </Navigation:Navigation.TopExtContent>-->
-            <Navigation:Navigation.BottomExtContent>
-                <Navigation:NavigationItem Icon="Settings" Title="设置" Uri="SettingsPage" Command="{Binding GotoPageCommand}" CommandParameter="SettingsPage"/>
-            </Navigation:Navigation.BottomExtContent>
-        </Navigation:Navigation>
+                <Navigation:Navigation.BottomExtContent>
+                    <Navigation:NavigationItem Icon="Settings" Title="设置" Uri="SettingsPage" Command="{Binding GotoPageCommand}" CommandParameter="SettingsPage"/>
+                </Navigation:Navigation.BottomExtContent>
+                <Navigation:Navigation.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="新建分组" Command="{Binding ShowGroupModalCommand}"/>
+                    </ContextMenu>
+                </Navigation:Navigation.ContextMenu>
+            </Navigation:Navigation>
 
-        <Border Grid.Column="1" >
-            <Controls:PageContainer  ServiceProvider="{Binding ServiceProvider}" Uri="{Binding Uri,Mode=TwoWay}" Title="{Binding Title}" IsShowTilteBar="{Binding IsShowTitleBar,Mode=TwoWay}"/>
+            <Border Grid.Column="1" >
+                <Controls:PageContainer  ServiceProvider="{Binding ServiceProvider}" Uri="{Binding Uri,Mode=TwoWay}" Title="{Binding Title}" IsShowTilteBar="{Binding IsShowTitleBar,Mode=TwoWay}"/>
+            </Border>
+
+        </Grid>
+
+        <!--弹出层-->
+        <Border Visibility="{Binding GroupModalVisibility}">
+            <Border.Background>
+                <SolidColorBrush Color="Black" Opacity=".8"/>
+            </Border.Background>
+            <Border Margin="60" Background="White" CornerRadius="6">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <TextBlock FontSize="20" Text="新增分组" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Button Command="{Binding HideGroupModalCommand}" Style="{DynamicResource Icon}" Width="40" Height="40" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0">
+                            <base:Icon IconType="ChromeClose" FontSize="12"/>
+                        </Button>
+                    </Grid>
+                    <StackPanel Grid.Row="1" Margin="20,0">
+                        <TextBlock Style="{DynamicResource LabelName}" Text="分组名称"/>
+                        <input:InputBox Placeholder="限制长度8个字符" Width="auto" Text="{Binding GroupName,Mode=TwoWay}"/>
+                    </StackPanel>
+                    <Button Grid.Row="2" Style="{DynamicResource Primary}" Content="确 定" Command="{Binding SaveGroupCommand}" HorizontalAlignment="Right" Margin="20,0" Width="120"/>
+                </Grid>
+            </Border>
+
         </Border>
 
+        <!--轻提醒-->
+        <Toast:Toast  Panel.ZIndex="999" Type="Warning" HorizontalAlignment="Center" VerticalAlignment="Top" Content="{Binding ToastContent}" IsShow="{Binding IsShowToast,Mode=TwoWay}"/>
+        <!--<Border x:Name="LightTip" Panel.ZIndex="999" Background="White" Width="300" Height="50" HorizontalAlignment="Center" VerticalAlignment="Top" CornerRadius="4" Margin="10">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="10" Opacity="0.5"  ShadowDepth="0"/>
+            </Border.Effect>
+            <TextBlock Text="请输入正确内容" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
+        </Border>-->
     </Grid>
 </ui:DefaultWindow>

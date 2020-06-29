@@ -79,6 +79,11 @@ namespace ProjectEvent.UI.Controls.ItemSelect
                     Remove(data.ID);
                 }
             }
+            else if(e.Action== NotifyCollectionChangedAction.Reset)
+            {
+                itemControls.Clear();
+                container.Children.Clear();
+            }
         }
         #endregion
 

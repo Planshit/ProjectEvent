@@ -36,6 +36,7 @@ namespace ProjectEvent.UI.Controls.Base
             {IconTypes.ClipboardList,"\xF0E3"},
             {IconTypes.Settings,"\xE713"},
             {IconTypes.ChromeBack,"\xE830"},
+            {IconTypes.BulletedList,"\xE8FD"},
 
             {IconTypes.ChevronUp,"\xE70E"}
 

@@ -17,5 +17,11 @@ namespace ProjectEvent.UI.Models
             get { return SelectedProjectID_; }
             set { SelectedProjectID_ = value; OnPropertyChanged(); }
         }
+        private string Title_;
+        public string Title
+        {
+            get { return Title_; }
+            set { Title_ = value;OnPropertyChanged(); }
+        }
     }
 }

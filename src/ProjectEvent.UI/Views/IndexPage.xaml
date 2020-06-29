@@ -20,7 +20,7 @@
 
         </Grid.RowDefinitions>
         <Grid Margin="20,0">
-            <TextBlock Text="Project Event" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            <TextBlock Text="{Binding Title}" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left"/>
 
             <Button  HorizontalAlignment="Right" Command="{Binding RedirectCommand}" Width="28" Height="28" Padding="0" CommandParameter="AddEventPage"  VerticalAlignment="Center" Style="{DynamicResource Primary}">
                 <Base:Icon IconType="More" FontSize="12"/>

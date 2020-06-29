@@ -27,5 +27,9 @@ namespace ProjectEvent.UI.Models.DataModels
         /// 操作
         /// </summary>
         public List<Core.Action.Models.ActionModel> Actions { get; set; }
+        /// <summary>
+        /// 分组ID
+        /// </summary>
+        public int GroupID { get; set; }
     }
 }

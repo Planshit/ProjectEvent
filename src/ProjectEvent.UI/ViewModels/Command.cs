@@ -23,14 +23,7 @@ namespace ProjectEvent.UI.ViewModels
         public event EventHandler CanExecuteChanged;
         public void Execute(object parameter)
         {
-            if (parameter != null)
-            {
-                _action(parameter);
-            }
-            else
-            {
-                _action("NULL");
-            }
+            _action(parameter);
             OnExecuted();
         }
         public delegate void ExecutedHandler(object parameter);

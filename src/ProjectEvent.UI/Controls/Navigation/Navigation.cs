@@ -69,6 +69,10 @@ namespace ProjectEvent.UI.Controls.Navigation
             var control = d as Navigation;
             if (e.NewValue != e.OldValue)
             {
+                if (control.Data != null)
+                {
+                    control.Data.CollectionChanged += control.Data_CollectionChanged;
+                }
                 foreach (var item in control.Data)
                 {
                     control.AddItem(item);
@@ -176,9 +180,9 @@ namespace ProjectEvent.UI.Controls.Navigation
         //    }
         //}
         #endregion
-        public delegate void NavigationEventHandler(object sender, NavigationItemModel item);
-        public event NavigationEventHandler Selected;
         public event RoutedEventHandler OnSelected;
+        public event RoutedEventHandler OnMouseRightButtonUP;
+
         private StackPanel ItemsPanel;
         private Dictionary<int, NavigationItem> ItemsDictionary;
         private int SelectedID;
@@ -188,6 +192,36 @@ namespace ProjectEvent.UI.Controls.Navigation
             DefaultStyleKey = typeof(Navigation);
             ItemsDictionary = new Dictionary<int, NavigationItem>();
         }
+
+        private void Data_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (var item in e.NewItems)
+                {
+                    AddItem(item as NavigationItemModel);
+                }
+            }
+            if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (var item in e.OldItems)
+                {
+                    RemoveItem(item as NavigationItemModel);
+                }
+            }
+            if (e.Action == NotifyCollectionChangedAction.Replace)
+            {
+                foreach (var ritem in e.NewItems)
+                {
+                    var item = ritem as NavigationItemModel;
+                    var id = item.ID;
+                    ItemsDictionary[id].Icon = item.Icon;
+                    ItemsDictionary[id].Title = item.Title;
+
+                }
+            }
+        }
+
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -231,32 +265,44 @@ namespace ProjectEvent.UI.Controls.Navigation
 
         private void NavItem_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+
             if (e.ChangedButton == System.Windows.Input.MouseButton.Left)
             {
-                SetSelectedID((sender as NavigationItem).ID);
+                //左键选中
+                SetSelectedItem((sender as NavigationItem).ID);
+                OnSelected?.Invoke(this, null);
+            }
+            if (e.ChangedButton == System.Windows.Input.MouseButton.Right)
+            {
+                //右键
+                SetSelectedItem((sender as NavigationItem).ID, false);
+                OnMouseRightButtonUP?.Invoke(this, null);
             }
         }
-        private void SetSelectedID(int id)
+        private void SetSelectedItem(int id, bool isSelected = true)
         {
-            if (id == SelectedID)
+            if (isSelected)
             {
-                return;
+                if (id == SelectedID)
+                {
+                    return;
+                }
+                if (ItemsDictionary.ContainsKey(SelectedID))
+                {
+                    ItemsDictionary[SelectedID].IsSelected = false;
+                }
+                ItemsDictionary[id].IsSelected = true;
+                SelectedID = id;
             }
-            if (ItemsDictionary.ContainsKey(SelectedID))
-            {
-                ItemsDictionary[SelectedID].IsSelected = false;
-            }
-            ItemsDictionary[id].IsSelected = true;
-            SelectedID = id;
             var item = Data.Where(m => m.ID == id).FirstOrDefault();
             SelectedItem = item;
-            Selected?.Invoke(this, item);
-            OnSelected?.Invoke(this, null);
+
         }
         private void RemoveItem(NavigationItemModel item)
         {
             var navItem = ItemsDictionary[item.ID];
             ItemsPanel.Children.Remove(navItem);
+            ItemsDictionary.Remove(item.ID);
         }
         private void Render()
         {
