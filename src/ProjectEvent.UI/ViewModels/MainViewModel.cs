@@ -52,9 +52,23 @@ namespace ProjectEvent.UI.ViewModels
 
             Items = new System.Collections.ObjectModel.ObservableCollection<Controls.Navigation.Models.NavigationItemModel>();
             Groups = new List<GroupModel>();
+
+            PropertyChanged += MainViewModel_PropertyChanged;
+
             InitGroupManagerContextMenu();
             InitNavigation();
             LoadGroups();
+        }
+
+        private void MainViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Uri))
+            {
+                if (Uri == nameof(IndexPage))
+                {
+                    Data = null;
+                }
+            }
         }
 
         private void OnDeleteGroupCommand(object obj)
@@ -131,7 +145,7 @@ namespace ProjectEvent.UI.ViewModels
             else
             {
                 //分组功能
-                Data = Groups.Where(m => m.ID == NavSelectedItem.ID).FirstOrDefault();
+                SelectedGroup = Groups.Where(m => m.ID == NavSelectedItem.ID).FirstOrDefault();
             }
             Debug.Write(NavSelectedItem.ID);
         }
@@ -185,7 +199,7 @@ namespace ProjectEvent.UI.ViewModels
         }
 
 
-        private void Toast(string content, ToastType toastType = ToastType.Normal)
+        public void Toast(string content, ToastType toastType = ToastType.Normal)
         {
             if (IsShowToast)
             {
@@ -291,7 +305,7 @@ namespace ProjectEvent.UI.ViewModels
         private void SelectGroup(int ID)
         {
             NavSelectedItem = Items.Where(m => m.ID == ID).FirstOrDefault();
-            Data = Groups.Where(m => m.ID == ID).FirstOrDefault();
+            SelectedGroup = Groups.Where(m => m.ID == ID).FirstOrDefault();
         }
     }
 }

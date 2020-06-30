@@ -7,6 +7,7 @@ using ProjectEvent.UI.Controls.InputGroup.Models;
 using ProjectEvent.UI.Models;
 using ProjectEvent.UI.Models.ConditionModels;
 using ProjectEvent.UI.Models.DataModels;
+using ProjectEvent.UI.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,18 +22,24 @@ namespace ProjectEvent.UI.ViewModels
 {
     public class AddEventPageVM : AddEventPageModel
     {
+        private readonly MainViewModel mainVM;
+        private readonly IProjects projects;
+
         public Command AddActionCommand { get; set; }
         public Command AddCommand { get; set; }
         public Command ActionDialogStateCommand { get; set; }
         public Command ShowActionDialogCommand { get; set; }
-        private readonly MainViewModel mainVM;
         public Command RedirectCommand { get; set; }
         public Command LoadedCommand { get; set; }
         private ActionContainer actionContainer;
         private ProjectModel project;
-        public AddEventPageVM(MainViewModel mainVM)
+        public AddEventPageVM(
+            MainViewModel mainVM,
+            IProjects projects)
         {
             this.mainVM = mainVM;
+            this.projects = projects;
+
             RedirectCommand = new Command(new Action<object>(OnRedirectCommand));
             LoadedCommand = new Command(new Action<object>(OnLoadedCommand));
             Events = new System.Collections.ObjectModel.ObservableCollection<Controls.ItemSelect.Models.ItemModel>();
@@ -88,13 +95,28 @@ namespace ProjectEvent.UI.ViewModels
         private void OnAddCommand(object obj)
         {
             var container = obj as ActionContainer;
-            string json = GenerateJson(container);
-            IOHelper.WriteFile($"Projects\\{ProjectName}.project.json", json);
-            MessageBox.Show(mainVM.Data == null ? "项目已创建！" : "项目已更新，部分设置重启应用生效！");
             if (mainVM.Data == null)
             {
-                mainVM.Uri = "IndexPage";
+                if (projects.GetProjects().Where(m => m.ProjectName == ProjectName).Any())
+                {
+                    mainVM.Toast("添加失败，名称已存在", Types.ToastType.Failed);
+                }
+                else if (projects.Add(GenerateModel(container)))
+                {
+                    mainVM.Toast("添加成功", Types.ToastType.Success);
+                    mainVM.Uri = "IndexPage";
+                }
+                else
+                {
+                    mainVM.Toast("添加失败", Types.ToastType.Failed);
+                }
             }
+            else
+            {
+                mainVM.Toast("已更新", Types.ToastType.Success);
+                projects.Update(GenerateModel(container));
+            }
+
         }
 
         private void AddEventPageVM_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -257,32 +279,38 @@ namespace ProjectEvent.UI.ViewModels
             OnActionDialogStateCommand(false);
         }
 
-
-        private string GenerateJson(ActionContainer container)
+        private ProjectModel GenerateModel(ActionContainer container)
         {
-            var project = new ProjectModel();
+            ProjectModel project = null;
+            if (mainVM.Data != null)
+            {
+                project = projects.GetProject((int)mainVM.Data);
+            }
+            if (project == null)
+            {
+                project = new ProjectModel();
+            }
             project.ProjectName = ProjectName;
             project.EventID = SelectedEventID;
             project.ConditionData = ConditionData;
             project.ProjectDescription = ProjectDescription;
             project.Actions = container.GenerateActions();
-            var json = JsonConvert.SerializeObject(project);
-            return json;
+            if (mainVM.SelectedGroup != null)
+            {
+                project.GroupID = mainVM.SelectedGroup.ID;
+            }
+            return project;
         }
 
         private void HandleEdit()
         {
             if (mainVM.Data != null)
             {
-                string projectName = mainVM.Data.ToString();
-                if (IOHelper.FileExists($"Projects\\{projectName}.project.json"))
+                project = projects.GetProject((int)mainVM.Data);
+                if (project != null)
                 {
-                    mainVM.Title = $"编辑方案 - {projectName}";
-                    ButtonSaveName = "保存";
-
-                    //导入
-                    project = JsonConvert.DeserializeObject<ProjectModel>(File.ReadAllText(IOHelper.GetFullPath($"Projects\\{projectName}.project.json")));
-
+                    mainVM.Title = $"编辑方案 - {project.ProjectName}";
+                    ButtonSaveName = "保 存";
                     object cdata = null;
                     switch ((EventType)project.EventID)
                     {

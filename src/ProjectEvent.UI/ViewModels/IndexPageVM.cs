@@ -5,6 +5,7 @@ using ProjectEvent.UI.Controls.Navigation;
 using ProjectEvent.UI.Models;
 using ProjectEvent.UI.Models.DataModels;
 using ProjectEvent.UI.Services;
+using ProjectEvent.UI.Views;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -38,7 +39,7 @@ namespace ProjectEvent.UI.ViewModels
 
         private void MainVM_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(mainVM.Data))
+            if (e.PropertyName == nameof(mainVM.SelectedGroup))
             {
                 Init();
             }
@@ -66,8 +67,7 @@ namespace ProjectEvent.UI.ViewModels
 
         private void HandleGroupInfo()
         {
-
-            group = mainVM.Data as GroupModel;
+            group = mainVM.SelectedGroup;
             if (group != null)
             {
                 Title = group.Name;
@@ -95,7 +95,7 @@ namespace ProjectEvent.UI.ViewModels
         {
             switch (e.PropertyName)
             {
-                case "SelectedProjectID":
+                case nameof(SelectedProjectID):
                     HandleProjectIDChanged();
                     break;
             }
@@ -105,8 +105,8 @@ namespace ProjectEvent.UI.ViewModels
         {
             if (SelectedProjectID > 0)
             {
-                mainVM.Data = Projects.Where(m => m.ID == SelectedProjectID).FirstOrDefault().Title;
-                mainVM.Uri = "AddEventPage";
+                mainVM.Data = SelectedProjectID;
+                mainVM.Uri = nameof(AddEventPage);
             }
         }
 

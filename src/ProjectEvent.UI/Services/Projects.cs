@@ -12,9 +12,14 @@ namespace ProjectEvent.UI.Services
     public class Projects : IProjects
     {
         private List<ProjectModel> projects;
+        private List<ProjectModel> projectsBackup;
         public Projects()
         {
             projects = new List<ProjectModel>();
+        }
+        private void UpdateBackup()
+        {
+            projectsBackup = JsonConvert.DeserializeObject<List<ProjectModel>>(JsonConvert.SerializeObject(projects));
         }
         public void LoadProjects()
         {
@@ -24,17 +29,25 @@ namespace ProjectEvent.UI.Services
                 var project = JsonConvert.DeserializeObject<ProjectModel>(File.ReadAllText(file.FullName));
                 Add(project, false);
             }
+            UpdateBackup();
         }
-        public void Add(ProjectModel project, bool isSave = true)
+        public bool Add(ProjectModel project, bool isSave = true)
         {
-            if (project != null && project.ID != null && project.ID > 0 && !projects.Where(m => m.ID == project.ID).Any() && !projects.Where(m => m.ProjectName == project.ProjectName).Any())
+            if (project.ID == null || project.ID <= 0)
             {
-                projects.Add(project);
+                project.ID = GetCreateID();
+            }
+            if (project != null && project.ID != null && !projects.Where(m => m.ID == project.ID).Any() && !projects.Where(m => m.ProjectName == project.ProjectName).Any())
+            {
                 if (isSave)
                 {
                     IOHelper.WriteFile($"Projects\\{project.ProjectName}.project.json", JsonConvert.SerializeObject(project));
                 }
+                projects.Add(project);
+                UpdateBackup();
+                return true;
             }
+            return false;
         }
 
         public void Delete(int ID)
@@ -46,11 +59,12 @@ namespace ProjectEvent.UI.Services
             {
                 IOHelper.FileDelete(oldpath);
             }
+            UpdateBackup();
         }
 
         public ProjectModel GetProject(int ID)
         {
-            return projects.Where(m => m.ID == ID).FirstOrDefault();
+            return projects.Where(m => m.ID == ID).ToList().FirstOrDefault();
         }
 
         public List<ProjectModel> GetProjects()
@@ -60,16 +74,18 @@ namespace ProjectEvent.UI.Services
 
         public void Update(ProjectModel project)
         {
-            var oldproject = projects.Where(m => m.ID == project.ID).FirstOrDefault();
-            int index = projects.IndexOf(oldproject);
-            projects[index] = project;
+            var oldproject = projectsBackup.Where(m => m.ID == project.ID).FirstOrDefault();
             //更新本地数据
-            string oldpath = $"Projects\\{oldproject.ProjectName}.project.json";
-            if (IOHelper.FileExists(oldpath))
+            if (oldproject.ProjectName != project.ProjectName)
             {
-                IOHelper.FileDelete(oldpath);
+                string oldpath = $"Projects\\{oldproject.ProjectName}.project.json";
+                if (IOHelper.FileExists(oldpath))
+                {
+                    IOHelper.FileDelete(oldpath);
+                }
             }
             IOHelper.WriteFile($"Projects\\{project.ProjectName}.project.json", JsonConvert.SerializeObject(project));
+            UpdateBackup();
         }
 
         public List<ProjectModel> GetProjects(int GID)
@@ -77,5 +93,9 @@ namespace ProjectEvent.UI.Services
             return projects.Where(m => m.GroupID == GID).ToList();
         }
 
+        public int GetCreateID()
+        {
+            return projects.Count > 0 ? projects.Max(m => m.ID) + 1 : 1;
+        }
     }
 }

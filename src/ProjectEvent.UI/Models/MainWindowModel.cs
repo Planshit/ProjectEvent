@@ -38,7 +38,15 @@ namespace ProjectEvent.UI.Models
             get { return Data_; }
             set { Data_ = value; OnPropertyChanged(); }
         }
-        public GroupModel SelectedGroup { get; set; }
+        private GroupModel SelectedGroup_;
+        /// <summary>
+        /// 选中分组
+        /// </summary>
+        public GroupModel SelectedGroup
+        {
+            get { return SelectedGroup_; }
+            set { SelectedGroup_ = value; OnPropertyChanged(); }
+        }
         public ObservableCollection<NavigationItemModel> Items { get; set; }
 
         private double NavigationWidth_ = 220;
