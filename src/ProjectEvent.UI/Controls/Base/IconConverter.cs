@@ -37,6 +37,7 @@ namespace ProjectEvent.UI.Controls.Base
             {IconTypes.Settings,"\xE713"},
             {IconTypes.ChromeBack,"\xE830"},
             {IconTypes.BulletedList,"\xE8FD"},
+            {IconTypes.CalculatorAddition,"\xE948"},
 
             {IconTypes.ChevronUp,"\xE70E"}
 

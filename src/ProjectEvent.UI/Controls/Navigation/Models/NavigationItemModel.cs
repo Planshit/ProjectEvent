@@ -14,6 +14,6 @@ namespace ProjectEvent.UI.Controls.Navigation.Models
         public ColorTypes IconColor { get; set; }
         public string BadgeText { get; set; }
         public string Uri { get; set; }
-        public bool IsSelected { get; set; }
+        //public bool IsSelected { get; set; }
     }
 }

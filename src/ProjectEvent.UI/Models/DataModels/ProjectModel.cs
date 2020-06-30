@@ -6,6 +6,7 @@ namespace ProjectEvent.UI.Models.DataModels
 {
     public class ProjectModel
     {
+        public int ID { get; set; }
         /// <summary>
         /// 方案名称
         /// </summary>

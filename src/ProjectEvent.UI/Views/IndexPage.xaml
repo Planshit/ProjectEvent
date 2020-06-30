@@ -22,8 +22,8 @@
         <Grid Margin="20,0">
             <TextBlock Text="{Binding Title}" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left"/>
 
-            <Button  HorizontalAlignment="Right" Command="{Binding RedirectCommand}" Width="28" Height="28" Padding="0" CommandParameter="AddEventPage"  VerticalAlignment="Center" Style="{DynamicResource Primary}">
-                <Base:Icon IconType="More" FontSize="12"/>
+            <Button FontWeight="Normal" HorizontalAlignment="Right" Command="{Binding RedirectCommand}" Width="30" Height="30" Padding="0" CommandParameter="AddEventPage"  VerticalAlignment="Center" Style="{DynamicResource Primary}" >
+                <Base:Icon IconType="CalculatorAddition" FontSize="14" />
             </Button>
         </Grid>
         <ItemSelect:ItemSelect Grid.Row="1" Items="{Binding Projects, Mode=TwoWay}" SelectID="{Binding SelectedProjectID, Mode=TwoWay}"/>

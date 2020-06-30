@@ -7,6 +7,7 @@ using ProjectEvent.UI.Controls.Navigation;
 using ProjectEvent.UI.Controls.Navigation.Models;
 using ProjectEvent.UI.Models;
 using ProjectEvent.UI.Models.DataModels;
+using ProjectEvent.UI.Types;
 using ProjectEvent.UI.Views;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace ProjectEvent.UI.ViewModels
@@ -50,8 +52,6 @@ namespace ProjectEvent.UI.ViewModels
 
             Items = new System.Collections.ObjectModel.ObservableCollection<Controls.Navigation.Models.NavigationItemModel>();
             Groups = new List<GroupModel>();
-            //创建数据文件夹
-            IOHelper.CreateDirectory("Data");
             InitGroupManagerContextMenu();
             InitNavigation();
             LoadGroups();
@@ -59,17 +59,33 @@ namespace ProjectEvent.UI.ViewModels
 
         private void OnDeleteGroupCommand(object obj)
         {
-            Toast("分组已被移除");
-            Groups.Remove(Groups.Where(m => m.ID == selectedNavigationItem.ID).FirstOrDefault());
+            Toast("分组已被移除", ToastType.Success);
+            var group = Groups.Where(m => m.ID == selectedNavigationItem.ID).FirstOrDefault();
+            int removeIndex = Groups.IndexOf(group);
+            Groups.Remove(group);
             Items.Remove(selectedNavigationItem);
+            if (NavSelectedItem.ID != -1)
+            {
+                if (Groups.Count > 0)
+                {
+                    SelectGroup(Groups[removeIndex - 1].ID);
+                }
+                else
+                {
+                    SelectGroup(-1);
+                }
+            }
             SaveGroup();
         }
 
         private void OnMouseRightButtonUPCommandHandle(object obj)
         {
-            var navigation = obj as Navigation;
-            selectedNavigationItem = navigation.SelectedItem;
-            groupManagerContextMenu.IsOpen = true;
+            var args = obj as RoutedEventArgs;
+            selectedNavigationItem = args.Source as NavigationItemModel;
+            if (selectedNavigationItem.ID >= 100)
+            {
+                groupManagerContextMenu.IsOpen = true;
+            }
         }
 
         private void OnHideGroupModalCommand(object obj)
@@ -108,17 +124,16 @@ namespace ProjectEvent.UI.ViewModels
 
         private void OnSelectedCommandHandle(object obj)
         {
-            var navigation = obj as Navigation;
-            if (!string.IsNullOrEmpty(navigation.SelectedItem.Uri))
+            if (!string.IsNullOrEmpty(NavSelectedItem.Uri))
             {
-                Uri = navigation.SelectedItem.Uri;
+                Uri = NavSelectedItem.Uri;
             }
             else
             {
                 //分组功能
-                Data = Groups.Where(m => m.ID == navigation.SelectedItem.ID).FirstOrDefault();
+                Data = Groups.Where(m => m.ID == NavSelectedItem.ID).FirstOrDefault();
             }
-            Debug.Write(navigation.SelectedItem.ID);
+            Debug.Write(NavSelectedItem.ID);
         }
 
         private void InitNavigation()
@@ -139,13 +154,7 @@ namespace ProjectEvent.UI.ViewModels
             Items.Add(new Controls.Navigation.Models.NavigationItemModel()
             {
             });
-            Items.Add(new Controls.Navigation.Models.NavigationItemModel()
-            {
-                BadgeText = "1",
-                Icon = Controls.Base.IconTypes.Timer,
-                Title = "Test3",
-                ID = 100
-            });
+            NavSelectedItem = Items[0];
         }
 
         private void LoadGroups()
@@ -176,7 +185,7 @@ namespace ProjectEvent.UI.ViewModels
         }
 
 
-        private void Toast(string content)
+        private void Toast(string content, ToastType toastType = ToastType.Normal)
         {
             if (IsShowToast)
             {
@@ -184,6 +193,7 @@ namespace ProjectEvent.UI.ViewModels
             }
             ToastContent = content;
             IsShowToast = true;
+            ToastType = toastType;
         }
         private void CreateGroup()
         {
@@ -204,7 +214,8 @@ namespace ProjectEvent.UI.ViewModels
                     Title = GroupName
                 });
                 SaveGroup();
-                Toast("分组已添加");
+                Toast("分组已添加", ToastType.Success);
+                SelectGroup(GID);
                 HideGroupModalCommand.Execute(null);
             }
         }
@@ -224,7 +235,8 @@ namespace ProjectEvent.UI.ViewModels
                     navitem.Icon = GroupIcon;
                     Items[navitemIndex] = navitem;
                     SaveGroup();
-                    Toast("分组已更新");
+                    Toast("分组已更新", ToastType.Success);
+                    SelectGroup(group.ID);
                 }
             }
         }
@@ -232,15 +244,15 @@ namespace ProjectEvent.UI.ViewModels
         {
             if (GroupName == string.Empty)
             {
-                Toast("请输入分组名称");
+                Toast("请输入分组名称", ToastType.Failed);
             }
             else if (GroupName.Length > 8)
             {
-                Toast("分组名称限制最多8个字符");
+                Toast("分组名称限制最多8个字符", ToastType.Failed);
             }
             else if (!edit && Groups.Where(m => m.Name == GroupName).Count() > 0)
             {
-                Toast("分组名称已存在");
+                Toast("分组名称已存在", ToastType.Failed);
             }
             else
             {
@@ -275,6 +287,11 @@ namespace ProjectEvent.UI.ViewModels
             groupManagerContextMenu.Items.Add(delItem);
             groupManagerContextMenu.Items.Add(editItem);
 
+        }
+        private void SelectGroup(int ID)
+        {
+            NavSelectedItem = Items.Where(m => m.ID == ID).FirstOrDefault();
+            Data = Groups.Where(m => m.ID == ID).FirstOrDefault();
         }
     }
 }

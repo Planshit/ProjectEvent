@@ -61,6 +61,7 @@ namespace ProjectEvent.UI.Controls.Base
         ClipboardList,
         Settings,
         ChromeBack,
-        BulletedList
+        BulletedList,
+        CalculatorAddition
     }
 }

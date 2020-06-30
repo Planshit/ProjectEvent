@@ -24,15 +24,18 @@ namespace ProjectEvent.UI.Services
         private readonly ITrayService trayService;
         private readonly IEventContainerService eventContainerService;
         private readonly IMainService mainService;
+        private readonly IProjects projects;
         public App(
             ITrayService trayService,
             IEventContainerService eventContainerService,
-            IMainService mainService
+            IMainService mainService,
+            IProjects projects
             )
         {
             this.trayService = trayService;
             this.eventContainerService = eventContainerService;
             this.mainService = mainService;
+            this.projects = projects;
         }
         public void Run()
         {
@@ -48,10 +51,11 @@ namespace ProjectEvent.UI.Services
 
         private void LoadProject()
         {
-            DirectoryInfo folder = IOHelper.GetDirectoryInfo("Projects");
-            foreach (FileInfo file in folder.GetFiles("*.project.json"))
+            //查找并加载方案数据
+            projects.LoadProjects();
+
+            foreach (var project in projects.GetProjects())
             {
-                var project = JsonConvert.DeserializeObject<ProjectModel>(File.ReadAllText(file.FullName));
                 if (project != null && project.EventID > 0)
                 {
                     CreateEvent(project);

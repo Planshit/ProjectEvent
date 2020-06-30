@@ -4,6 +4,7 @@ using ProjectEvent.UI.Controls.ItemSelect.Models;
 using ProjectEvent.UI.Controls.Navigation;
 using ProjectEvent.UI.Models;
 using ProjectEvent.UI.Models.DataModels;
+using ProjectEvent.UI.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,11 +17,13 @@ namespace ProjectEvent.UI.ViewModels
     public class IndexPageVM : IndexPageModel
     {
         private readonly MainViewModel mainVM;
+        private readonly IProjects projects;
         public Command RedirectCommand { get; set; }
         private GroupModel group;
-        public IndexPageVM(MainViewModel mainVM)
+        public IndexPageVM(MainViewModel mainVM, IProjects projects)
         {
             this.mainVM = mainVM;
+            this.projects = projects;
 
             RedirectCommand = new Command(new Action<object>(OnRedirectCommand));
             PropertyChanged += IndexPageVM_PropertyChanged;
@@ -77,21 +80,15 @@ namespace ProjectEvent.UI.ViewModels
         private void ImportProjects()
         {
             Projects.Clear();
-            DirectoryInfo folder = IOHelper.GetDirectoryInfo("Projects");
-            int i = 0;
-            foreach (FileInfo file in folder.GetFiles("*.project.json"))
+            var projectsData = group == null ? projects.GetProjects() : projects.GetProjects(group.ID);
+            foreach (var project in projectsData)
             {
-                i++;
-                var project = JsonConvert.DeserializeObject<ProjectModel>(File.ReadAllText(file.FullName));
-                if (group == null || group.ID == project.GroupID)
+                Projects.Add(new Controls.ItemSelect.Models.ItemModel
                 {
-                    Projects.Add(new Controls.ItemSelect.Models.ItemModel
-                    {
-                        ID = i,
-                        Title = project.ProjectName,
-                        Description = project.ProjectDescription
-                    });
-                }
+                    ID = project.ID,
+                    Title = project.ProjectName,
+                    Description = project.ProjectDescription
+                });
             }
         }
         private void IndexPageVM_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

@@ -38,6 +38,7 @@ namespace ProjectEvent.UI.Models
             get { return Data_; }
             set { Data_ = value; OnPropertyChanged(); }
         }
+        public GroupModel SelectedGroup { get; set; }
         public ObservableCollection<NavigationItemModel> Items { get; set; }
 
         private double NavigationWidth_ = 220;
@@ -111,6 +112,13 @@ namespace ProjectEvent.UI.Models
         {
             get { return GroupModalVisibility_; }
             set { GroupModalVisibility_ = value; OnPropertyChanged(); }
+        }
+
+        private NavigationItemModel NavSelectedItem_;
+        public NavigationItemModel NavSelectedItem
+        {
+            get { return NavSelectedItem_; }
+            set { NavSelectedItem_ = value; OnPropertyChanged(); }
         }
     }
 }

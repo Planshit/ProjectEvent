@@ -135,8 +135,7 @@
           Value="Transparent" />
         <Setter Property="Foreground"
                 Value="{DynamicResource StandardTextBrush}"/>
-        <Setter Property="FontWeight"
-                Value="600"/>
+      
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -170,5 +169,5 @@
             </Setter.Value>
         </Setter>
     </Style>
-
+   
 </ResourceDictionary>

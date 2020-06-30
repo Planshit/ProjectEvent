@@ -12,6 +12,40 @@ namespace ProjectEvent.UI.Controls.Navigation
 {
     public class Navigation : Control
     {
+        public ContextMenu ItemContextMenu
+        {
+            get { return (ContextMenu)GetValue(ItemContextMenuProperty); }
+            set { SetValue(SelectedItemProperty, value); }
+        }
+        public static readonly DependencyProperty ItemContextMenuProperty =
+            DependencyProperty.Register("ItemContextMenu", typeof(ContextMenu), typeof(Navigation));
+
+        public NavigationItemModel SelectedItem
+        {
+            get { return (NavigationItemModel)GetValue(SelectedItemProperty); }
+            set { SetValue(SelectedItemProperty, value); }
+        }
+        public static readonly DependencyProperty SelectedItemProperty =
+            DependencyProperty.Register("SelectedItem", typeof(NavigationItemModel), typeof(Navigation), new PropertyMetadata(new PropertyChangedCallback(OnSelectedItemChanged)));
+
+        private static void OnSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var control = d as Navigation;
+            if (e.NewValue != e.OldValue)
+            {
+                var newItem = e.NewValue as NavigationItemModel;
+                var oldItem = e.OldValue as NavigationItemModel;
+                if (newItem != null && control.ItemsDictionary.ContainsKey(newItem.ID))
+                {
+                    control.ItemsDictionary[newItem.ID].IsSelected = true;
+                }
+                if (oldItem != null && control.ItemsDictionary.ContainsKey(oldItem.ID))
+                {
+                    control.ItemsDictionary[oldItem.ID].IsSelected = false;
+                }
+            }
+        }
+
         public bool IsShowNavigation
         {
             get { return (bool)GetValue(IsShowNavigationProperty); }
@@ -185,8 +219,6 @@ namespace ProjectEvent.UI.Controls.Navigation
 
         private StackPanel ItemsPanel;
         private Dictionary<int, NavigationItem> ItemsDictionary;
-        private int SelectedID;
-        public NavigationItemModel SelectedItem { get; set; }
         public Navigation()
         {
             DefaultStyleKey = typeof(Navigation);
@@ -241,7 +273,7 @@ namespace ProjectEvent.UI.Controls.Navigation
             if (ItemsPanel != null)
             {
                 var navItem = new NavigationItem();
-                int id = item.ID <= 0 ? CreateID() : item.ID;
+                int id = item.ID == null ? CreateID() : item.ID;
                 item.ID = id;
                 navItem.ID = id;
                 navItem.Title = item.Title;
@@ -249,55 +281,39 @@ namespace ProjectEvent.UI.Controls.Navigation
                 navItem.IconColor = item.IconColor;
                 navItem.BadgeText = item.BadgeText;
                 navItem.Uri = item.Uri;
-                navItem.IsSelected = item.IsSelected;
-                if (navItem.IsSelected)
-                {
-                    SelectedID = id;
-                }
+                //navItem.IsSelected = item.IsSelected;
                 if (!string.IsNullOrEmpty(item.Title))
                 {
                     navItem.MouseUp += NavItem_MouseUp;
                 }
                 ItemsPanel.Children.Add(navItem);
                 ItemsDictionary.Add(id, navItem);
+                //if (item.IsSelected)
+                //{
+                //    SelectedItem = item;
+                //}
             }
         }
 
         private void NavItem_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-
+            var navitem = sender as NavigationItem;
             if (e.ChangedButton == System.Windows.Input.MouseButton.Left)
             {
                 //左键选中
-                SetSelectedItem((sender as NavigationItem).ID);
+                SelectedItem = Data.Where(m => m.ID == navitem.ID).FirstOrDefault();
                 OnSelected?.Invoke(this, null);
             }
             if (e.ChangedButton == System.Windows.Input.MouseButton.Right)
             {
                 //右键
-                SetSelectedItem((sender as NavigationItem).ID, false);
-                OnMouseRightButtonUP?.Invoke(this, null);
+                var args = new RoutedEventArgs();
+                args.RoutedEvent = e.RoutedEvent;
+                args.Source = Data.Where(m => m.ID == navitem.ID).FirstOrDefault();
+                OnMouseRightButtonUP?.Invoke(this, args);
             }
         }
-        private void SetSelectedItem(int id, bool isSelected = true)
-        {
-            if (isSelected)
-            {
-                if (id == SelectedID)
-                {
-                    return;
-                }
-                if (ItemsDictionary.ContainsKey(SelectedID))
-                {
-                    ItemsDictionary[SelectedID].IsSelected = false;
-                }
-                ItemsDictionary[id].IsSelected = true;
-                SelectedID = id;
-            }
-            var item = Data.Where(m => m.ID == id).FirstOrDefault();
-            SelectedItem = item;
 
-        }
         private void RemoveItem(NavigationItemModel item)
         {
             var navItem = ItemsDictionary[item.ID];
