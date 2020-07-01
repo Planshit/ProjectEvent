@@ -29,10 +29,12 @@ namespace ProjectEvent.UI.ViewModels
         public Command AddCommand { get; set; }
         public Command ActionDialogStateCommand { get; set; }
         public Command ShowActionDialogCommand { get; set; }
+        public Command PageLoadedCommand { get; set; }
         public Command RedirectCommand { get; set; }
         public Command LoadedCommand { get; set; }
         private ActionContainer actionContainer;
         private ProjectModel project;
+        private Page page;
         public AddEventPageVM(
             MainViewModel mainVM,
             IProjects projects)
@@ -48,6 +50,8 @@ namespace ProjectEvent.UI.ViewModels
             AddCommand = new Command(new Action<object>(OnAddCommand));
             ActionDialogStateCommand = new Command(new Action<object>(OnActionDialogStateCommand));
             ShowActionDialogCommand = new Command(new Action<object>(OnShowActionDialogCommand));
+            PageLoadedCommand = new Command(new Action<object>(OnPageLoadedCommand));
+
             AddACtionDialogVisibility = System.Windows.Visibility.Hidden;
             PropertyChanged += AddEventPageVM_PropertyChanged;
 
@@ -59,6 +63,11 @@ namespace ProjectEvent.UI.ViewModels
             InitConditions();
             InitAcions();
             HandleEdit();
+        }
+
+        private void OnPageLoadedCommand(object obj)
+        {
+            page = obj as Page;
         }
 
         private void OnLoadedCommand(object obj)
@@ -123,8 +132,19 @@ namespace ProjectEvent.UI.ViewModels
         {
             switch (e.PropertyName)
             {
-                case "SelectedEventID":
+                case nameof(SelectedEventID):
                     HandleEventIDChanged();
+                    break;
+                case nameof(IsEventTabItemSelected):
+                    if (IsEventTabItemSelected)
+                    {
+                        VisualStateManager.GoToElementState(page, "EventTabSelected", true);
+                    }
+                    else
+                    {
+                        VisualStateManager.GoToElementState(page, "EventTabUnSelected", true);
+
+                    }
                     break;
             }
         }
@@ -142,20 +162,22 @@ namespace ProjectEvent.UI.ViewModels
             {
                 ID = (int)EventType.OnIntervalTimer,
                 Title = "计时器",
-                Icon = Controls.Base.IconTypes.Timer
+                Icon = Controls.Base.IconTypes.Timer,
+                Description = "每隔多少秒触发"
             });
             Events.Add(new Controls.ItemSelect.Models.ItemModel()
             {
                 ID = (int)EventType.OnDeviceStartup,
                 Title = "设备启动",
-                Color = Base.Color.ColorTypes.Gold
-
+                Description = "电脑首次开机或注销后重新登录时触发",
+                Icon = Controls.Base.IconTypes.DeviceRun
             });
             Events.Add(new Controls.ItemSelect.Models.ItemModel()
             {
                 ID = (int)EventType.OnProcessCreated,
                 Title = "进程创建",
-                Color = Base.Color.ColorTypes.Violet
+                Description = "当有新的程序首次运行时触发",
+                Icon = Controls.Base.IconTypes.ProcessingRun
 
             });
         }
@@ -295,6 +317,7 @@ namespace ProjectEvent.UI.ViewModels
             project.ConditionData = ConditionData;
             project.ProjectDescription = ProjectDescription;
             project.Actions = container.GenerateActions();
+            project.Icon = ProjectIcon;
             if (mainVM.SelectedGroup != null)
             {
                 project.GroupID = mainVM.SelectedGroup.ID;

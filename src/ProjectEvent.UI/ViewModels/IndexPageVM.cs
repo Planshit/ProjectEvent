@@ -93,11 +93,22 @@ namespace ProjectEvent.UI.ViewModels
             var projectsData = group == null ? projects.GetProjects() : projects.GetProjects(group.ID);
             foreach (var project in projectsData)
             {
+                string gpName = string.Empty;
+                if (group == null)
+                {
+                    var gp = project.GroupID > 0 ? groupService.GetGroup(project.GroupID) : null;
+                    if (gp != null)
+                    {
+                        gpName = gp.Name;
+                    }
+                }
                 Projects.Add(new Controls.ItemSelect.Models.ItemModel
                 {
                     ID = project.ID,
                     Title = project.ProjectName,
-                    Description = project.ProjectDescription
+                    Description = project.ProjectDescription,
+                    Icon=project.Icon,
+                    Tag = gpName
                 });
             }
         }

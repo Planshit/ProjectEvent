@@ -14,13 +14,15 @@
                             <StackPanel Height="44" Orientation="Horizontal" Panel.ZIndex="1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,32,0,0" Visibility="{TemplateBinding TitleBarVisibility}">
                                 <Button Style="{DynamicResource Icon}"
                                     Width="35"
-                                    Height="40"
+                                    Height="35"
                                         Command="{TemplateBinding BackCommand}"
+                                        VerticalAlignment="Center"
                                        >
                                     <base:Icon IconType="Back"
+                                               VerticalAlignment="Center"
                                       FontSize="15" />
                                 </Button>
-                                <TextBlock Text="{TemplateBinding Title}" VerticalAlignment="Center" FontSize="20" Margin="10,0,0,0"/>
+                                <TextBlock Text="{TemplateBinding Title}" VerticalAlignment="Center" FontSize="16" Margin="10,0,0,0"/>
                             </StackPanel>
                             <Frame Grid.Row="1" Content="{TemplateBinding Content}" NavigationUIVisibility="Hidden"/>
                         </Grid>

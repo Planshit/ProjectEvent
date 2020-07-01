@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjectEvent.UI.Controls.Base;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -32,5 +33,9 @@ namespace ProjectEvent.UI.Models.DataModels
         /// 分组ID
         /// </summary>
         public int GroupID { get; set; }
+        /// <summary>
+        /// 图标
+        /// </summary>
+        public IconTypes Icon { get; set; }
     }
 }

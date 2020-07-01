@@ -1,4 +1,5 @@
-﻿using ProjectEvent.UI.Controls.InputGroup.Models;
+﻿using ProjectEvent.UI.Controls.Base;
+using ProjectEvent.UI.Controls.InputGroup.Models;
 using ProjectEvent.UI.Controls.ItemSelect.Models;
 using ProjectEvent.UI.Models.DataModels;
 using System;
@@ -100,5 +101,12 @@ namespace ProjectEvent.UI.Models
             get { return IsActionsTabItemSelected_; }
             set { IsActionsTabItemSelected_ = value; OnPropertyChanged(); }
         }
+        private IconTypes ProjectIcon_ = IconTypes.Product;
+        public IconTypes ProjectIcon
+        {
+            get { return ProjectIcon_; }
+            set { ProjectIcon_ = value; OnPropertyChanged(); }
+        }
+
     }
 }

@@ -22,6 +22,13 @@ namespace ProjectEvent.UI.Controls.ItemSelect
         }
         public static readonly DependencyProperty TitleProperty =
             DependencyProperty.Register("Title", typeof(string), typeof(Item), new PropertyMetadata("未知"));
+        public string Tag
+        {
+            get { return (string)GetValue(TagProperty); }
+            set { SetValue(TagProperty, value); }
+        }
+        public static readonly DependencyProperty TagProperty =
+            DependencyProperty.Register("Tag", typeof(string), typeof(Item));
 
         public string Description
         {
@@ -86,7 +93,7 @@ namespace ProjectEvent.UI.Controls.ItemSelect
         {
             DefaultStyleKey = typeof(Item);
             Foreground = Colors.GetFromString("#323130");
-            BorderThickness = new Thickness(1);
+            BorderThickness = new Thickness(0);
         }
         protected override void OnMouseEnter(MouseEventArgs e)
         {

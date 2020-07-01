@@ -53,4 +53,8 @@
     <Color x:Key="SubBorderColor">#eaebeb</Color>
     <SolidColorBrush x:Key="SubBorderBrush" Color="{StaticResource SubBorderColor}" />
 
+    <!--辅助文字颜色（淡）-->
+    <Color x:Key="SubTextColor">#6E6D7A</Color>
+    <SolidColorBrush x:Key="SubTextBrush" Color="{StaticResource SubTextColor}" />
+
 </ResourceDictionary>

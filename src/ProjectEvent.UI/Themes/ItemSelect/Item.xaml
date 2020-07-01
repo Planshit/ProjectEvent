@@ -16,13 +16,13 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:Item}">
                     <ControlTemplate.Resources>
-                        <DropShadowEffect x:Key="BorderShadow" BlurRadius="10" Opacity="0.2"  ShadowDepth="0"/>
+                        <DropShadowEffect x:Key="BorderShadow" Color="{DynamicResource PrimaryColor}" BlurRadius="10" Opacity="0.2"  ShadowDepth="0"/>
                     </ControlTemplate.Resources>
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Margin="10"
-                            CornerRadius="4"
+                            CornerRadius="10"
                             x:Name="Border">
                         <Border.RenderTransform>
                             <TranslateTransform Y="0"/>
@@ -59,12 +59,18 @@
                                         <RowDefinition x:Name="IconRow" Height="*"/>
                                         <RowDefinition x:Name="DescriptionRow" Height="*"/>
                                     </Grid.RowDefinitions>
-                                    <base:Icon Foreground="{TemplateBinding IconColor}" IconType="{TemplateBinding Icon}" FontSize="40" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <base:Icon Foreground="{TemplateBinding IconColor}" FontWeight="Normal" IconType="{TemplateBinding Icon}" FontSize="30" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,10,0,0"/>
 
-                                    <TextBlock Text="{TemplateBinding Description}" Grid.Row="1" TextWrapping="Wrap" Margin="10,0" Foreground="{DynamicResource PlaceholderBrush}"/>
+                                    <StackPanel Grid.Row="1" Margin="10,0">
+                                        <TextBlock TextAlignment="Left" TextTrimming="CharacterEllipsis" Text="{TemplateBinding Title}" FontSize="14" FontWeight="Bold" ToolTip="{TemplateBinding Title}"/>
+                                        <TextBlock MaxHeight="20" Text="{TemplateBinding Description}"  Grid.Row="1" TextTrimming="CharacterEllipsis" Margin="0,10" Foreground="{DynamicResource PlaceholderBrush}" ToolTip="{TemplateBinding Description}"/>
+                                    </StackPanel>
+
                                 </Grid>
-                                <Border Grid.Row="1" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0,1,0,0"  Padding="0,10,0,0">
-                                    <TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis" Text="{TemplateBinding Title}" FontSize="14" FontWeight="Bold" ToolTip="{TemplateBinding Title}"/>
+                                <Border Grid.Row="1" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0"  Padding="0">
+                                    <Border x:Name="Tag" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,10,10" Background="{DynamicResource StandardColorBrush}" CornerRadius="4" Padding="10,5" ToolTip="{TemplateBinding Tag}">
+                                        <TextBlock Text="{TemplateBinding Tag}" Foreground="White"  TextTrimming="CharacterEllipsis"/>
+                                    </Border>
                                 </Border>
                             </Grid>
                         </Border>
@@ -73,9 +79,9 @@
                     <ControlTemplate.Triggers>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
-                                <Condition Property="Description" Value=""/>
+                                <Condition Property="Tag" Value=""/>
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="DescriptionRow" Property="Height" Value="0"/>
+                            <Setter TargetName="Tag" Property="Visibility" Value="Collapsed"/>
                         </MultiTrigger>
                         <Trigger Property="IsMouseOver" Value="true">
                             <Setter TargetName="Border" Property="Effect" Value="{StaticResource BorderShadow}"/>

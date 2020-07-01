@@ -62,6 +62,9 @@ namespace ProjectEvent.UI.Controls.Base
         Settings,
         ChromeBack,
         BulletedList,
-        CalculatorAddition
+        CalculatorAddition,
+        DeviceRun,
+        ProcessingRun,
+        Product
     }
 }

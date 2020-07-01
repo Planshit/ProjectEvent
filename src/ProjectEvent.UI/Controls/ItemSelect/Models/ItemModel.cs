@@ -10,6 +10,8 @@ namespace ProjectEvent.UI.Controls.ItemSelect.Models
     {
         public int ID { get; set; }
         public string Title { get; set; }
+        public string Tag { get; set; } = string.Empty;
+
         public string Description { get; set; } = string.Empty;
         public string ImageUri { get; set; }
         public IconTypes Icon { get; set; } = IconTypes.AppIconDefault;

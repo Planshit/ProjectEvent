@@ -149,6 +149,7 @@ namespace ProjectEvent.UI.Controls.ItemSelect
             item.Description = data.Description;
             item.Icon = data.Icon;
             item.Color = data.Color;
+            item.Tag = data.Tag;
             item.IsSelected = data.IsSelected;
             item.MouseLeftButtonUp += (e, c) =>
             {
