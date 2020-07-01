@@ -25,17 +25,20 @@ namespace ProjectEvent.UI.Services
         private readonly IEventContainerService eventContainerService;
         private readonly IMainService mainService;
         private readonly IProjects projects;
+        private readonly IGroup group;
         public App(
             ITrayService trayService,
             IEventContainerService eventContainerService,
             IMainService mainService,
-            IProjects projects
+            IProjects projects,
+            IGroup group
             )
         {
             this.trayService = trayService;
             this.eventContainerService = eventContainerService;
             this.mainService = mainService;
             this.projects = projects;
+            this.group = group;
         }
         public void Run()
         {
@@ -47,6 +50,8 @@ namespace ProjectEvent.UI.Services
             InitApp();
             //启动主服务
             mainService.Run();
+            //加载分组数据
+            group.Load();
         }
 
         private void LoadProject()

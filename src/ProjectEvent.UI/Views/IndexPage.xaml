@@ -26,6 +26,12 @@
                 <Base:Icon IconType="CalculatorAddition" FontSize="14" />
             </Button>
         </Grid>
-        <ItemSelect:ItemSelect Grid.Row="1" Items="{Binding Projects, Mode=TwoWay}" SelectID="{Binding SelectedProjectID, Mode=TwoWay}"/>
+        <ItemSelect:ItemSelect Grid.Row="1" Items="{Binding Projects, Mode=TwoWay}" SelectID="{Binding SelectedProjectID, Mode=TwoWay}" SelectItem="{Binding SelectItem,Mode=TwoWay}" ItemContextMenu="{Binding ItemContextMenu}">
+            <!--<ItemSelect:ItemSelect.ItemContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="移动到分组"/>
+                </ContextMenu>
+            </ItemSelect:ItemSelect.ItemContextMenu>-->
+        </ItemSelect:ItemSelect>
     </Grid>
 </Page>

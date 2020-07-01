@@ -7,6 +7,7 @@ using ProjectEvent.UI.Controls.Navigation;
 using ProjectEvent.UI.Controls.Navigation.Models;
 using ProjectEvent.UI.Models;
 using ProjectEvent.UI.Models.DataModels;
+using ProjectEvent.UI.Services;
 using ProjectEvent.UI.Types;
 using ProjectEvent.UI.Views;
 using System;
@@ -25,6 +26,9 @@ namespace ProjectEvent.UI.ViewModels
     public class MainViewModel : MainWindowModel
     {
         private readonly IServiceProvider serviceProvider;
+        private readonly IProjects projects;
+        private readonly IGroup group;
+
         public Command OnSelectedCommand { get; set; }
         public Command GotoPageCommand { get; set; }
         public Command SaveGroupCommand { get; set; }
@@ -35,10 +39,15 @@ namespace ProjectEvent.UI.ViewModels
         private ContextMenu groupManagerContextMenu;
         private NavigationItemModel selectedNavigationItem;
         public MainViewModel(
-            IServiceProvider serviceProvider
+            IServiceProvider serviceProvider,
+            IProjects projects,
+            IGroup group
             )
         {
             this.serviceProvider = serviceProvider;
+            this.projects = projects;
+            this.group = group;
+
             ServiceProvider = serviceProvider;
             Uri = "IndexPage";
             Title = "Project Event";
@@ -51,7 +60,6 @@ namespace ProjectEvent.UI.ViewModels
             DeleteGroupCommand = new Command(new Action<object>(OnDeleteGroupCommand));
 
             Items = new System.Collections.ObjectModel.ObservableCollection<Controls.Navigation.Models.NavigationItemModel>();
-            Groups = new List<GroupModel>();
 
             PropertyChanged += MainViewModel_PropertyChanged;
 
@@ -74,22 +82,30 @@ namespace ProjectEvent.UI.ViewModels
         private void OnDeleteGroupCommand(object obj)
         {
             Toast("分组已被移除", ToastType.Success);
-            var group = Groups.Where(m => m.ID == selectedNavigationItem.ID).FirstOrDefault();
-            int removeIndex = Groups.IndexOf(group);
-            Groups.Remove(group);
+            var groups = group.GetGroups();
+            var group_ = group.GetGroup(selectedNavigationItem.ID);
+            int removeIndex = groups.IndexOf(group_);
+            group.Delete(selectedNavigationItem.ID);
             Items.Remove(selectedNavigationItem);
+            groups = group.GetGroups();
             if (NavSelectedItem.ID != -1)
             {
-                if (Groups.Count > 0)
+                if (groups.Count > 0)
                 {
-                    SelectGroup(Groups[removeIndex - 1].ID);
+                    SelectGroup(groups[removeIndex == 0 ? 0 : removeIndex - 1].ID);
                 }
                 else
                 {
                     SelectGroup(-1);
                 }
             }
-            SaveGroup();
+            //将分组内的项目转移
+            var groupProjects = projects.GetProjects(selectedNavigationItem.ID);
+            foreach (var project in groupProjects)
+            {
+                project.GroupID = 0;
+                projects.Update(project);
+            }
         }
 
         private void OnMouseRightButtonUPCommandHandle(object obj)
@@ -111,11 +127,13 @@ namespace ProjectEvent.UI.ViewModels
         private void OnShowGroupModalCommand(object obj)
         {
             GroupModalVisibility = System.Windows.Visibility.Visible;
+            GroupModalTitle = "新建分组";
             if (obj != null)
             {
                 GroupName = selectedNavigationItem.Title;
                 GroupID = selectedNavigationItem.ID;
                 GroupIcon = selectedNavigationItem.Icon;
+                GroupModalTitle = "编辑分组";
             }
         }
 
@@ -145,7 +163,7 @@ namespace ProjectEvent.UI.ViewModels
             else
             {
                 //分组功能
-                SelectedGroup = Groups.Where(m => m.ID == NavSelectedItem.ID).FirstOrDefault();
+                SelectedGroup = group.GetGroup(NavSelectedItem.ID);
             }
             Debug.Write(NavSelectedItem.ID);
         }
@@ -180,20 +198,16 @@ namespace ProjectEvent.UI.ViewModels
                     Items.RemoveAt(i);
                 }
             }
-            //分组数据路径
-            string path = IOHelper.GetFullPath("Data\\Groups.json");
-            if (File.Exists(path))
+
+            //获取分组数据
+            foreach (var group in group.GetGroups())
             {
-                Groups = JsonConvert.DeserializeObject<List<GroupModel>>(File.ReadAllText(path));
-                foreach (var group in Groups)
+                Items.Add(new NavigationItemModel()
                 {
-                    Items.Add(new NavigationItemModel()
-                    {
-                        ID = group.ID,
-                        Icon = group.Icon,
-                        Title = group.Name,
-                    });
-                }
+                    ID = group.ID,
+                    Icon = group.Icon,
+                    Title = group.Name,
+                });
             }
 
         }
@@ -213,23 +227,21 @@ namespace ProjectEvent.UI.ViewModels
         {
             if (ValidGroupInput())
             {
-                int GID = Groups.Count > 0 ? Groups.Max(m => m.ID) + 1 : 100;
-                Groups.Add(new GroupModel()
+
+                var g = group.Add(new GroupModel()
                 {
-                    ID = GID,
                     Icon = GroupIcon,
                     Name = GroupName
                 });
 
                 Items.Add(new NavigationItemModel()
                 {
-                    ID = GID,
+                    ID = g.ID,
                     Icon = GroupIcon,
                     Title = GroupName
                 });
-                SaveGroup();
                 Toast("分组已添加", ToastType.Success);
-                SelectGroup(GID);
+                SelectGroup(g.ID);
                 HideGroupModalCommand.Execute(null);
             }
         }
@@ -237,20 +249,20 @@ namespace ProjectEvent.UI.ViewModels
         {
             if (ValidGroupInput(true))
             {
-                var group = Groups.Where(m => m.ID == GroupID).FirstOrDefault();
+                var group_ = group.GetGroup(GroupID);
                 var navitem = Items.Where(m => m.ID == GroupID).FirstOrDefault();
                 int navitemIndex = Items.IndexOf(navitem);
-                if (group != null)
+                if (group_ != null)
                 {
-                    group.Name = GroupName;
-                    group.Icon = GroupIcon;
-
+                    group_.Name = GroupName;
+                    group_.Icon = GroupIcon;
+                    group.Update(group_);
                     navitem.Title = GroupName;
                     navitem.Icon = GroupIcon;
                     Items[navitemIndex] = navitem;
-                    SaveGroup();
                     Toast("分组已更新", ToastType.Success);
-                    SelectGroup(group.ID);
+                    SelectGroup(group_.ID);
+                    HideGroupModalCommand.Execute(null);
                 }
             }
         }
@@ -264,7 +276,7 @@ namespace ProjectEvent.UI.ViewModels
             {
                 Toast("分组名称限制最多8个字符", ToastType.Failed);
             }
-            else if (!edit && Groups.Where(m => m.Name == GroupName).Count() > 0)
+            else if (!edit && group.GetGroups().Where(m => m.Name == GroupName).Any())
             {
                 Toast("分组名称已存在", ToastType.Failed);
             }
@@ -280,10 +292,7 @@ namespace ProjectEvent.UI.ViewModels
             GroupName = "";
             GroupIcon = Controls.Base.IconTypes.BulletedList;
         }
-        private void SaveGroup()
-        {
-            IOHelper.WriteFile("Data\\Groups.json", JsonConvert.SerializeObject(Groups));
-        }
+
         private void InitGroupManagerContextMenu()
         {
             groupManagerContextMenu = new ContextMenu();
@@ -305,7 +314,7 @@ namespace ProjectEvent.UI.ViewModels
         private void SelectGroup(int ID)
         {
             NavSelectedItem = Items.Where(m => m.ID == ID).FirstOrDefault();
-            SelectedGroup = Groups.Where(m => m.ID == ID).FirstOrDefault();
+            SelectedGroup = group.GetGroup(ID);
         }
     }
 }

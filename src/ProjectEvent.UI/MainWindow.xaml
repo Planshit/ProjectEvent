@@ -60,7 +60,7 @@
                         <RowDefinition Height="50"/>
                     </Grid.RowDefinitions>
                     <Grid>
-                        <TextBlock FontSize="20" Text="新增分组" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock FontSize="20" Text="{Binding GroupModalTitle}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Button Command="{Binding HideGroupModalCommand}" Style="{DynamicResource Icon}" Width="40" Height="40" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0">
                             <base:Icon IconType="ChromeClose" FontSize="12"/>
                         </Button>

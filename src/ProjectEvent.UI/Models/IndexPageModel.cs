@@ -21,7 +21,14 @@ namespace ProjectEvent.UI.Models
         public string Title
         {
             get { return Title_; }
-            set { Title_ = value;OnPropertyChanged(); }
+            set { Title_ = value; OnPropertyChanged(); }
+        }
+
+        private ItemModel SelectItem_;
+        public ItemModel SelectItem
+        {
+            get { return SelectItem_; }
+            set { SelectItem_ = value; OnPropertyChanged(); }
         }
     }
 }

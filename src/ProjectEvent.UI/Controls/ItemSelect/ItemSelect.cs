@@ -71,7 +71,7 @@ namespace ProjectEvent.UI.Controls.ItemSelect
                     AddItem(data);
                 }
             }
-            else if(e.Action== NotifyCollectionChangedAction.Remove)
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
             {
                 foreach (var item in e.OldItems)
                 {
@@ -79,7 +79,7 @@ namespace ProjectEvent.UI.Controls.ItemSelect
                     Remove(data.ID);
                 }
             }
-            else if(e.Action== NotifyCollectionChangedAction.Reset)
+            else if (e.Action == NotifyCollectionChangedAction.Reset)
             {
                 itemControls.Clear();
                 container.Children.Clear();
@@ -102,18 +102,27 @@ namespace ProjectEvent.UI.Controls.ItemSelect
             control.Select((int)e.NewValue);
         }
         #endregion
+        public ItemModel SelectItem
+        {
+            get { return (ItemModel)GetValue(SelectItemProperty); }
+            set { SetValue(SelectItemProperty, value); }
+        }
+        public static readonly DependencyProperty SelectItemProperty =
+            DependencyProperty.Register("SelectItem", typeof(ItemModel), typeof(ItemSelect));
+        public ContextMenu ItemContextMenu
+        {
+            get { return (ContextMenu)GetValue(ItemContextMenuProperty); }
+            set { SetValue(ItemContextMenuProperty, value); }
+        }
+        public static readonly DependencyProperty ItemContextMenuProperty =
+            DependencyProperty.Register("ItemContextMenu", typeof(ContextMenu), typeof(ItemSelect));
+
         private WrapPanel container;
         private Dictionary<int, Item> itemControls;
-        ContextMenu contextMenu;
-        MenuItem menuItemDel = new MenuItem();
         public ItemSelect()
         {
             DefaultStyleKey = typeof(ItemSelect);
             itemControls = new Dictionary<int, Item>();
-            contextMenu = new ContextMenu();
-            menuItemDel = new MenuItem();
-            menuItemDel.Header = "删除";
-            contextMenu.Items.Add(menuItemDel);
         }
         public override void OnApplyTemplate()
         {
@@ -153,12 +162,12 @@ namespace ProjectEvent.UI.Controls.ItemSelect
 
         private void Item_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            menuItemDel.Click += (e, c) =>
+            var item = sender as Item;
+            SelectItem = Items.Where(m => m.ID == item.ID).FirstOrDefault();
+            if (ItemContextMenu != null)
             {
-                var item = sender as Item;
-                Items.Remove(Items.Where(m => m.ID == item.ID).FirstOrDefault());
-            };
-            contextMenu.IsOpen = true;
+                ItemContextMenu.IsOpen = true;
+            }
         }
         private void Remove(int id)
         {

@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Controls;
 
 namespace ProjectEvent.UI.ViewModels
 {
@@ -19,12 +20,19 @@ namespace ProjectEvent.UI.ViewModels
     {
         private readonly MainViewModel mainVM;
         private readonly IProjects projects;
+        private readonly IGroup groupService;
         public Command RedirectCommand { get; set; }
+        public ContextMenu ItemContextMenu { get; set; }
         private GroupModel group;
-        public IndexPageVM(MainViewModel mainVM, IProjects projects)
+        private MenuItem moveGroupMenutItem;
+        public IndexPageVM(
+            MainViewModel mainVM,
+            IProjects projects,
+            IGroup groupService)
         {
             this.mainVM = mainVM;
             this.projects = projects;
+            this.groupService = groupService;
 
             RedirectCommand = new Command(new Action<object>(OnRedirectCommand));
             PropertyChanged += IndexPageVM_PropertyChanged;
@@ -34,7 +42,9 @@ namespace ProjectEvent.UI.ViewModels
             mainVM.IsShowNavigation = true;
             mainVM.IsShowTitleBar = false;
 
+            ItemContextMenu = new ContextMenu();
             Init();
+            CreateItemContextMenu();
         }
 
         private void MainVM_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -91,6 +101,24 @@ namespace ProjectEvent.UI.ViewModels
                 });
             }
         }
+
+        private void CreateItemContextMenu()
+        {
+            MenuItem del = new MenuItem();
+            del.Header = "删除";
+            del.Click += (e, c) =>
+            {
+                projects.Delete(SelectItem.ID);
+                Projects.Remove(SelectItem);
+                mainVM.Toast("方案已被删除", Types.ToastType.Success);
+            };
+            moveGroupMenutItem = new MenuItem();
+            moveGroupMenutItem.Header = "移动到";
+
+            ItemContextMenu.Items.Add(del);
+            ItemContextMenu.Items.Add(moveGroupMenutItem);
+
+        }
         private void IndexPageVM_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -98,6 +126,33 @@ namespace ProjectEvent.UI.ViewModels
                 case nameof(SelectedProjectID):
                     HandleProjectIDChanged();
                     break;
+                case nameof(SelectItem):
+                    UpdateContextMenu();
+                    break;
+            }
+        }
+
+        private void UpdateContextMenu()
+        {
+            moveGroupMenutItem.Items.Clear();
+            var project = projects.GetProject(SelectItem.ID);
+            foreach (var g in groupService.GetGroups())
+            {
+                if (g.ID != project.GroupID)
+                {
+                    var gm = new MenuItem();
+                    gm.Click += (e, c) =>
+                    {
+                        project.GroupID = g.ID;
+                        projects.Update(project);
+                        if (group != null)
+                        {
+                            Projects.Remove(SelectItem);
+                        }
+                    };
+                    gm.Header = g.Name;
+                    moveGroupMenutItem.Items.Add(gm);
+                }
             }
         }
 

@@ -75,8 +75,7 @@ namespace ProjectEvent.UI.Models
             get { return IsShowTitleBar_; }
             set { IsShowTitleBar_ = value; OnPropertyChanged(); }
         }
-        public List<GroupModel> Groups { get; set; }
-
+        
         private ToastType ToastType_ = ToastType.Normal;
         public ToastType ToastType
         {
@@ -127,6 +126,18 @@ namespace ProjectEvent.UI.Models
         {
             get { return NavSelectedItem_; }
             set { NavSelectedItem_ = value; OnPropertyChanged(); }
+        }
+        private string GroupModalTitle_;
+        public string GroupModalTitle
+        {
+            get { return GroupModalTitle_; }
+            set { GroupModalTitle_ = value; OnPropertyChanged(); }
+        }
+        private string GroupModalBtnName_;
+        public string GroupModalBtnName
+        {
+            get { return GroupModalBtnName_; }
+            set { GroupModalBtnName_ = value; OnPropertyChanged(); }
         }
     }
 }

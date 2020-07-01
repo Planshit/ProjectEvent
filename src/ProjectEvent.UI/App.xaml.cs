@@ -47,6 +47,7 @@ namespace ProjectEvent
             services.AddSingleton<ITrayService, TrayService>();
             services.AddSingleton<IApp, ProjectEvent.UI.Services.App>();
             services.AddSingleton<IProjects, Projects>();
+            services.AddSingleton<IGroup, Group>();
 
             //services.AddTransient<PageContainer>();
             services.AddSingleton<MainViewModel>();
