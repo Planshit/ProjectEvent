@@ -28,6 +28,6 @@
         <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Navigation/Navigation.xaml"/>
         <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Toast/Toast.xaml"/>
         <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/IconSelection/IconSelection.xaml"/>
-
+        <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Toggle/Toggle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
