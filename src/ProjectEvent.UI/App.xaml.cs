@@ -36,7 +36,7 @@ namespace ProjectEvent
         private void ConfigureServices(IServiceCollection services)
         {
             //core services
-            services.AddSingleton<IEventContainerService, EventContainerService>();
+            services.AddSingleton<IEventService, EventService>();
             services.AddSingleton<ITimerService, TimerService>();
             services.AddSingleton<ITimerTaskService, TimerTaskService>();
             services.AddSingleton<IMainService, MainService>();

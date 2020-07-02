@@ -9,19 +9,18 @@ namespace ProjectEvent.Core.Services.Tasks
 {
     public class DeviceTaskService : IDeviceTaskService
     {
-        public event EventHandler OnEventTrigger;
-        private readonly IEventContainerService _eventContainerService;
+        private readonly IEventService eventService;
 
 
-        public DeviceTaskService(IEventContainerService eventContainerService)
+        public DeviceTaskService(IEventService eventContainerService)
         {
-            _eventContainerService = eventContainerService;
+            eventService = eventContainerService;
 
             //_eventContainerService.OnAddEvent += _eventContainerService_OnAddEvent;
         }
         public void Run()
         {
-            var events = _eventContainerService.
+            var events = eventService.
                 GetEvents().
                 Where(m => m.EventType == Event.Types.EventType.OnDeviceStartup ||
                 m.EventType == Event.Types.EventType.OnDeviceShutdown
@@ -36,13 +35,10 @@ namespace ProjectEvent.Core.Services.Tasks
 
         private void Handle(EventModel ev)
         {
-            switch(ev.EventType)
+            switch (ev.EventType)
             {
                 case Event.Types.EventType.OnDeviceStartup:
-                    if (ActionTask.Invoke(ev))
-                    {
-                        OnEventTrigger?.Invoke(ev, 0);
-                    }
+                    eventService.Invoke(ev, null);
                     break;
             }
         }

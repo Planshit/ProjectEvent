@@ -13,17 +13,17 @@ namespace ProjectEvent.Core.Services.TimerTask
 {
     public class TimerTaskService : ITimerTaskService
     {
-        private readonly IEventContainerService _eventContainerService;
+        private readonly IEventService eventService;
         private readonly ITimerService _timerService;
 
         public event EventHandler OnEventTrigger;
 
         private List<int> _handledEventIDs;
 
-        public TimerTaskService(IEventContainerService eventContainerService,
+        public TimerTaskService(IEventService eventContainerService,
             ITimerService timerService)
         {
-            _eventContainerService = eventContainerService;
+            eventService = eventContainerService;
             _timerService = timerService;
 
             //_eventContainerService.OnAddEvent += _eventContainerService_OnAddEvent;
@@ -35,7 +35,7 @@ namespace ProjectEvent.Core.Services.TimerTask
 
         public void Run()
         {
-            foreach (var ev in _eventContainerService.GetEvents())
+            foreach (var ev in eventService.GetEvents())
             {
                 Handle(ev);
             }
@@ -57,10 +57,7 @@ namespace ProjectEvent.Core.Services.TimerTask
                 var condition = ev.Condition as OnTimerChangedCondition;
                 _timerService.StartNew(() =>
                 {
-                    if (ActionTask.Invoke(ev))
-                    {
-                        OnEventTrigger?.Invoke(ev, 0);
-                    }
+                    eventService.Invoke(ev, null);
                 }, condition.AtDateTime, condition.IsRepetition);
 
             }
@@ -74,10 +71,7 @@ namespace ProjectEvent.Core.Services.TimerTask
                 _timerService.StartNew(
                     () =>
                     {
-                        if (ActionTask.Invoke(ev))
-                        {
-                            OnEventTrigger?.Invoke(ev, 0);
-                        }
+                        eventService.Invoke(ev, null);
                     },
                 condition.Seconds,
                 condition.Num);

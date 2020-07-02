@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ProjectEvent.Core.Services
 {
-    public interface IEventContainerService
+    public interface IEventService
     {
         /// <summary>
         /// 添加一个事件
@@ -26,6 +26,20 @@ namespace ProjectEvent.Core.Services
         /// </summary>
         /// <returns></returns>
         IEnumerable<EventModel> GetEvents();
+        /// <summary>
+        /// 事件被触发时发生
+        /// </summary>
 
+        event EventHandler OnEventTrigger;
+        /// <summary>
+        /// 尝试触发事件
+        /// </summary>
+        /// <param name="ev">事件模型</param>
+        /// <param name="data">事件数据</param>
+        void Invoke(EventModel ev, object data);
+        /// <summary>
+        /// action执行时发生
+        /// </summary>
+        event ActionInvokeHandler OnActionInvoke;
     }
 }

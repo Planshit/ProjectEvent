@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows;
 
@@ -22,20 +23,20 @@ namespace ProjectEvent.UI.Services
     public class App : IApp
     {
         private readonly ITrayService trayService;
-        private readonly IEventContainerService eventContainerService;
+        private readonly IEventService eventService;
         private readonly IMainService mainService;
         private readonly IProjects projects;
         private readonly IGroup group;
         public App(
             ITrayService trayService,
-            IEventContainerService eventContainerService,
+            IEventService eventContainerService,
             IMainService mainService,
             IProjects projects,
             IGroup group
             )
         {
             this.trayService = trayService;
-            this.eventContainerService = eventContainerService;
+            this.eventService = eventContainerService;
             this.mainService = mainService;
             this.projects = projects;
             this.group = group;
@@ -52,6 +53,19 @@ namespace ProjectEvent.UI.Services
             mainService.Run();
             //加载分组数据
             group.Load();
+            eventService.OnEventTrigger += EventService_OnEventTrigger;
+            eventService.OnActionInvoke += EventService_OnActionInvoke;
+        }
+
+        private void EventService_OnActionInvoke(int taskID, int actionID, Core.Action.Types.ActionInvokeStateType state)
+        {
+            Debug.WriteLine("action invoke:" + taskID + ",actionid:" + actionID + ",state:" + state.ToString());
+        }
+
+        private void EventService_OnEventTrigger(Core.Event.Models.EventModel ev, bool isSuccess)
+        {
+            Debug.WriteLine("event:" + ev.ID + ",issuccess:" + isSuccess.ToString());
+
         }
 
         private void LoadProject()
@@ -98,7 +112,7 @@ namespace ProjectEvent.UI.Services
                     break;
             }
 
-            eventContainerService.Add(new Core.Event.Models.EventModel()
+            eventService.Add(new Core.Event.Models.EventModel()
             {
                 EventType = (EventType)project.EventID,
                 Condition = condition,

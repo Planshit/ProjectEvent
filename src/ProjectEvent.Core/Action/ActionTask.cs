@@ -2,6 +2,7 @@
 using ProjectEvent.Core.Event;
 using ProjectEvent.Core.Event.Models;
 using ProjectEvent.Core.Helper;
+using ProjectEvent.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,31 +13,14 @@ namespace ProjectEvent.Core.Action
 {
     public static class ActionTask
     {
-        private static int _index = 0;
-        public static bool Invoke(EventModel ev, object data = null)
+        public static event ActionInvokeHandler OnActionInvoke;
+        public static void SetActionInvokeHandler(ActionInvokeHandler e)
         {
-            bool isSuccess = false;
-            if (ev.Condition.IsPass(data))
+            if (OnActionInvoke == null)
             {
-                Task.Factory.StartNew(() =>
-                {
-                    _index++;
-                    InvokeAction(_index, ev.Actions);
-
-                });
-                isSuccess = true;
+                OnActionInvoke += e;
             }
-
-            //记录event触发
-            EventLoger.Add(new EventLogModel()
-            {
-                EventType = ev.EventType,
-                IsSuccess = isSuccess,
-            });
-
-            return isSuccess;
         }
-
         public static void InvokeAction(int taskID, IEnumerable<ActionModel> actions)
         {
             if (actions == null)
@@ -47,20 +31,23 @@ namespace ProjectEvent.Core.Action
             {
                 var actionBuilder = new ActionBuilder(action.Action, action.Parameter);
                 var actionTask = actionBuilder.Builer(taskID, action.ID);
+                OnActionInvoke?.Invoke(taskID, action.ID, Types.ActionInvokeStateType.Runing);
                 if (actionTask != null)
                 {
                     for (int i = 0; i < action.Num; i++)
                     {
                         actionTask.Start();
+                        var actionResult = actionTask.Result;
                         if (actionBuilder.IsHasResult())
                         {
-                            var actionResult = actionTask.Result;
                             ActionTaskResulter.Add(taskID, actionResult);
                         }
+                        OnActionInvoke?.Invoke(taskID, action.ID, Types.ActionInvokeStateType.Success);
                     }
                 }
                 else
                 {
+                    OnActionInvoke?.Invoke(taskID, action.ID, Types.ActionInvokeStateType.Failed);
                     LogHelper.Warning($"找不到Action Type：{action.Action}");
                 }
             }

@@ -12,18 +12,18 @@ namespace ProjectEvent.Core.Services.Tasks
     public class ProcessTaskService : IProcessTaskService
     {
         public event EventHandler OnEventTrigger;
-        private readonly IEventContainerService _eventContainerService;
+        private readonly IEventService eventService;
         private ManagementEventWatcher watcher;
-        public ProcessTaskService(IEventContainerService eventContainerService)
+        public ProcessTaskService(IEventService eventService)
         {
-            _eventContainerService = eventContainerService;
+            this.eventService = eventService;
             EventQuery query = new EventQuery();
             query.QueryString = "SELECT * FROM" +
                 " __InstanceCreationEvent WITHIN 1 " +
                 "WHERE TargetInstance isa 'Win32_Process'";
             watcher = new ManagementEventWatcher(query);
             watcher.EventArrived += NewProcess_Created;
-            _eventContainerService.OnAddEvent += _eventContainerService_OnAddEvent;
+            eventService.OnAddEvent += _eventContainerService_OnAddEvent;
         }
 
         private void _eventContainerService_OnAddEvent(EventModel @event)
@@ -33,7 +33,7 @@ namespace ProjectEvent.Core.Services.Tasks
 
         public void Run()
         {
-            var hasEv = _eventContainerService.
+            var hasEv = eventService.
                GetEvents().
                Where(m => m.EventType == Event.Types.EventType.OnProcessCreated ||
                m.EventType == Event.Types.EventType.OnProcessShutdown
@@ -47,7 +47,7 @@ namespace ProjectEvent.Core.Services.Tasks
         }
         private void Handle(ManagementBaseObject baseObject)
         {
-            var evs = _eventContainerService.
+            var evs = eventService.
                 GetEvents().
                 Where(m => m.EventType == Event.Types.EventType.OnProcessCreated ||
                 m.EventType == Event.Types.EventType.OnProcessShutdown).
@@ -55,14 +55,9 @@ namespace ProjectEvent.Core.Services.Tasks
 
             foreach (var ev in evs)
             {
-                switch (ev.EventType)
+                if(ev.EventType== Event.Types.EventType.OnProcessCreated)
                 {
-                    case Event.Types.EventType.OnProcessCreated:
-                        if (ActionTask.Invoke(ev, baseObject))
-                        {
-                            OnEventTrigger?.Invoke(ev, 0);
-                        }
-                        break;
+                    eventService.Invoke(ev, baseObject);
                 }
             }
 
