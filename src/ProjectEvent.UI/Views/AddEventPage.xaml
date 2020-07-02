@@ -65,7 +65,7 @@
                     <ColorAnimationUsingKeyFrames Storyboard.TargetName="Page"
                                                 Storyboard.TargetProperty="(Page.Background).                     (SolidColorBrush.Color)">
                         <EasingColorKeyFrame KeyTime="00:00:0.3"
-                                         Value="{DynamicResource StandardMouseHoverColor}"/>
+                                         Value="#ffe3ca"/>
                     </ColorAnimationUsingKeyFrames>
                 </Storyboard>
             </VisualState>
