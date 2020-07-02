@@ -41,6 +41,13 @@ namespace ProjectEvent.UI.Controls.Base
             {IconTypes.DeviceRun,"\xE401"},
             {IconTypes.ProcessingRun,"\xE404"},
             {IconTypes.Product,"\xECDC"},
+            {IconTypes.FileTemplate,"\xF2E6"},
+            {IconTypes.DeviceOff,"\xE402"},
+            {IconTypes.FlowChart,"\xE9D4"},
+            {IconTypes.DownloadDocument,"\xF549"},
+            {IconTypes.Delete,"\xE74D"},
+            {IconTypes.EditStyle,"\xEF60"},
+            {IconTypes.OpenWithMirrored,"\xEA5C"},
 
             {IconTypes.ChevronUp,"\xE70E"}
 

@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using ProjectEvent.Core.Helper;
+using ProjectEvent.UI.Base.Color;
 using ProjectEvent.UI.Controls;
+using ProjectEvent.UI.Controls.Base;
 using ProjectEvent.UI.Controls.ItemSelect;
 using ProjectEvent.UI.Controls.Navigation;
 using ProjectEvent.UI.Controls.Navigation.Models;
@@ -300,15 +302,26 @@ namespace ProjectEvent.UI.ViewModels
             {
                 Header = "删除分组"
             };
+            delItem.Foreground = Colors.GetColor(ColorTypes.Red);
+            delItem.Icon = new Icon()
+            {
+                IconType = IconTypes.Delete,
+                Foreground = Colors.GetColor(ColorTypes.Red)
+            };
             delItem.Command = DeleteGroupCommand;
             MenuItem editItem = new MenuItem()
             {
                 Header = "编辑分组"
             };
+            editItem.Icon = new Icon()
+            {
+                IconType = IconTypes.EditStyle
+            };
             editItem.Command = ShowGroupModalCommand;
             editItem.CommandParameter = true;
-            groupManagerContextMenu.Items.Add(delItem);
             groupManagerContextMenu.Items.Add(editItem);
+            groupManagerContextMenu.Items.Add(new Separator());
+            groupManagerContextMenu.Items.Add(delItem);
 
         }
         private void SelectGroup(int ID)

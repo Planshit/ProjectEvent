@@ -7,6 +7,8 @@
         <ResourceDictionary Source="/Styles/Light/Base/ComboBox.xaml" />
         <ResourceDictionary Source="/Styles/Light/Base/CheckBox.xaml" />
         <ResourceDictionary Source="/Styles/Light/Container/TabControl.xaml" />
+        <ResourceDictionary Source="/Styles/Light/Base/ContextMenu.xaml" />
+        <ResourceDictionary Source="/Styles/Light/Base/MenuItem.xaml" />
 
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

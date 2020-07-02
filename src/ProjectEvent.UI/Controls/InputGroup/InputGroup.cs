@@ -1,4 +1,5 @@
-﻿using ProjectEvent.UI.Controls.InputGroup.Models;
+﻿using ProjectEvent.UI.Controls.Input;
+using ProjectEvent.UI.Controls.InputGroup.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -55,19 +56,27 @@ namespace ProjectEvent.UI.Controls.InputGroup
                 return;
             }
             container.Children.Clear();
-
+            bool isAddLabelName = true;
             foreach (var input in Groups)
             {
                 Control control = null;
                 switch (input.Type)
                 {
                     case InputType.Text:
-                        control = new TextBox();
+                        control = new InputBox();
+                        break;
+                    case InputType.Number:
+                        control = new InputBox()
+                        {
+                            InputType = InputTypes.Number
+                        };
                         break;
                     case InputType.Bool:
-                        control = new CheckBox();
+                        control = new Toggle.Toggle();
                         break;
                 }
+
+
                 //binding input
                 BindingOperations.SetBinding(control, input.BindingProperty, new Binding()
                 {
@@ -75,9 +84,15 @@ namespace ProjectEvent.UI.Controls.InputGroup
                     Path = new PropertyPath(input.BindingName),
                     Mode = BindingMode.TwoWay,
                 });
-                var label = new Label();
-                label.Content = input.Title;
-                container.Children.Add(label);
+
+
+                if (isAddLabelName)
+                {
+                    var label = new TextBlock();
+                    label.Style = FindResource("LabelName") as Style;
+                    label.Text = input.Title;
+                    container.Children.Add(label);
+                }
                 container.Children.Add(control);
             }
         }

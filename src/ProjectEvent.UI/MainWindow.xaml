@@ -36,7 +36,11 @@
                 </Navigation:Navigation.BottomExtContent>
                 <Navigation:Navigation.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="新建分组" Command="{Binding ShowGroupModalCommand}"/>
+                        <MenuItem Header="新建分组" Command="{Binding ShowGroupModalCommand}">
+                            <MenuItem.Icon>
+                                <base:Icon IconType="CalculatorAddition" FontSize="12"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
                     </ContextMenu>
                 </Navigation:Navigation.ContextMenu>
             </Navigation:Navigation>
@@ -60,7 +64,7 @@
                         <RowDefinition Height="50"/>
                     </Grid.RowDefinitions>
                     <Grid>
-                        <TextBlock FontSize="20" Text="{Binding GroupModalTitle}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock FontSize="16" Text="{Binding GroupModalTitle}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Button Command="{Binding HideGroupModalCommand}" Style="{DynamicResource Icon}" Width="40" Height="40" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0">
                             <base:Icon IconType="ChromeClose" FontSize="12"/>
                         </Button>

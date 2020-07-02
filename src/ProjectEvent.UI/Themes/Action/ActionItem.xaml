@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:ProjectEvent.UI.Controls.Action">
+                    xmlns:local="clr-namespace:ProjectEvent.UI.Controls.Action"
+                    xmlns:base="clr-namespace:ProjectEvent.UI.Controls.Base">
     <Style TargetType="{x:Type local:ActionItem}">
         <Setter Property="Background" Value="White"/>
         <Setter Property="Template">
@@ -10,29 +11,36 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Margin="5"
+                            CornerRadius="2"
                             Padding="10">
                         <Border.Effect>
-                            <DropShadowEffect BlurRadius="5" Opacity="0.1"  ShadowDepth="0"/>
+                            <DropShadowEffect Color="{DynamicResource PrimaryColor}" BlurRadius="5" Opacity="0.1"  ShadowDepth="0"/>
                         </Border.Effect>
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="30"/>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
                             <Grid x:Name="Header">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                                    <TextBlock Text="{TemplateBinding Icon}" FontFamily="/ProjectEvent.UI;component/Assets/Fonts/#Fabric External MDL2 Assets" VerticalAlignment="Center" FontSize="16" Foreground="#737373"/>
+                                    <base:Icon x:Name="Icon" IconType="{TemplateBinding Icon}" Foreground="{DynamicResource PrimaryColorBrush}" VerticalAlignment="Center" FontSize="16" Margin="0,0,10,0" Visibility="Visible"/>
 
-                                    <TextBlock Text="{TemplateBinding ActionName}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="#737373"/>
+                                    <TextBlock Text="{TemplateBinding ActionName}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center"  Foreground="{DynamicResource StandardTextBrush}"/>
 
                                 </StackPanel>
-                                <Button x:Name="ButtonRemove" Command="{Binding RemoveCommand}" CommandParameter="{TemplateBinding ID}" HorizontalAlignment="Right" Width="30" Height="30">
-                                    <TextBlock Text="&#xE8BB;" FontFamily="/ProjectEvent.UI;component/Assets/Fonts/#Fabric External MDL2 Assets" VerticalAlignment="Center" FontSize="14" Foreground="#737373"/>
+                                <Button x:Name="ButtonRemove" Command="{Binding RemoveCommand}" CommandParameter="{TemplateBinding ID}" Style="{DynamicResource Icon}" HorizontalAlignment="Right" Width="30" Height="30">
+                                    <base:Icon IconType="ChromeClose" FontSize="12"/>
+
                                 </Button>
                             </Grid>
                             <Border x:Name="Input" Grid.Row="1"/>
                         </Grid>
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Icon" Value="None">
+                            <Setter TargetName="Icon" Property="Visibility" Value="Collapsed"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

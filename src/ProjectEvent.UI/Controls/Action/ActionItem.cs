@@ -1,5 +1,6 @@
 ﻿using ProjectEvent.UI.Controls.Action.Data;
 using ProjectEvent.UI.Controls.Action.Models;
+using ProjectEvent.UI.Controls.Base;
 using ProjectEvent.UI.Models.DataModels;
 using ProjectEvent.UI.Types;
 using System;
@@ -15,14 +16,14 @@ namespace ProjectEvent.UI.Controls.Action
 {
     public class ActionItem : Control
     {
-        public string Icon
+        public IconTypes Icon
         {
-            get { return (string)GetValue(IconProperty); }
+            get { return (IconTypes)GetValue(IconProperty); }
             set { SetValue(IconProperty, value); }
         }
         public static readonly DependencyProperty IconProperty =
             DependencyProperty.Register("Icon",
-                typeof(string),
+                typeof(IconTypes),
                 typeof(ActionItem));
         public double Y
         {

@@ -24,7 +24,7 @@
     <SolidColorBrush x:Key="PrimaryColorBrush" Color="{StaticResource PrimaryColor}" />
     <!--文字颜色-->
     <Color x:Key="PrimaryTextColor">#ffffff</Color>
-    <SolidColorBrush x:Key="PrimaryTextBrush" Color="{StaticResource PrimaryTextColor}" /> 
+    <SolidColorBrush x:Key="PrimaryTextBrush" Color="{StaticResource PrimaryTextColor}" />
     <!--鼠标经过颜色-->
     <Color x:Key="PrimaryMouseHoverColor">#106ebe</Color>
     <SolidColorBrush x:Key="PrimaryMouseHoverBrush" Color="{StaticResource PrimaryMouseHoverColor}" />
@@ -56,5 +56,8 @@
     <!--辅助文字颜色（淡）-->
     <Color x:Key="SubTextColor">#6E6D7A</Color>
     <SolidColorBrush x:Key="SubTextBrush" Color="{StaticResource SubTextColor}" />
+    <!--辅助图标颜色-->
+    <Color x:Key="SubIconColor">#737373</Color>
+    <SolidColorBrush x:Key="SubIconColorBrush" Color="{StaticResource SubIconColor}" />
 
 </ResourceDictionary>

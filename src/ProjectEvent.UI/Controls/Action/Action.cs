@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace ProjectEvent.UI.Controls.Action
 {
@@ -42,6 +43,7 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 var label = new Label();
                 label.Content = item.Title;
+                label.Foreground = FindResource("StandardTextBrush") as SolidColorBrush;
                 label.VerticalAlignment = System.Windows.VerticalAlignment.Center;
                 var input = new ActionInput();
                 input.ActionID = ID;

@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 using ProjectEvent.Core.Helper;
+using ProjectEvent.UI.Base.Color;
+using ProjectEvent.UI.Controls.Base;
 using ProjectEvent.UI.Controls.ItemSelect.Models;
 using ProjectEvent.UI.Controls.Navigation;
 using ProjectEvent.UI.Models;
@@ -107,7 +109,7 @@ namespace ProjectEvent.UI.ViewModels
                     ID = project.ID,
                     Title = project.ProjectName,
                     Description = project.ProjectDescription,
-                    Icon=project.Icon,
+                    Icon = project.Icon,
                     Tag = gpName
                 });
             }
@@ -115,9 +117,15 @@ namespace ProjectEvent.UI.ViewModels
 
         private void CreateItemContextMenu()
         {
-            MenuItem del = new MenuItem();
-            del.Header = "删除";
-            del.Click += (e, c) =>
+            MenuItem delItem = new MenuItem();
+            delItem.Header = "删除";
+            delItem.Foreground = Colors.GetColor(ColorTypes.Red);
+            delItem.Icon = new Icon()
+            {
+                IconType = IconTypes.Delete,
+                Foreground = Colors.GetColor(ColorTypes.Red)
+            };
+            delItem.Click += (e, c) =>
             {
                 projects.Delete(SelectItem.ID);
                 Projects.Remove(SelectItem);
@@ -125,9 +133,14 @@ namespace ProjectEvent.UI.ViewModels
             };
             moveGroupMenutItem = new MenuItem();
             moveGroupMenutItem.Header = "移动到";
-
-            ItemContextMenu.Items.Add(del);
+            moveGroupMenutItem.Icon = new Icon()
+            {
+                IconType = IconTypes.OpenWithMirrored,
+            };
             ItemContextMenu.Items.Add(moveGroupMenutItem);
+            ItemContextMenu.Items.Add(new Separator());
+            ItemContextMenu.Items.Add(delItem);
+
 
         }
         private void IndexPageVM_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -160,6 +173,10 @@ namespace ProjectEvent.UI.ViewModels
                         {
                             Projects.Remove(SelectItem);
                         }
+                    };
+                    gm.Icon = new Icon()
+                    {
+                        IconType = g.Icon
                     };
                     gm.Header = g.Name;
                     moveGroupMenutItem.Items.Add(gm);

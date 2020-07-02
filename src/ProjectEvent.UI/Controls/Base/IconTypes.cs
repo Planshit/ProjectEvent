@@ -65,6 +65,13 @@ namespace ProjectEvent.UI.Controls.Base
         CalculatorAddition,
         DeviceRun,
         ProcessingRun,
-        Product
+        Product,
+        FileTemplate,
+        DeviceOff,
+        FlowChart,
+        DownloadDocument,
+        Delete,
+        EditStyle,
+        OpenWithMirrored
     }
 }

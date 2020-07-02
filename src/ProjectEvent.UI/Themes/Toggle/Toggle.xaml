@@ -34,21 +34,21 @@
                                         <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.RenderTransform).
                (TranslateTransform.X)"
                                           Storyboard.TargetName="Mark">
-                                            <EasingDoubleKeyFrame KeyTime="00:00:0.3"
+                                            <EasingDoubleKeyFrame KeyTime="00:00:0.2"
                                    Value="28" />
                                         </DoubleAnimationUsingKeyFrames>
                                         <!--更改标记点颜色-->
                                         <ColorAnimationUsingKeyFrames 
                                             Storyboard.TargetName="Mark"
                                             Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)">
-                                            <EasingColorKeyFrame KeyTime="00:00:0.3"
+                                            <EasingColorKeyFrame KeyTime="00:00:0.2"
                                                                  Value="White"/>
                                         </ColorAnimationUsingKeyFrames>
                                         <!--更改背景颜色-->
                                         <ColorAnimationUsingKeyFrames 
                                             Storyboard.TargetName="Button"
                                             Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)">
-                                            <EasingColorKeyFrame KeyTime="00:00:0.3"
+                                            <EasingColorKeyFrame KeyTime="00:00:0.2"
                                                                  Value="{DynamicResource PrimaryColor}"/>
                                         </ColorAnimationUsingKeyFrames>
                                     </Storyboard>
@@ -58,7 +58,7 @@
                                         <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.RenderTransform).
                (TranslateTransform.X)"
                                           Storyboard.TargetName="Mark">
-                                            <EasingDoubleKeyFrame KeyTime="00:00:0.3"
+                                            <EasingDoubleKeyFrame KeyTime="00:00:0.2"
                                    Value="0" />
                                         </DoubleAnimationUsingKeyFrames>
                                     </Storyboard>

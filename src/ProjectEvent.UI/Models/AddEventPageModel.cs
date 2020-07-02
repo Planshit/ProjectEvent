@@ -57,7 +57,7 @@ namespace ProjectEvent.UI.Models
             set { ProjectDescription_ = value; OnPropertyChanged(); }
         }
 
-        private string ButtonSaveName_ = "创建";
+        private string ButtonSaveName_ = "创 建";
         public string ButtonSaveName
         {
             get { return ButtonSaveName_; }

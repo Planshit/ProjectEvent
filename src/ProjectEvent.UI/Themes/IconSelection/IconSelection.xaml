@@ -19,9 +19,9 @@
                                 <base:Icon IconType="{TemplateBinding SelectedIcon}" FontSize="{TemplateBinding FontSize}" SnapsToDevicePixels="True"/>
                             </Button>
                             <Popup x:Name="Popup" AllowsTransparency="True" Width="300" Height="300" StaysOpen="False">
-                                <Border Margin="10" Background="White" CornerRadius="4" ClipToBounds="True">
+                                <Border Margin="10" Background="White" CornerRadius="4" Padding="5">
                                     <Border.Effect>
-                                        <DropShadowEffect BlurRadius="10" Opacity="0.2"  ShadowDepth="0"/>
+                                        <DropShadowEffect BlurRadius="10" Opacity=".2"  ShadowDepth="0"/>
                                     </Border.Effect>
                                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                                         <WrapPanel x:Name="IconsPanel">

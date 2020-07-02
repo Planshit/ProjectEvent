@@ -9,7 +9,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Margin="0,2"
-                            Padding="5"
+                            Padding="0"
                             CornerRadius="2">
                         <StackPanel Orientation="Horizontal" x:Name="Container">
                            

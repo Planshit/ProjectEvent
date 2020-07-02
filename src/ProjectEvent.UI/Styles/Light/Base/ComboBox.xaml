@@ -124,8 +124,7 @@
           Value="Auto" />
         <Setter Property="ScrollViewer.CanContentScroll"
           Value="true" />
-        <Setter Property="MinWidth"
-          Value="120" />
+        
         <Setter Property="Cursor"
           Value="Hand" />
         <Setter Property="Foreground"
@@ -182,7 +181,7 @@
                             Content="{TemplateBinding SelectionBoxItem}"
                             ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                             ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                            Margin="9,0,23,0"
+                            Margin="9,0,40,0"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Left">
                         </ContentPresenter>

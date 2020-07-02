@@ -14,7 +14,7 @@
                             <TranslateTransform Y="-60"/>
                         </Border.RenderTransform>
                         <Border.Effect>
-                            <DropShadowEffect BlurRadius="10" Opacity="0.5"  ShadowDepth="0"/>
+                            <DropShadowEffect  BlurRadius="10" Opacity="0.3"  ShadowDepth="0"/>
                         </Border.Effect>
                         <TextBlock Text="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
                         <VisualStateManager.VisualStateGroups>
@@ -24,7 +24,7 @@
                                         <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.RenderTransform).
                (TranslateTransform.Y)"
                                           Storyboard.TargetName="Border">
-                                            <EasingDoubleKeyFrame KeyTime="00:00:0.03"
+                                            <EasingDoubleKeyFrame KeyTime="00:00:0.1"
                                    Value="10" />
                                         </DoubleAnimationUsingKeyFrames>
                                     </Storyboard>
@@ -34,7 +34,7 @@
                                         <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.RenderTransform).
                (TranslateTransform.Y)"
                                           Storyboard.TargetName="Border">
-                                            <EasingDoubleKeyFrame KeyTime="00:00:0.03"
+                                            <EasingDoubleKeyFrame KeyTime="00:00:0.1"
                                    Value="-60" />
                                         </DoubleAnimationUsingKeyFrames>
                                     </Storyboard>
@@ -44,12 +44,14 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="Type" Value="Success">
-                            <Setter Property="Background" Value="#227D51"/>
+                            <Setter Property="Background" Value="#56C773"/>
                             <Setter Property="Foreground" Value="White"/>
                         </Trigger>
                         <Trigger Property="Type" Value="Failed">
-                            <Setter Property="Background" Value="#CB4042"/>
+                            <Setter Property="Background" Value="#F3221B"/>
                             <Setter Property="Foreground" Value="White"/>
+
+
 
                         </Trigger>
                         <Trigger Property="Type" Value="Warning">

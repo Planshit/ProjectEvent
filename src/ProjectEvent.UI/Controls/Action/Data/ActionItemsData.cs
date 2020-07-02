@@ -21,16 +21,16 @@ namespace ProjectEvent.UI.Controls.Action.Data
             switch (uiactionType)
             {
                 case ActionType.HttpGet:
-                    action.Icon = "\xEC27";
+                    action.Icon = Base.IconTypes.DownloadDocument;
                     break;
                 case ActionType.IF:
-                    action.Icon = "\xE9D4";
+                    action.Icon = Base.IconTypes.FlowChart;
                     break;
                 case ActionType.WriteFile:
-                    action.Icon = "\xF2E6";
+                    action.Icon = Base.IconTypes.FileTemplate;
                     break;
                 case ActionType.Shutdown:
-                    action.Icon = "\xF2E6";
+                    action.Icon = Base.IconTypes.DeviceOff;
                     break;
             }
 

@@ -216,7 +216,15 @@ namespace ProjectEvent.UI.Controls.Action
         }
         private void Remove(ActionItem item)
         {
-            ActionPanel.Height -= item.ActualHeight;
+            double newHeight = ActionPanel.Height - item.ActualHeight;
+            if (newHeight <= 0)
+            {
+                ActionPanel.Height = double.NaN;
+            }
+            else
+            {
+                ActionPanel.Height = newHeight;
+            }
             ActionPanel.Children.Remove(item);
             ActionItems.Remove(item);
             SortAction();
@@ -324,6 +332,8 @@ namespace ProjectEvent.UI.Controls.Action
         #region 移动结束（鼠标释放）
         private void HandleMoveEnd(ActionItem action)
         {
+            AddActionBtn.Visibility = Visibility.Visible;
+
             var actionPoint = action.RenderTransform as TranslateTransform;
             //调整控件自身的位置对齐
 
@@ -435,6 +445,7 @@ namespace ProjectEvent.UI.Controls.Action
         #region 移动开始（鼠标点击）
         private void HandleMoveStart(ActionItem action)
         {
+            AddActionBtn.Visibility = Visibility.Hidden;
             if (action.Action.ActionType == UI.Types.ActionType.IF)
             {
                 //移动的是if action时需要将它的子级全部隐藏
@@ -781,8 +792,9 @@ namespace ProjectEvent.UI.Controls.Action
         }
         private void GetIFChildrenMaxID(Core.Action.Models.ActionModel action)
         {
-            var parameterjobject = action.Parameter as JObject;
-            var parameter = parameterjobject.ToObject<IFActionParameterModel>();
+            //var parameterjobject = action.Parameter as JObject;
+            var parameter = ObjectConvert.Get<IFActionParameterModel>(action.Parameter);
+            //var parameter = parameterjobject.ToObject<IFActionParameterModel>();
             foreach (var paction in parameter.PassActions.Concat(parameter.NoPassActions))
             {
                 GetMaxID(paction);
@@ -854,8 +866,7 @@ namespace ProjectEvent.UI.Controls.Action
                 return;
             }
             //创建if action
-            var parameterjobject = action.Parameter as JObject;
-            var ifParameter = parameterjobject.ToObject<IFActionParameterModel>();
+            var ifParameter = ObjectConvert.Get<IFActionParameterModel>(action.Parameter);
 
             var ifActionModel = ActionItemsData.Get(UI.Types.ActionType.IF);
             ifActionModel.ID = action.ID;

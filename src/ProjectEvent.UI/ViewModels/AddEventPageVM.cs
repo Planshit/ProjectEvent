@@ -4,6 +4,7 @@ using ProjectEvent.Core.Helper;
 using ProjectEvent.UI.Controls.Action;
 using ProjectEvent.UI.Controls.Action.Data;
 using ProjectEvent.UI.Controls.InputGroup.Models;
+using ProjectEvent.UI.Controls.Toggle;
 using ProjectEvent.UI.Models;
 using ProjectEvent.UI.Models.ConditionModels;
 using ProjectEvent.UI.Models.DataModels;
@@ -68,6 +69,7 @@ namespace ProjectEvent.UI.ViewModels
         private void OnPageLoadedCommand(object obj)
         {
             page = obj as Page;
+            UpdateVisualState();
         }
 
         private void OnLoadedCommand(object obj)
@@ -135,20 +137,42 @@ namespace ProjectEvent.UI.ViewModels
                 case nameof(SelectedEventID):
                     HandleEventIDChanged();
                     break;
+                case nameof(IsActionsTabItemSelected):
+                case nameof(IsConditionTabItemSelected):
                 case nameof(IsEventTabItemSelected):
-                    if (IsEventTabItemSelected)
-                    {
-                        VisualStateManager.GoToElementState(page, "EventTabSelected", true);
-                    }
-                    else
-                    {
-                        VisualStateManager.GoToElementState(page, "EventTabUnSelected", true);
-
-                    }
+                case nameof(IsInfoTabItemSelected):
+                    UpdateVisualState();
                     break;
             }
         }
 
+        private void UpdateVisualState()
+        {
+            if (page == null)
+            {
+                return;
+            }
+            if (IsActionsTabItemSelected)
+            {
+                VisualStateManager.GoToElementState(page, "ActionsTabSelected", true);
+            }
+            else if (IsInfoTabItemSelected)
+            {
+                VisualStateManager.GoToElementState(page, "InfoTabSelected", true);
+            }
+            else if (IsEventTabItemSelected)
+            {
+                VisualStateManager.GoToElementState(page, "EventTabSelected", true);
+            }
+            else if (IsConditionTabItemSelected)
+            {
+                VisualStateManager.GoToElementState(page, "ConditionTabSelected", true);
+            }
+            else
+            {
+                VisualStateManager.GoToElementState(page, "NoTabSelected", true);
+            }
+        }
         private void HandleEventIDChanged()
         {
             IsConditionTabItemSelected = true;
@@ -225,14 +249,14 @@ namespace ProjectEvent.UI.ViewModels
                     ConditionData = new IntervalTimerConditionModel();
                     cds.Add(new InputModel()
                     {
-                        Type = Controls.InputGroup.InputType.Text,
+                        Type = Controls.InputGroup.InputType.Number,
                         BindingName = "Second",
                         BindingProperty = TextBox.TextProperty,
                         Title = "间隔秒数"
                     });
                     cds.Add(new InputModel()
                     {
-                        Type = Controls.InputGroup.InputType.Text,
+                        Type = Controls.InputGroup.InputType.Number,
                         BindingName = "Num",
                         BindingProperty = TextBox.TextProperty,
                         Title = "循环次数（0时永远）"
@@ -252,14 +276,14 @@ namespace ProjectEvent.UI.ViewModels
                     {
                         Type = Controls.InputGroup.InputType.Bool,
                         BindingName = "Caseinsensitive",
-                        BindingProperty = CheckBox.IsCheckedProperty,
-                        Title = "不区分大小写"
+                        BindingProperty = Toggle.IsCheckedProperty,
+                        Title = "忽略大小写"
                     });
                     cds.Add(new InputModel()
                     {
                         Type = Controls.InputGroup.InputType.Bool,
                         BindingName = "FuzzyMatch",
-                        BindingProperty = CheckBox.IsCheckedProperty,
+                        BindingProperty = Toggle.IsCheckedProperty,
                         Title = "模糊匹配"
                     });
                     break;
