@@ -14,6 +14,7 @@ namespace ProjectEvent.Core.Services.Tasks
         public event EventHandler OnEventTrigger;
         private readonly IEventService eventService;
         private ManagementEventWatcher watcher;
+        private bool isRun = false;
         public ProcessTaskService(IEventService eventService)
         {
             this.eventService = eventService;
@@ -23,10 +24,17 @@ namespace ProjectEvent.Core.Services.Tasks
                 "WHERE TargetInstance isa 'Win32_Process'";
             watcher = new ManagementEventWatcher(query);
             watcher.EventArrived += NewProcess_Created;
-            eventService.OnAddEvent += _eventContainerService_OnAddEvent;
+            eventService.OnAddEvent += _eventService_OnAddAndRemoveEvent;
+            eventService.OnRemoveEvent += _eventService_OnAddAndRemoveEvent;
+            eventService.OnUpdateEvent += EventService_OnUpdateEvent;
         }
 
-        private void _eventContainerService_OnAddEvent(EventModel @event)
+        private void EventService_OnUpdateEvent(EventModel oldValue, EventModel newValue)
+        {
+            Run();
+        }
+
+        private void _eventService_OnAddAndRemoveEvent(EventModel @event)
         {
             Run();
         }
@@ -40,9 +48,17 @@ namespace ProjectEvent.Core.Services.Tasks
                ).
                Any();
 
-            if (hasEv)
+            if (hasEv && !isRun)
             {
+                //存在进程创建事件且未启动时
                 watcher.Start();
+                isRun = true;
+            }
+            else if (!hasEv && isRun)
+            {
+                //不存在进程创建事件且在运行中时
+                watcher.Stop();
+                isRun = false;
             }
         }
         private void Handle(ManagementBaseObject baseObject)
@@ -55,7 +71,7 @@ namespace ProjectEvent.Core.Services.Tasks
 
             foreach (var ev in evs)
             {
-                if(ev.EventType== Event.Types.EventType.OnProcessCreated)
+                if (ev.EventType == Event.Types.EventType.OnProcessCreated)
                 {
                     eventService.Invoke(ev, baseObject);
                 }
@@ -65,10 +81,6 @@ namespace ProjectEvent.Core.Services.Tasks
         private void NewProcess_Created(object sender, EventArrivedEventArgs se)
         {
             Handle(se.NewEvent);
-            //ManagementBaseObject e = se.NewEvent;
-            //var Processname = ((ManagementBaseObject)e["TargetInstance"])["Name"].ToString();
-            //var ExecutablePath = ((ManagementBaseObject)e["TargetInstance"])["ExecutablePath"];
-            //Debug.WriteLine("进程创建：" + Processname + ",进程文件路径：" + ExecutablePath);
         }
     }
 }

@@ -22,6 +22,11 @@ namespace ProjectEvent.Core.Services
         /// </summary>
         event ContainerEventHandler OnRemoveEvent;
         /// <summary>
+        /// 更新事件时发生
+        /// </summary>
+        event EventChangedHandler OnUpdateEvent;
+
+        /// <summary>
         /// 获取所有事件
         /// </summary>
         /// <returns></returns>
@@ -41,5 +46,15 @@ namespace ProjectEvent.Core.Services
         /// action执行时发生
         /// </summary>
         event ActionInvokeHandler OnActionInvoke;
+        /// <summary>
+        /// 移除一个event
+        /// </summary>
+        /// <param name="id"></param>
+        void Remove(int id);
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="ev"></param>
+        void Update(EventModel ev);
     }
 }

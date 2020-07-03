@@ -16,5 +16,18 @@ namespace ProjectEvent.Core.Event.Models
         public ICondition Condition { get; set; }
 
         public IEnumerable<ActionModel> Actions { get; set; }
+
+        public EventModel Copy()
+        {
+            return new EventModel()
+            {
+                ID = ID,
+                Actions = Actions,
+                Condition = Condition,
+                EventType = EventType,
+                IsEnabled = IsEnabled,
+                Name = Name
+            };
+        }
     }
 }

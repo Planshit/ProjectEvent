@@ -77,12 +77,12 @@ namespace ProjectEvent.UI.Services
             {
                 if (project != null && project.EventID > 0)
                 {
-                    CreateEvent(project);
+                    Add(project);
                 }
             }
         }
 
-        private void CreateEvent(ProjectModel project)
+        private Core.Event.Models.EventModel CreateEventModel(ProjectModel project)
         {
             ICondition condition = null;
             switch ((EventType)project.EventID)
@@ -111,18 +111,40 @@ namespace ProjectEvent.UI.Services
                     };
                     break;
             }
-
-            eventService.Add(new Core.Event.Models.EventModel()
+            return new Core.Event.Models.EventModel()
             {
+                ID = project.ID,
                 EventType = (EventType)project.EventID,
                 Condition = condition,
                 Actions = project.Actions
-            });
+            };
+            //eventService.Add(new Core.Event.Models.EventModel()
+            //{
+            //    ID = project.ID,
+            //    EventType = (EventType)project.EventID,
+            //    Condition = condition,
+            //    Actions = project.Actions
+            //});
         }
 
         private void InitApp()
         {
             SystemHelper.SetStartup();
+        }
+
+        public void Add(ProjectModel project)
+        {
+            eventService.Add(CreateEventModel(project));
+        }
+
+        public void Update(ProjectModel project)
+        {
+            eventService.Update(CreateEventModel(project));
+        }
+
+        public void Remove(int id)
+        {
+            eventService.Remove(id);
         }
     }
 }

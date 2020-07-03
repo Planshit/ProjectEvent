@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using ProjectEvent.Core.Helper;
+using ProjectEvent.Core.Services;
 using ProjectEvent.UI.Base.Color;
 using ProjectEvent.UI.Controls.Base;
 using ProjectEvent.UI.Controls.ItemSelect.Models;
@@ -23,6 +24,7 @@ namespace ProjectEvent.UI.ViewModels
         private readonly MainViewModel mainVM;
         private readonly IProjects projects;
         private readonly IGroup groupService;
+        private readonly IApp app;
         public Command RedirectCommand { get; set; }
         public ContextMenu ItemContextMenu { get; set; }
         private GroupModel group;
@@ -30,16 +32,17 @@ namespace ProjectEvent.UI.ViewModels
         public IndexPageVM(
             MainViewModel mainVM,
             IProjects projects,
-            IGroup groupService)
+            IGroup groupService,
+            IApp app)
         {
             this.mainVM = mainVM;
             this.projects = projects;
             this.groupService = groupService;
+            this.app = app;
 
             RedirectCommand = new Command(new Action<object>(OnRedirectCommand));
             PropertyChanged += IndexPageVM_PropertyChanged;
             Projects = new System.Collections.ObjectModel.ObservableCollection<Controls.ItemSelect.Models.ItemModel>();
-            Projects.CollectionChanged += Projects_CollectionChanged;
             mainVM.PropertyChanged += MainVM_PropertyChanged;
             mainVM.IsShowNavigation = true;
             mainVM.IsShowTitleBar = false;
@@ -57,19 +60,6 @@ namespace ProjectEvent.UI.ViewModels
             }
         }
 
-        private void Projects_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
-            {
-                foreach (var item in e.OldItems)
-                {
-                    var data = item as ItemModel;
-                    string project = $"Projects\\{data.Title}.project.json";
-                    IOHelper.FileDelete(project);
-                }
-
-            }
-        }
 
         private void Init()
         {
@@ -127,9 +117,7 @@ namespace ProjectEvent.UI.ViewModels
             };
             delItem.Click += (e, c) =>
             {
-                projects.Delete(SelectItem.ID);
-                Projects.Remove(SelectItem);
-                mainVM.Toast("方案已被删除", Types.ToastType.Success);
+                DeleteProject(SelectItem);
             };
             moveGroupMenutItem = new MenuItem();
             moveGroupMenutItem.Header = "移动到";
@@ -156,6 +144,10 @@ namespace ProjectEvent.UI.ViewModels
             }
         }
 
+        #region 更新右键菜单（移动分组数据更新）
+        /// <summary>
+        /// 更新右键菜单（移动分组数据更新）
+        /// </summary>
         private void UpdateContextMenu()
         {
             moveGroupMenutItem.Items.Clear();
@@ -183,7 +175,7 @@ namespace ProjectEvent.UI.ViewModels
                 }
             }
         }
-
+        #endregion
         private void HandleProjectIDChanged()
         {
             if (SelectedProjectID > 0)
@@ -197,5 +189,15 @@ namespace ProjectEvent.UI.ViewModels
         {
             mainVM.Uri = obj.ToString();
         }
+
+        #region 删除项目
+        private void DeleteProject(ItemModel item)
+        {
+            projects.Delete(item.ID);
+            Projects.Remove(item);
+            app.Remove(item.ID);
+            mainVM.Toast("方案已被删除", Types.ToastType.Success);
+        }
+        #endregion
     }
 }

@@ -15,23 +15,61 @@ namespace ProjectEvent.Core.Services.TimerTask
     {
         private readonly IEventService eventService;
         private readonly ITimerService _timerService;
-
         public event EventHandler OnEventTrigger;
-
-        private List<int> _handledEventIDs;
-
-        public TimerTaskService(IEventService eventContainerService,
+        public TimerTaskService(IEventService eventService,
             ITimerService timerService)
         {
-            eventService = eventContainerService;
+            this.eventService = eventService;
             _timerService = timerService;
 
-            //_eventContainerService.OnAddEvent += _eventContainerService_OnAddEvent;
-
-            _handledEventIDs = new List<int>();
+            eventService.OnAddEvent += EventService_OnAddEvent;
+            eventService.OnRemoveEvent += EventService_OnRemoveEvent;
+            eventService.OnUpdateEvent += EventService_OnUpdateEvent;
         }
 
+        private void EventService_OnUpdateEvent(EventModel oldValue, EventModel newValue)
+        {
+            //旧值是否是时间事件
+            bool oldIsTimeEvent = oldValue.EventType == Event.Types.EventType.OnIntervalTimer || oldValue.EventType == Event.Types.EventType.OnTimerChanged;
+            //新值是否是时间事件
+            bool newIsTimeEvent = newValue.EventType == Event.Types.EventType.OnIntervalTimer || newValue.EventType == Event.Types.EventType.OnTimerChanged;
+            if (oldIsTimeEvent && !newIsTimeEvent)
+            {
+                //旧值是,新值不是时卸载timer
+                _timerService.Close(oldValue.ID);
+            }
+            else if (oldIsTimeEvent && newIsTimeEvent)
+            {
+                //旧值新值都是timer事件时判断是否更改条件或事件类型
+                if ((oldValue.EventType != newValue.EventType) || (oldValue.Condition != newValue.Condition))
+                {
+                    //条件或类型被修改
 
+                    //关闭旧的timer
+                    _timerService.Close(oldValue.ID);
+                    //启动新的
+                    Handle(newValue);
+                }
+            }
+            else if (!oldIsTimeEvent && newIsTimeEvent)
+            {
+                //旧值不是新值是
+                Handle(newValue);
+            }
+        }
+
+        private void EventService_OnRemoveEvent(EventModel ev)
+        {
+            if (ev.EventType == Event.Types.EventType.OnTimerChanged || ev.EventType == Event.Types.EventType.OnIntervalTimer)
+            {
+                _timerService.Close(ev.ID);
+            }
+        }
+
+        private void EventService_OnAddEvent(EventModel ev)
+        {
+            Handle(ev);
+        }
 
         public void Run()
         {
@@ -43,32 +81,23 @@ namespace ProjectEvent.Core.Services.TimerTask
 
         private void Handle(EventModel ev)
         {
-            if (_handledEventIDs.Contains(ev.ID))
-            {
-                Debug.WriteLine("已存在 event " + ev.ID);
-                return;
-            }
-
             //指定日期的事件
             if (ev.EventType == Event.Types.EventType.OnTimerChanged)
             {
-                _handledEventIDs.Add(ev.ID);
 
                 var condition = ev.Condition as OnTimerChangedCondition;
-                _timerService.StartNew(() =>
-                {
-                    eventService.Invoke(ev, null);
-                }, condition.AtDateTime, condition.IsRepetition);
+                _timerService.StartNew(ev.ID, () =>
+                 {
+                     eventService.Invoke(ev, null);
+                 }, condition.AtDateTime, condition.IsRepetition);
 
             }
 
             //计时循环事件
             if (ev.EventType == Event.Types.EventType.OnIntervalTimer)
             {
-                _handledEventIDs.Add(ev.ID);
-
                 var condition = ev.Condition as OnIntervalTimerCondition;
-                _timerService.StartNew(
+                _timerService.StartNew(ev.ID,
                     () =>
                     {
                         eventService.Invoke(ev, null);
@@ -77,12 +106,6 @@ namespace ProjectEvent.Core.Services.TimerTask
                 condition.Num);
 
             }
-        }
-
-
-        private void _eventContainerService_OnAddEvent(EventModel ev)
-        {
-            Handle(ev);
         }
     }
 }

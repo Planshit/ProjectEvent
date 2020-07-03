@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using ProjectEvent.Core.Event.Types;
 using ProjectEvent.Core.Helper;
+using ProjectEvent.Core.Services;
 using ProjectEvent.UI.Controls.Action;
 using ProjectEvent.UI.Controls.Action.Data;
 using ProjectEvent.UI.Controls.InputGroup.Models;
@@ -25,7 +26,7 @@ namespace ProjectEvent.UI.ViewModels
     {
         private readonly MainViewModel mainVM;
         private readonly IProjects projects;
-
+        private readonly IApp app;
         public Command AddActionCommand { get; set; }
         public Command AddCommand { get; set; }
         public Command ActionDialogStateCommand { get; set; }
@@ -38,10 +39,12 @@ namespace ProjectEvent.UI.ViewModels
         private Page page;
         public AddEventPageVM(
             MainViewModel mainVM,
-            IProjects projects)
+            IProjects projects,
+            IApp app)
         {
             this.mainVM = mainVM;
             this.projects = projects;
+            this.app = app;
 
             RedirectCommand = new Command(new Action<object>(OnRedirectCommand));
             LoadedCommand = new Command(new Action<object>(OnLoadedCommand));
@@ -110,22 +113,17 @@ namespace ProjectEvent.UI.ViewModels
             {
                 if (projects.GetProjects().Where(m => m.ProjectName == ProjectName).Any())
                 {
-                    mainVM.Toast("添加失败，名称已存在", Types.ToastType.Failed);
-                }
-                else if (projects.Add(GenerateModel(container)))
-                {
-                    mainVM.Toast("添加成功", Types.ToastType.Success);
-                    mainVM.Uri = "IndexPage";
+                    mainVM.Toast("方案名称已存在，请更换", Types.ToastType.Failed);
                 }
                 else
                 {
-                    mainVM.Toast("添加失败", Types.ToastType.Failed);
+                    AddProject(GenerateModel(container));
                 }
+
             }
             else
             {
-                mainVM.Toast("已更新", Types.ToastType.Success);
-                projects.Update(GenerateModel(container));
+                UpdateProject(GenerateModel(container));
             }
 
         }
@@ -146,6 +144,7 @@ namespace ProjectEvent.UI.ViewModels
             }
         }
 
+        #region 切换tab时更新visual state
         private void UpdateVisualState()
         {
             if (page == null)
@@ -173,6 +172,7 @@ namespace ProjectEvent.UI.ViewModels
                 VisualStateManager.GoToElementState(page, "NoTabSelected", true);
             }
         }
+        #endregion
         private void HandleEventIDChanged()
         {
             IsConditionTabItemSelected = true;
@@ -386,6 +386,28 @@ namespace ProjectEvent.UI.ViewModels
                 IsInfoTabItemSelected = true;
                 IsActionsTabItemSelected = false;
             }
+        }
+
+        private void AddProject(ProjectModel project)
+        {
+            bool res = projects.Add(project);
+            if (res)
+            {
+                mainVM.Toast("添加成功", Types.ToastType.Success);
+                mainVM.Uri = "IndexPage";
+                app.Add(project);
+            }
+            else
+            {
+                mainVM.Toast("添加失败", Types.ToastType.Failed);
+            }
+        }
+
+        private void UpdateProject(ProjectModel project)
+        {
+            mainVM.Toast("已更新", Types.ToastType.Success);
+            projects.Update(project);
+            app.Update(project);
         }
     }
 }

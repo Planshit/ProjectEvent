@@ -16,7 +16,7 @@ namespace ProjectEvent.Core.Services
             _timerRunCount = new Dictionary<int, int>();
         }
 
-        public void StartNew(System.Action action, DateTime dateTime, bool autoReset = false)
+        public void StartNew(int id, System.Action action, DateTime dateTime, bool autoReset = false)
         {
             //转换时间
             var trueTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, 0);
@@ -25,11 +25,11 @@ namespace ProjectEvent.Core.Services
             {
                 //每天
                 trueTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, dateTime.Hour, dateTime.Minute, 0);
-                StartNew(action, trueTime.Subtract(DateTime.Now).TotalSeconds, 1, () =>
-                  {
-                      //进行下一个周期
-                      StartNew(action, dateTime, autoReset);
-                  });
+                StartNew(id, action, trueTime.Subtract(DateTime.Now).TotalSeconds, 1, () =>
+                   {
+                       //进行下一个周期
+                       StartNew(id, action, dateTime, autoReset);
+                   });
             }
             else
             {
@@ -38,7 +38,7 @@ namespace ProjectEvent.Core.Services
                 {
                     var s = trueTime.Subtract(DateTime.Now).TotalSeconds;
                     //可以执行
-                    StartNew(action, s, 1);
+                    StartNew(id, action, s, 1);
                 }
                 else
                 {
@@ -51,10 +51,13 @@ namespace ProjectEvent.Core.Services
 
 
 
-        public void StartNew(System.Action action, double seconds, int num = 0, System.Action timerClosedAction = null)
+        public void StartNew(int id, System.Action action, double seconds, int num = 0, System.Action timerClosedAction = null)
         {
-            int id = _timers.Count + 1;
 
+            if (_timers.ContainsKey(id))
+            {
+                return;
+            }
             var timer = new Timer();
             timer.Interval = seconds * 1000;
 
@@ -78,11 +81,6 @@ namespace ProjectEvent.Core.Services
             timer.Start();
         }
 
-
-        /// <summary>
-        /// 关闭一个timer
-        /// </summary>
-        /// <param name="id"></param>
         public void Close(int id)
         {
             if (_timers.ContainsKey(id))

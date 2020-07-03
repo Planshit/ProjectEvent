@@ -5,5 +5,7 @@ using System.Text;
 
 namespace ProjectEvent.Core.Services
 {
-    public delegate void ContainerEventHandler(EventModel @event);
+    public delegate void ContainerEventHandler(EventModel ev);
+    public delegate void EventChangedHandler(EventModel oldValue, EventModel newValue);
+
 }

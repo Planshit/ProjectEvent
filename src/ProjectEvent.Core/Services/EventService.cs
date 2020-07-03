@@ -14,6 +14,7 @@ namespace ProjectEvent.Core.Services
         public event ContainerEventHandler OnRemoveEvent;
         public event EventHandler OnEventTrigger;
         public event ActionInvokeHandler OnActionInvoke;
+        public event EventChangedHandler OnUpdateEvent;
 
         private Dictionary<int, EventModel> _events;
         private int taskID = 0;
@@ -37,10 +38,10 @@ namespace ProjectEvent.Core.Services
 
             //检查条件是否输入正确
 
-            if (!ev.Condition.Check().IsValid)
-            {
-                return false;
-            }
+            //if (!ev.Condition.Check().IsValid)
+            //{
+            //    return false;
+            //}
 
             ////检查action是否输入正确
             //if (ev.Actions != null)
@@ -96,5 +97,30 @@ namespace ProjectEvent.Core.Services
             //响应触发事件
             OnEventTrigger?.Invoke(ev, isSuccess);
         }
+
+        public void Remove(int id)
+        {
+            if (_events.ContainsKey(id))
+            {
+                var ev = _events[id].Copy();
+                _events.Remove(id);
+                OnRemoveEvent?.Invoke(ev);
+            }
+        }
+
+        public void Update(EventModel ev)
+        {
+            if (_events.ContainsKey(ev.ID))
+            {
+                var oldEV = _events[ev.ID].Copy();
+
+                _events[ev.ID] = ev;
+
+                OnUpdateEvent?.Invoke(oldEV, ev);
+
+            }
+        }
+
+
     }
 }
