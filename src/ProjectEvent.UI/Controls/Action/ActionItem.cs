@@ -88,6 +88,7 @@ namespace ProjectEvent.UI.Controls.Action
         private Border Input;
         private Button ButtonRemove;
         public ActionContainer ActionContainer { get; set; }
+        public object VMDataContext { get; set; }
         public ActionItem()
         {
             DefaultStyleKey = typeof(ActionItem);
@@ -129,6 +130,7 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 //SetInputData();
                 Action item = new Action(Action.ID, GetInputs());
+                item.VMDataContext = VMDataContext;
                 item.ActionContainer = ActionContainer;
                 ActionName = $"[{Action.ID}] {Action.ActionName}";
                 item.Data = InputDataModel;

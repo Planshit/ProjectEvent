@@ -1,5 +1,8 @@
-﻿using ProjectEvent.Core.Action.Types;
+﻿using ProjectEvent.Core.Action;
+using ProjectEvent.Core.Action.Types;
 using ProjectEvent.Core.Action.Types.ResultTypes;
+using ProjectEvent.Core.Event.Data;
+using ProjectEvent.Core.Event.Types;
 using ProjectEvent.UI.Controls.Action.Data;
 using ProjectEvent.UI.Controls.Action.Models;
 using ProjectEvent.UI.Controls.Action.Types;
@@ -14,11 +17,31 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace ProjectEvent.UI.Controls.Action
 {
     public class ActionInput : Control
     {
+        public EventType EventType
+        {
+            get { return (EventType)GetValue(EventTypeProperty); }
+            set { SetValue(EventTypeProperty, value); }
+        }
+        public static readonly DependencyProperty EventTypeProperty =
+            DependencyProperty.Register("EventType",
+                typeof(EventType),
+                typeof(ActionInput), new PropertyMetadata(new PropertyChangedCallback(OnEventTypeChanged)));
+
+        private static void OnEventTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Debug.WriteLine(e.NewValue);
+            if (e.NewValue != e.OldValue)
+            {
+                (d as ActionInput).RenderEventVariable();
+            }
+        }
+
         public Visibility PlaceholderVisibility
         {
             get { return (Visibility)GetValue(PlaceholderVisibilityProperty); }
@@ -82,8 +105,9 @@ namespace ProjectEvent.UI.Controls.Action
         private ComboBox ActionIDComboBox;
         private ComboBox ActionResultsComboBox;
         private ComboBox SelectComboBox;
-
         private Popup Popup;
+        private WrapPanel eventVariablePanel, globalVariablePanel;
+        private TabItem ActionResultTab;
         private bool isEnterPopup;
         public ActionContainer ActionContainer { get; set; }
         private Button addActionResultBtn;
@@ -111,9 +135,12 @@ namespace ProjectEvent.UI.Controls.Action
             ActionIDComboBox = GetTemplateChild("ActionIDComboBox") as ComboBox;
             ActionResultsComboBox = GetTemplateChild("ActionResultsComboBox") as ComboBox;
             SelectComboBox = GetTemplateChild("SelectComboBox") as ComboBox;
-
             Popup = GetTemplateChild("Popup") as Popup;
             addActionResultBtn = GetTemplateChild("AddActionResultBtn") as Button;
+            eventVariablePanel = GetTemplateChild("EventVariablePanel") as WrapPanel;
+            globalVariablePanel = GetTemplateChild("GlobalVariablePanel") as WrapPanel;
+            ActionResultTab = GetTemplateChild("ActionResultTab") as TabItem;
+
             addActionResultBtn.Click += AddActionResultBtn_Click;
             ActionIDComboBox.SelectionChanged += ActionIDComboBox_SelectionChanged;
 
@@ -121,6 +148,8 @@ namespace ProjectEvent.UI.Controls.Action
             Popup.MouseLeave += Popup_MouseLeave;
             Render();
             BindingData();
+            RenderEventVariable();
+            RenderGlobalVariable();
         }
         private void BindingData()
         {
@@ -133,7 +162,6 @@ namespace ProjectEvent.UI.Controls.Action
                         Source = Data,
                         Path = new PropertyPath(BindingName),
                         Mode = BindingMode.TwoWay,
-
                     });
                     break;
                 case InputType.Select:
@@ -326,6 +354,19 @@ namespace ProjectEvent.UI.Controls.Action
                 }
             }
             Valid();
+            //面板显示与隐藏
+            if (ActionResultTab != null)
+            {
+                if (ActionItemsSource.Count == 0)
+                {
+                    ActionResultTab.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    ActionResultTab.Visibility = Visibility.Visible;
+                }
+            }
+
         }
 
 
@@ -335,10 +376,15 @@ namespace ProjectEvent.UI.Controls.Action
         private void Valid()
         {
             IsValidInput = true;
+            if (inputTextBox == null)
+            {
+                return;
+            }
             if (inputTextBox.Text == string.Empty)
             {
                 return;
             }
+            //验证操作结果变量
             var matchs = Regex.Matches(inputTextBox.Text, @"\{(?<id>[0-9]{1,5})\.(?<key>[0-9]{1,25})\}");
             foreach (Match match in matchs)
             {
@@ -356,7 +402,94 @@ namespace ProjectEvent.UI.Controls.Action
                     break;
                 }
             }
+            //验证事件变量
+            var eventVariableMatchs = Regex.Matches(inputTextBox.Text, @"\{(?<key>[a-zA-Z]{1,25})\}");
+            if (eventVariableMatchs.Count > 0)
+            {
+                if (!EventVariableData.Variables.ContainsKey(this.EventType))
+                {
+                    IsValidInput = false;
+                    return;
+                }
+                var eventVariables = EventVariableData.Variables[this.EventType];
+                foreach (Match match in eventVariableMatchs)
+                {
+                    var key = match.Groups["key"].Value;
+                    if (!eventVariables.ContainsKey(key))
+                    {
+                        IsValidInput = false;
+                        break;
+                    }
+                }
+            }
+            //验证全局变量
+            var variables = Regex.Matches(inputTextBox.Text, @"\{@(?<key>[a-zA-Z]{1,25})\}");
+            if (variables.Count > 0)
+            {
+                foreach (Match variable in variables)
+                {
+                    var key = variable.Groups["key"].Value;
+                    if (!GlobalVariable.Variables.ContainsKey(key))
+                    {
+                        IsValidInput = false;
+                        break;
+                    }
+                }
+            }
+
         }
 
+        private void RenderEventVariable()
+        {
+            if (eventVariablePanel != null)
+            {
+                eventVariablePanel.Children.Clear();
+                if (EventVariableData.Variables.ContainsKey(this.EventType))
+                {
+                    var variables = EventVariableData.Variables[this.EventType];
+                    foreach (var v in variables)
+                    {
+                        eventVariablePanel.Children.Add(CreateVariableButton(v.Value, v.Key));
+                    }
+                }
+            }
+            Valid();
+
+        }
+        private Button CreateVariableButton(string name, string variable)
+        {
+            var btn = new Button();
+            btn.Style = FindResource("Icon") as Style;
+            btn.Content = name;
+            btn.Padding = new Thickness(5, 0, 5, 0);
+            btn.Click += (e, c) =>
+            {
+                if (inputTextBox != null)
+                {
+                    inputTextBox.AppendText($"{{{variable}}}");
+                    inputTextBox.Focus();
+                    Valid();
+                }
+            };
+            return btn;
+        }
+
+        /// <summary>
+        /// 渲染全局变量
+        /// </summary>
+        private void RenderGlobalVariable()
+        {
+            if (globalVariablePanel != null)
+            {
+                globalVariablePanel.Children.Clear();
+
+                foreach (var v in GlobalVariable.Variables)
+                {
+                    globalVariablePanel.Children.Add(CreateVariableButton(v.Value, $"@{v.Key}"));
+                }
+            }
+            Valid();
+
+        }
     }
 }

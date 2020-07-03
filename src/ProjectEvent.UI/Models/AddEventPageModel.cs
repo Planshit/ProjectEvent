@@ -1,4 +1,5 @@
-﻿using ProjectEvent.UI.Controls.Base;
+﻿using ProjectEvent.Core.Event.Types;
+using ProjectEvent.UI.Controls.Base;
 using ProjectEvent.UI.Controls.InputGroup.Models;
 using ProjectEvent.UI.Controls.ItemSelect.Models;
 using ProjectEvent.UI.Models.DataModels;
@@ -34,7 +35,12 @@ namespace ProjectEvent.UI.Models
         public int SelectedEventID
         {
             get { return SelectedEventID_; }
-            set { SelectedEventID_ = value; OnPropertyChanged(); }
+            set
+            {
+                SelectedEventID_ = value;
+                EventType = (EventType)value;
+                OnPropertyChanged();
+            }
         }
 
         private object ConditionData_;
@@ -107,6 +113,11 @@ namespace ProjectEvent.UI.Models
             get { return ProjectIcon_; }
             set { ProjectIcon_ = value; OnPropertyChanged(); }
         }
-
+        private EventType EventType_;
+        public EventType EventType
+        {
+            get { return EventType_; }
+            set { EventType_ = value; OnPropertyChanged(); }
+        }
     }
 }

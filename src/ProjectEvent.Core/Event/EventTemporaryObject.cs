@@ -2,10 +2,11 @@
 using ProjectEvent.Core.Event.Types;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Management;
 using System.Text;
 using System.Text.RegularExpressions;
-
+using ProjectEvent.Core.Extensions;
 namespace ProjectEvent.Core.Event
 {
     /// <summary>
@@ -38,10 +39,12 @@ namespace ProjectEvent.Core.Event
             switch (ev.EventType)
             {
                 case Types.EventType.OnProcessCreated:
-                    var pcdata = data as ManagementBaseObject;
-                    string Name = ((ManagementBaseObject)pcdata["TargetInstance"])["Name"].ToString();
-                    //string ExecutablePath = ((ManagementBaseObject)e["TargetInstance"])["ExecutablePath"].ToString();
-                    result.Add(nameof(ProcessCreatedEventTOType.ProcessName), Name);
+                    var p = ((ManagementBaseObject)(data as ManagementBaseObject)["TargetInstance"]);
+
+                    result.Add(nameof(ProcessCreatedEventVariableType.ProcessName), p.TryGetProperty("Name"));
+                    result.Add(nameof(ProcessCreatedEventVariableType.ExecutablePath), p.TryGetProperty("ExecutablePath"));
+                    result.Add(nameof(ProcessCreatedEventVariableType.Handle), p.TryGetProperty("Handle"));
+                    result.Add(nameof(ProcessCreatedEventVariableType.CommandLine), p.TryGetProperty("CommandLine"));
                     break;
             }
 

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace ProjectEvent.Core.Helper
 {
@@ -29,6 +31,37 @@ namespace ProjectEvent.Core.Helper
             }
             return false;
         }
+
+        /// <summary>
+        /// 获取当前登录用户名
+        /// </summary>
+        /// <returns></returns>
+        public static string GetCurrentUserName()
+        {
+            string name = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+            if (name.IndexOf('\\') != -1)
+            {
+                return name.Split('\\')[1];
+            }
+            return string.Empty;
+        }
+        //public static void GetStartupTime()
+        //{
+        //    var process = Process.GetProcesses().Where(m => m.ProcessName == "explorer").FirstOrDefault();
+
+        //    try
+        //    {
+        //        Debug.WriteLine(process.ProcessName);
+        //        Debug.WriteLine(process.StartTime);
+
+        //    }
+        //    catch
+        //    {
+
+        //    }
+
+
+        //}
 
     }
 }

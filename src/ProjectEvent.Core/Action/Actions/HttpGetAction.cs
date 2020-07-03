@@ -26,7 +26,7 @@ namespace ProjectEvent.Core.Action.Actions
                 result.Result.Add((int)HttpResultType.IsSuccess, "false");
                 if (p != null)
                 {
-                    p.Url = ActionTaskResulter.GetActionResultsString(taskID, p.Url);
+                    p.Url = ActionParameterConverter.ConvertToString(taskID, p.Url);
                     Debug.WriteLine("http get:" + p.Url);
                     var http = new HttpRequest();
                     http.Url = p.Url;

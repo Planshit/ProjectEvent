@@ -119,6 +119,7 @@ namespace ProjectEvent.UI.Controls.Action
             var item = new ActionItem();
             item.ActionContainer = this;
             item.DataContext = this;
+            item.VMDataContext = this.DataContext;
             item.ID = action.ID;
             item.InputDataModel = inputdata == null ? GetCreateDefaultInputData(action.ActionType) : inputdata;
             item.Action = action;

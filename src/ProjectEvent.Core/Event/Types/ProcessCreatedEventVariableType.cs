@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ProjectEvent.Core.Event.Types
 {
-    public enum ProcessCreatedEventTOType
+    public enum ProcessCreatedEventVariableType
     {
         /// <summary>
         /// 进程名称
@@ -13,6 +13,14 @@ namespace ProjectEvent.Core.Event.Types
         /// <summary>
         /// 执行路径
         /// </summary>
-        ExecutablePath
+        ExecutablePath,
+        /// <summary>
+        /// 句柄
+        /// </summary>
+        Handle,
+        /// <summary>
+        /// 命令行参数
+        /// </summary>
+        CommandLine
     }
 }

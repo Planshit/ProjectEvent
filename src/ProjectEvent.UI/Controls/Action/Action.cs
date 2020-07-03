@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
 
 namespace ProjectEvent.UI.Controls.Action
@@ -14,7 +16,7 @@ namespace ProjectEvent.UI.Controls.Action
         private StackPanel container;
         private int ID;
         public object Data { get; set; }
-
+        public object VMDataContext { get; set; }
         public ActionContainer ActionContainer { get; set; }
         public Action(int ID, List<ActionInputModel> inputs)
         {
@@ -53,6 +55,13 @@ namespace ProjectEvent.UI.Controls.Action
                 input.InputType = item.InputType;
                 input.ComboBoxItemsSource = item.SelectItems;
                 input.VerticalAlignment = System.Windows.VerticalAlignment.Center;
+                //绑定事件类型
+                BindingOperations.SetBinding(input, ActionInput.EventTypeProperty, new Binding()
+                {
+                    Source = VMDataContext,
+                    Path = new PropertyPath("EventType"),
+                    Mode = BindingMode.Default,
+                });
                 container.Children.Add(label);
                 container.Children.Add(input);
 

@@ -18,9 +18,9 @@ namespace ProjectEvent.Core.Action.Actions
                 var p = ObjectConvert.Get<IFActionParameterModel>(parameter);
                 string left, right;
                 //获取左输入
-                left = ActionTaskResulter.GetActionResultsString(taskID, p.LeftInput);
+                left = ActionParameterConverter.ConvertToString(taskID, p.LeftInput);
                 //获取右输入
-                right = ActionTaskResulter.GetActionResultsString(taskID, p.RightInput);
+                right = ActionParameterConverter.ConvertToString(taskID, p.RightInput);
 
 
                 switch (p.Condition)
