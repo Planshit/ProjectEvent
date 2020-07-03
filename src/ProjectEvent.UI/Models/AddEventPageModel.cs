@@ -119,5 +119,17 @@ namespace ProjectEvent.UI.Models
             get { return EventType_; }
             set { EventType_ = value; OnPropertyChanged(); }
         }
+        private Visibility RunActionsButtonVisibility_ = Visibility.Hidden;
+        public Visibility RunActionsButtonVisibility
+        {
+            get { return RunActionsButtonVisibility_; }
+            set { RunActionsButtonVisibility_ = value; OnPropertyChanged(); }
+        }
+        private Visibility StopActionsButtonVisibility_;
+        public Visibility StopActionsButtonVisibility
+        {
+            get { return StopActionsButtonVisibility_; }
+            set { StopActionsButtonVisibility_ = value; OnPropertyChanged(); }
+        }
     }
 }

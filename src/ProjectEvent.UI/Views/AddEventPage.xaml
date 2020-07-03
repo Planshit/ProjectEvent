@@ -58,7 +58,7 @@
                     </ColorAnimationUsingKeyFrames>
                 </Storyboard>
             </VisualState>
-            
+
             <!--action tab-->
             <VisualState x:Name="ActionsTabSelected">
                 <Storyboard>
@@ -120,6 +120,10 @@
                 </TabItem>
             </TabControl>
             <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                <Button Content="停止操作" Width="120" Height="35" Command="{Binding ActionInvokeCommand}" CommandParameter="stop" Style="{DynamicResource Standard}" Margin="0,0,10,0" Visibility="{Binding RunActionsButtonVisibility}"/>
+
+                <Button Content="执行操作" Width="120" Height="35" Command="{Binding ActionInvokeCommand}" CommandParameter="run" Style="{DynamicResource Standard}" Margin="0,0,10,0" Visibility="{Binding RunActionsButtonVisibility}"/>
+
                 <Button Content="{Binding ButtonSaveName}" Width="120" Height="35" Command="{Binding AddCommand}" CommandParameter="{Binding ElementName=container}" Style="{DynamicResource Primary}"/>
                 <!--<Button Content="Import" Width="120" Height="30" Command="{Binding ImportCommand}" CommandParameter="{Binding ElementName=container}"/>-->
             </StackPanel>

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ProjectEvent.Core.Action
@@ -14,12 +15,21 @@ namespace ProjectEvent.Core.Action
     public static class ActionTask
     {
         public static event ActionInvokeHandler OnActionInvoke;
-        public static void SetActionInvokeHandler(ActionInvokeHandler e)
+        private static Thread testThread;
+        public static void StopTestInvokeAction()
         {
-            if (OnActionInvoke == null)
-            {
-                OnActionInvoke += e;
-            }
+        }
+        public static void RunTestInvokeAction(IEnumerable<ActionModel> actions)
+        {
+            Debug.WriteLine("start");
+
+            Thread.Sleep(5000);
+
+            //执行actions
+            InvokeAction(17290302, actions);
+
+            Debug.WriteLine("end");
+
         }
         public static void InvokeAction(int taskID, IEnumerable<ActionModel> actions)
         {

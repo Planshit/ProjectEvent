@@ -68,8 +68,6 @@ namespace ProjectEvent.Core.Services
 
         public void Invoke(EventModel ev, object data)
         {
-            //ActionTask.OnActionInvoke += OnActionInvoke;
-            ActionTask.SetActionInvokeHandler(OnActionInvoke);
             bool isSuccess = ev.Condition.IsPass(data);
 
             if (isSuccess)

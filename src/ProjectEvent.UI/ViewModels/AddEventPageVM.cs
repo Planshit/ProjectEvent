@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using ProjectEvent.Core.Action;
 using ProjectEvent.Core.Event.Types;
 using ProjectEvent.Core.Helper;
 using ProjectEvent.Core.Services;
@@ -34,6 +35,8 @@ namespace ProjectEvent.UI.ViewModels
         public Command PageLoadedCommand { get; set; }
         public Command RedirectCommand { get; set; }
         public Command LoadedCommand { get; set; }
+        public Command ActionInvokeCommand { get; set; }
+
         private ActionContainer actionContainer;
         private ProjectModel project;
         private Page page;
@@ -55,7 +58,7 @@ namespace ProjectEvent.UI.ViewModels
             ActionDialogStateCommand = new Command(new Action<object>(OnActionDialogStateCommand));
             ShowActionDialogCommand = new Command(new Action<object>(OnShowActionDialogCommand));
             PageLoadedCommand = new Command(new Action<object>(OnPageLoadedCommand));
-
+            ActionInvokeCommand = new Command(new Action<object>(OnActionInvokeCommand));
             AddACtionDialogVisibility = System.Windows.Visibility.Hidden;
             PropertyChanged += AddEventPageVM_PropertyChanged;
 
@@ -68,6 +71,37 @@ namespace ProjectEvent.UI.ViewModels
             InitAcions();
             HandleEdit();
         }
+        #region 运行或停止actions
+        private void OnActionInvokeCommand(object obj)
+        {
+            if (obj != null)
+            {
+                if (obj.ToString() == "run")
+                {
+                    RunActions();
+                }
+                else
+                {
+                    StopActions();
+                }
+            }
+        }
+        private void RunActions()
+        {
+            ActionTask.OnActionInvoke += ActionTask_OnActionInvoke;
+            ActionTask.RunTestInvokeAction(actionContainer.GenerateActions());
+        }
+        private void StopActions()
+        {
+            ActionTask.StopTestInvokeAction();
+            ActionTask.OnActionInvoke -= ActionTask_OnActionInvoke;
+        }
+
+        private void ActionTask_OnActionInvoke(int taskID, int actionID, Core.Action.Types.ActionInvokeStateType state)
+        {
+            ActionTask.OnActionInvoke -= ActionTask_OnActionInvoke;
+        }
+        #endregion
 
         private void OnPageLoadedCommand(object obj)
         {
@@ -151,9 +185,11 @@ namespace ProjectEvent.UI.ViewModels
             {
                 return;
             }
+            RunActionsButtonVisibility = Visibility.Hidden;
             if (IsActionsTabItemSelected)
             {
                 VisualStateManager.GoToElementState(page, "ActionsTabSelected", true);
+                RunActionsButtonVisibility = Visibility.Visible;
             }
             else if (IsInfoTabItemSelected)
             {
