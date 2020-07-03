@@ -10,12 +10,12 @@ namespace ProjectEvent.Core.Action.Actions
 {
     public class IFAction : IAction
     {
-        public Task<ActionResultModel> GenerateAction(int taskID, int actionID, object parameter)
+        public System.Action GenerateAction(int taskID, ActionModel action)
         {
-            var task = new Task<ActionResultModel>(() =>
+            return () =>
             {
                 bool isPass = false;
-                var p = ObjectConvert.Get<IFActionParameterModel>(parameter);
+                var p = ObjectConvert.Get<IFActionParameterModel>(action.Parameter);
                 string left, right;
                 //获取左输入
                 left = ActionParameterConverter.ConvertToString(taskID, p.LeftInput);
@@ -49,7 +49,7 @@ namespace ProjectEvent.Core.Action.Actions
                 }
 
                 var result = new ActionResultModel();
-                result.ID = actionID;
+                result.ID = action.ID;
                 result.Result = new Dictionary<int, string>();
                 result.Result.Add((int)CommonResultKeyType.IsSuccess, isPass.ToString());
                 //result.Result = new Dictionary<int, ActionResultValueModel>();
@@ -58,64 +58,12 @@ namespace ProjectEvent.Core.Action.Actions
                 //    Type = ActoinResultValueType.BOOL,
                 //    Value = isPass
                 //});
-                return result;
-            });
-            return task;
+                //返回数据
+                ActionTaskResulter.Add(taskID, result);
+            };
 
         }
 
-        //private bool EqualOrUnEqual(ActionResultValueModel left, ActionResultValueModel right, bool equal = true)
-        //{
-        //    try
-        //    {
-        //        if (left.Type == ActoinResultValueType.TEXT)
-        //        {
-        //            return equal ? left.Value.ToString() == right.Value.ToString() : left.Value.ToString() != right.Value.ToString();
-        //        }
-        //        else if (left.Type == ActoinResultValueType.NUMBER)
-        //        {
-        //            return equal ? (double)left.Value == (double)right.Value : (double)left.Value != (double)right.Value;
-        //        }
-        //        else if (left.Type == ActoinResultValueType.BOOL)
-        //        {
-        //            return equal ? (bool)left.Value == (bool)right.Value : (bool)left.Value != (bool)right.Value;
-        //        }
-        //        else
-        //        {
-        //            return equal ? left.Value == right.Value : left.Value != right.Value;
-        //        }
-        //    }
-        //    catch
-        //    {
-        //        return false;
-        //    }
-        //}
-
-        //private ActionResultValueModel GetActionInput(int taskID, BaseIFActionInputModel ip)
-        //{
-        //    Types.IFActionInputType type = ip.InputType;
-        //    var result = new ActionResultValueModel();
-        //    result.Type = ActoinResultValueType.TEXT;
-        //    result.Value = string.Empty;
-
-        //    if (type == Types.IFActionInputType.Text)
-        //    {
-        //        result.Type = ActoinResultValueType.TEXT;
-        //        result.Value = (ip as IFActionTextInputModel).Value;
-        //    }
-        //    else if (type == Types.IFActionInputType.ActionResult)
-        //    {
-        //        var actionResult = ActionTaskResulter.GetActionResult(taskID, (ip as IFActionResultInputModel).ActionID);
-        //        if (actionResult != null)
-        //        {
-        //            if (actionResult.Result.ContainsKey((ip as IFActionResultInputModel).ResultKey))
-        //            {
-        //                return actionResult.Result[(ip as IFActionResultInputModel).ResultKey];
-        //            }
-        //        }
-        //    }
-
-        //    return result;
-        //}
+       
     }
 }

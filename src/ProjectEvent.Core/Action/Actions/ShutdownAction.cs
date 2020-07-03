@@ -14,12 +14,12 @@ namespace ProjectEvent.Core.Action.Actions
 {
     public class ShutdownAction : IAction
     {
-        public Task<ActionResultModel> GenerateAction(int taskID, int actionID, object parameter)
+        public System.Action GenerateAction(int taskID, ActionModel action)
         {
-            var task = new Task<ActionResultModel>(() =>
+            return () =>
             {
                 var result = new ActionResultModel();
-                result.ID = actionID;
+                result.ID = action.ID;
                 result.Result = new Dictionary<int, string>();
                 result.Result.Add((int)CommonResultKeyType.IsSuccess, "false");
                 try
@@ -31,9 +31,9 @@ namespace ProjectEvent.Core.Action.Actions
                 catch
                 {
                 }
-                return result;
-            });
-            return task;
+                //返回数据
+                ActionTaskResulter.Add(taskID, result);
+            };
         }
     }
 }

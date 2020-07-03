@@ -13,30 +13,31 @@ namespace ProjectEvent.Core.Action.Actions
 {
     public class WriteFileAction : IAction
     {
-        public Task<ActionResultModel> GenerateAction(int taskID, int actionID, object parameter)
+        public System.Action GenerateAction(int taskID, ActionModel action)
         {
-            var task = new Task<ActionResultModel>(() =>
-            {
-                var p = ObjectConvert.Get<WriteFileActionParameterModel>(parameter);
-                var result = new ActionResultModel();
-                result.ID = actionID;
-                result.Result = new Dictionary<int, string>();
-                result.Result.Add((int)CommonResultKeyType.IsSuccess, "false");
-                p.FilePath = ActionParameterConverter.ConvertToString(taskID, p.FilePath);
-                p.Content = ActionParameterConverter.ConvertToString(taskID, p.Content);
+            return () =>
+             {
+                 Task.Delay(2000).Wait();
+                 var p = ObjectConvert.Get<WriteFileActionParameterModel>(action.Parameter);
+                 var result = new ActionResultModel();
+                 result.ID = action.ID;
+                 result.Result = new Dictionary<int, string>();
+                 result.Result.Add((int)CommonResultKeyType.IsSuccess, "false");
+                 p.FilePath = ActionParameterConverter.ConvertToString(taskID, p.FilePath);
+                 p.Content = ActionParameterConverter.ConvertToString(taskID, p.Content);
 
-                Debug.WriteLine("write file:" + p.FilePath);
-                try
-                {
-                    File.WriteAllText(p.FilePath, p.Content);
-                    result.Result[(int)CommonResultKeyType.IsSuccess] = "true";
-                }
-                catch
-                {
-                }
-                return result;
-            });
-            return task;
+                 Debug.WriteLine("write file:" + p.FilePath);
+                 try
+                 {
+                     File.WriteAllText(p.FilePath, p.Content);
+                     result.Result[(int)CommonResultKeyType.IsSuccess] = "true";
+                 }
+                 catch
+                 {
+                 }
+                 //返回数据
+                 ActionTaskResulter.Add(taskID, result);
+             };
         }
     }
 }
