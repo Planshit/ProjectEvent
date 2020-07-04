@@ -52,7 +52,15 @@ namespace ProjectEvent.UI.Services
                         string dataPath = $"{LogDir}{DateTime.Now.ToString("yyyy-MM-dd")}.json";
                         if (IOHelper.FileExists(dataPath))
                         {
-                            var data = JsonConvert.DeserializeObject<List<EventLogModel>>(IOHelper.ReadFile(dataPath));
+                            var data = new List<EventLogModel>();
+                            try
+                            {
+                                data = JsonConvert.DeserializeObject<List<EventLogModel>>(IOHelper.ReadFile(dataPath));
+                            }
+                            catch (Exception e)
+                            {
+                                LogHelper.Error(e.ToString());
+                            }
                             if (data != null)
                             {
                                 data.AddRange(storageLogs);
@@ -115,11 +123,18 @@ namespace ProjectEvent.UI.Services
 
         public List<EventLogModel> GetEventLogs()
         {
-            string dataPath = $"{LogDir}{DateTime.Now.ToString("yyyy-MM-dd")}.json";
             var data = new List<EventLogModel>();
-            if (IOHelper.FileExists(dataPath))
+            try
             {
-                data = JsonConvert.DeserializeObject<List<EventLogModel>>(IOHelper.ReadFile(dataPath));
+                string dataPath = $"{LogDir}{DateTime.Now.ToString("yyyy-MM-dd")}.json";
+                if (IOHelper.FileExists(dataPath))
+                {
+                    data = JsonConvert.DeserializeObject<List<EventLogModel>>(IOHelper.ReadFile(dataPath));
+                }
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error(e.ToString());
             }
             data.AddRange(logs);
             return data;
