@@ -165,6 +165,13 @@ namespace ProjectEvent.UI.ViewModels
                         {
                             Projects.Remove(SelectItem);
                         }
+                        else
+                        {
+                            int index = Projects.IndexOf(SelectItem);
+                            SelectItem.Tag = g.Name;
+                            Projects[index] = SelectItem;
+                        }
+                        mainVM.Toast("移动完成", Types.ToastType.Success);
                     };
                     gm.Icon = new Icon()
                     {
