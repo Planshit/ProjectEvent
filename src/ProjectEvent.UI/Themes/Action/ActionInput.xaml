@@ -25,6 +25,12 @@
                                         </Border.Effect>
 
                                         <TabControl>
+                                            <TabItem Header="全局变量">
+                                                <WrapPanel x:Name="GlobalVariablePanel"/>
+                                            </TabItem>
+                                            <TabItem Header="事件变量">
+                                                <WrapPanel x:Name="EventVariablePanel"/>
+                                            </TabItem>
                                             <TabItem Header="操作结果" x:Name="ActionResultTab">
                                                 <StackPanel>
 
@@ -35,20 +41,8 @@
                                                     <Button x:Name="AddActionResultBtn" Content="添加" Height="32" Margin="0,10,0,0" Style="{DynamicResource Primary}" Width="auto"/>
                                                 </StackPanel>
                                             </TabItem>
-                                            <TabItem Header="事件变量">
-                                                <WrapPanel x:Name="EventVariablePanel">
 
-                                                    <!--<Button Content="添加"  Style="{DynamicResource Icon}" Width="auto"/>
-                                                    <Button Content="啊发添加"  Style="{DynamicResource Icon}" Width="auto"/>-->
-                                                </WrapPanel>
-                                            </TabItem>
-                                            <TabItem Header="全局变量">
-                                                <WrapPanel x:Name="GlobalVariablePanel">
 
-                                                    <!--<Button Content="添加"  Style="{DynamicResource Icon}" Width="auto"/>
-                                                    <Button Content="啊发添加"  Style="{DynamicResource Icon}" Width="auto"/>-->
-                                                </WrapPanel>
-                                            </TabItem>
                                         </TabControl>
 
 

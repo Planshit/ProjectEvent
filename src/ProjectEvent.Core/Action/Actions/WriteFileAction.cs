@@ -17,7 +17,6 @@ namespace ProjectEvent.Core.Action.Actions
         {
             return () =>
              {
-                 Task.Delay(2000).Wait();
                  var p = ObjectConvert.Get<WriteFileActionParameterModel>(action.Parameter);
                  var result = new ActionResultModel();
                  result.ID = action.ID;
@@ -32,8 +31,9 @@ namespace ProjectEvent.Core.Action.Actions
                      File.WriteAllText(p.FilePath, p.Content);
                      result.Result[(int)CommonResultKeyType.IsSuccess] = "true";
                  }
-                 catch
+                 catch (Exception e)
                  {
+                     LogHelper.Error(e.ToString());
                  }
                  //返回数据
                  ActionTaskResulter.Add(taskID, result);

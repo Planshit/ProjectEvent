@@ -72,10 +72,10 @@
             
             <!--action runing-->
             <VisualState x:Name="ActionsRuning">
-                <Storyboard>
+                <Storyboard RepeatBehavior="Forever" AutoReverse="True">
                     <ColorAnimationUsingKeyFrames Storyboard.TargetName="Page"
                                                 Storyboard.TargetProperty="(Page.Background).                     (SolidColorBrush.Color)">
-                        <EasingColorKeyFrame KeyTime="00:00:0.3"
+                        <EasingColorKeyFrame KeyTime="00:00:1"
                                          Value="{DynamicResource SubBorderColor}"/>
                     </ColorAnimationUsingKeyFrames>
                 </Storyboard>
