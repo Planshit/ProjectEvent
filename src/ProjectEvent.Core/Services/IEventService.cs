@@ -43,10 +43,6 @@ namespace ProjectEvent.Core.Services
         /// <param name="data">事件数据</param>
         void Invoke(EventModel ev, object data);
         /// <summary>
-        /// action执行时发生
-        /// </summary>
-        event ActionInvokeHandler OnActionInvoke;
-        /// <summary>
         /// 移除一个event
         /// </summary>
         /// <param name="id"></param>

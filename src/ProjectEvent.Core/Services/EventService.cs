@@ -13,7 +13,6 @@ namespace ProjectEvent.Core.Services
         public event ContainerEventHandler OnAddEvent;
         public event ContainerEventHandler OnRemoveEvent;
         public event EventHandler OnEventTrigger;
-        public event ActionInvokeHandler OnActionInvoke;
         public event EventChangedHandler OnUpdateEvent;
 
         private Dictionary<int, EventModel> _events;
