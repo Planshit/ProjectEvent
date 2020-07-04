@@ -82,7 +82,10 @@ namespace ProjectEvent.UI.Controls.ItemSelect
             else if (e.Action == NotifyCollectionChangedAction.Reset)
             {
                 itemControls.Clear();
-                container.Children.Clear();
+                if (container != null)
+                {
+                    container.Children.Clear();
+                }
             }
         }
         #endregion
@@ -143,6 +146,10 @@ namespace ProjectEvent.UI.Controls.ItemSelect
         }
         private void AddItem(ItemModel data)
         {
+            if (container == null)
+            {
+                return;
+            }
             var item = new Item();
             item.Title = data.Title;
             item.ID = data.ID;
