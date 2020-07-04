@@ -62,7 +62,7 @@ namespace ProjectEvent.UI.ViewModels
 
         private void GeneralData_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            //settingsService.Update(GeneralData);
+            settingsService.Update(Settings.General);
         }
         #endregion
     }
