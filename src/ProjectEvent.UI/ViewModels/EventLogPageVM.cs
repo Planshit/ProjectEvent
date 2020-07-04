@@ -22,11 +22,16 @@ namespace ProjectEvent.UI.ViewModels
 
         private void ReadLogText()
         {
-            var logs = eventLog.GetEventLogs().OrderByDescending(m=>m.ID);
+            var logs = eventLog.GetEventLogs().OrderByDescending(m => m.ID);
             foreach (var log in logs)
             {
                 var project = projects.GetProject(log.ProjectID);
-                Log += $"{log.ID}\r\n触发方案：{project.ProjectName}，时间：{log.Time.ToString()}\r\n-----\r\n";
+                string name = "[已被删除]";
+                if (project != null)
+                {
+                    name = project.ProjectName;
+                }
+                Log += $"{log.ID}\r\n方案：{name}，时间：{log.Time.ToString()}\r\n-----\r\n";
             }
         }
     }
