@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ProjectEvent.UI.Controls.Base;
 using ProjectEvent.UI.Controls.Window;
 using ProjectEvent.UI.ViewModels;
 using ProjectEvent.UI.Views;
@@ -27,8 +28,9 @@ namespace ProjectEvent.UI.Services
         //托盘菜单项
         private ContextMenu contextMenu;
 
-        private MenuItem menuItem_Options;
-        private MenuItem menuItem_Quit;
+        private MenuItem menuItemSettings;
+        private MenuItem menuItemQuit;
+        private MenuItem menuItemIndexPage;
         private bool IsMainWindowShow = false;
         private DefaultWindow mainWindow;
         public TrayService(
@@ -67,28 +69,27 @@ namespace ProjectEvent.UI.Services
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
-                if (IsMainWindowShow && mainWindow!=null)
-                {
-                    mainWindow.Show();
-                    mainWindow.Activate();
-                }
-                else
-                {
-                    DefaultWindow mainWindow = _serviceProvider.GetService<MainWindow>();
-                    var dataContext = _serviceProvider.GetService<MainViewModel>();
-                    mainWindow.DataContext = dataContext;
-                    dataContext.SelectGroup(-1);
-                    dataContext.Uri = nameof(IndexPage);
-                    mainWindow.Closed += MainWindow_Closed;
-                    mainWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                    mainWindow.Focus();
-                    mainWindow.Show();
-                    IsMainWindowShow = true;
-                    this.mainWindow = mainWindow;
-                }
+                OpenShowPage(nameof(IndexPage));
             }
         }
 
+        private void OpenShowPage(string page)
+        {
+            if (IsMainWindowShow && mainWindow != null)
+            {
+                var vm = mainWindow.DataContext as MainViewModel;
+                if (vm != null)
+                {
+                    vm.Uri = page;
+                    mainWindow.Show();
+                    mainWindow.Activate();
+                }
+            }
+            else
+            {
+                CreateMainWindow(page);
+            }
+        }
         private void MainWindow_Closed(object sender, EventArgs e)
         {
             IsMainWindowShow = false;
@@ -114,22 +115,62 @@ namespace ProjectEvent.UI.Services
                 contextMenu.IsOpen = false;
             };
 
-            menuItem_Options = new MenuItem();
-            menuItem_Options.Header = "选项";
-            //menuItem_Options.Click += menuItem_Options_Click;
+            menuItemIndexPage = new MenuItem();
+            menuItemIndexPage = new MenuItem();
+            menuItemIndexPage.Header = "主界面";
+            //menuItemIndexPage.Icon = new Controls.Base.Icon()
+            //{
+            //    IconType = IconTypes.Settings
+            //};
 
+            menuItemIndexPage.Click += MenuItemIndexPage_Click; ;
+            menuItemSettings = new MenuItem();
+            menuItemSettings.Header = "设置";
+            menuItemSettings.Icon = new Controls.Base.Icon()
+            {
+                IconType = IconTypes.Settings
+            };
+            menuItemSettings.Click += MenuItem_Settings_Click; ;
 
+            menuItemQuit = new MenuItem();
+            menuItemQuit.Header = "退出";
+            menuItemQuit.Click += menuItem_Exit_Click;
 
-
-            menuItem_Quit = new MenuItem();
-            menuItem_Quit.Header = "退出";
-            menuItem_Quit.Click += menuItem_Exit_Click;
-
-            //添加托盘菜单项
-            contextMenu.Items.Add(menuItem_Options);
+            contextMenu.Items.Add(menuItemIndexPage);
+            contextMenu.Items.Add(menuItemSettings);
             contextMenu.Items.Add(new Separator());
-            contextMenu.Items.Add(menuItem_Quit);
+            contextMenu.Items.Add(menuItemQuit);
+        }
 
+        private void MenuItemIndexPage_Click(object sender, RoutedEventArgs e)
+        {
+            OpenShowPage(nameof(IndexPage));
+        }
+
+        private MainViewModel CreateMainWindow(string uri)
+        {
+            DefaultWindow mainWindow = _serviceProvider.GetService<MainWindow>();
+            var dataContext = _serviceProvider.GetService<MainViewModel>();
+            mainWindow.DataContext = dataContext;
+            dataContext.SelectGroup(-1);
+            dataContext.Uri = nameof(IndexPage);
+            mainWindow.Closed += MainWindow_Closed;
+            mainWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            mainWindow.Show();
+            mainWindow.Activate();
+            IsMainWindowShow = true;
+            this.mainWindow = mainWindow;
+
+            if (uri != nameof(IndexPage))
+            {
+                dataContext.Uri = uri;
+            }
+            return dataContext;
+        }
+
+        private void MenuItem_Settings_Click(object sender, RoutedEventArgs e)
+        {
+            OpenShowPage(nameof(SettingsPage));
         }
 
         private void menuItem_Exit_Click(object sender, EventArgs e)
@@ -143,7 +184,7 @@ namespace ProjectEvent.UI.Services
             {
                 Uri iconUri = new Uri("/ProjectEvent.UI;component/Assets/Icons/" + name + ".ico", UriKind.RelativeOrAbsolute);
                 StreamResourceInfo info = Application.GetResourceStream(iconUri);
-                notifyIcon.Icon = new Icon(info.Stream);
+                notifyIcon.Icon = new System.Drawing.Icon(info.Stream);
 
             }
         }
