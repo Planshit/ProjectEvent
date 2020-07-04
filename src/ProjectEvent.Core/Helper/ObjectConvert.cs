@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,6 +25,11 @@ namespace ProjectEvent.Core.Helper
             {
                 var jobject = obj as JObject;
                 result = jobject.ToObject<T>();
+            }
+            if (result != null)
+            {
+                string jstr = JsonConvert.SerializeObject(result);
+                result = JsonConvert.DeserializeObject<T>(jstr);
             }
             return result;
         }
