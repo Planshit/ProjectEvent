@@ -1,75 +1,103 @@
-﻿using System;
+﻿using ProjectEvent.Core.Types;
+using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace ProjectEvent.Core.Helper
 {
     public class LogHelper
     {
-        public enum Level
-        {
-            /// <summary>
-            /// 调试
-            /// </summary>
-            DEBUG,
-            /// <summary>
-            /// 错误
-            /// </summary>
-            ERROR,
-            /// <summary>
-            /// 警告
-            /// </summary>
-            WARNING
-        }
+        //最大日志阈值
+        private static int MaxLogsCount = 100;
+        //缓存
+        private static Dictionary<string, List<string>> storage = new Dictionary<string, List<string>>();
+        //日志存放目录
+        private const string LogDir = "Log\\";
+        private static readonly object writeLock = new object();
+        private static readonly object addLock = new object();
+
         public static void Debug(string text, bool write = false, bool console = true)
         {
-            Log(Level.DEBUG, text, write, console);
+            Log(LogLevelType.DEBUG, text, write, console);
         }
         public static void Error(string text, bool write = true, bool console = true)
         {
-            Log(Level.ERROR, text, write, console);
+            Log(LogLevelType.ERROR, text, write, console);
         }
         public static void Warning(string text, bool write = true, bool console = true)
         {
-            Log(Level.WARNING, text, write, console);
+            Log(LogLevelType.WARNING, text, write, console);
         }
-        private static void Log(Level level, string text, bool write = false, bool console = true)
+        private static void Log(LogLevelType level, string text, bool write = false, bool console = true)
         {
-            string log = LogFormat(level, text);
-            if (write)
+            Task.Run(() =>
             {
-                //写入日志文件
-                WriteFile(level, log);
-            }
+                lock (addLock)
+                {
+                    string log = LogFormat(level, text);
+                    if (write)
+                    {
+                        string key = DateTime.Now.ToString($"{level}_yyyyMMdd");
+                        if (storage.ContainsKey(key))
+                        {
+                            if (storage[key].Count >= MaxLogsCount)
+                            {
+                                var logs = storage[key].ToArray();
+                                SaveToFileTask(key, logs);
+                                storage[key].Clear();
+                            }
+                            storage[key].Add(log);
+                        }
+                        else
+                        {
+                            storage.Add(key, new List<string>()
+                        {
+                            {log }
+                        });
+                        }
+                    }
+                }
+            });
+
             if (console)
             {
                 //在debug模式下打印到输出
-                System.Diagnostics.Debug.WriteLine(log);
+                System.Diagnostics.Debug.WriteLine(LogFormat(level, text));
             }
         }
-        private static void WriteFile(Level level, string text)
+
+        private static void SaveToFileTask(string key, string[] logs)
         {
-            try
+            Task.Run(() =>
             {
-                string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                         "Log",
-                         $"{level.ToString()}_{DateTime.Now.ToString("yyyy_MM_dd")}.log");
-                string dir = Path.GetDirectoryName(filePath);
-                if (!Directory.Exists(dir))
+                SaveToFile(key, logs);
+            });
+        }
+        private static void SaveToFile(string key, string[] logs)
+        {
+            lock (writeLock)
+            {
+                string date = key.Substring(key.Length - 8, 8);
+                string dir = $"{LogDir}{date}\\";
+                IOHelper.CreateDirectory(dir);
+                string logstr = string.Join("\r\n", logs);
+                IOHelper.AppendFile($"{dir}{key}.log", logstr);
+            }
+        }
+
+        public static void Save()
+        {
+            Task.Run(() =>
+            {
+                foreach (var log in storage)
                 {
-                    Directory.CreateDirectory(dir);
+                    SaveToFile(log.Key, log.Value.ToArray());
                 }
-                File.AppendAllText(filePath, text);
-            }
-            catch
-            {
-                //...
-            }
+            });
         }
-        private static string LogFormat(Level level, string text)
+        private static string LogFormat(LogLevelType level, string text)
         {
-            string logText = $"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] [{level.ToString()}]\r\n{text}\r\n------------------------\r\n\r\n";
+            string logText = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [{level}]\r\n{text}\r\n------------------------\r\n\r\n";
             return logText;
         }
     }

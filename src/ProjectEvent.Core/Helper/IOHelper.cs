@@ -94,10 +94,16 @@ namespace ProjectEvent.Core.Helper
             File.WriteAllText(path, contents);
         }
 
-        public static string ReadFile(string path,bool isinbasedir = true)
+        public static string ReadFile(string path, bool isinbasedir = true)
         {
             path = GetFullPath(path, isinbasedir);
             return File.ReadAllText(path);
+        }
+
+        public static void AppendFile(string path, string content, bool isinbasedir = true)
+        {
+            path = GetFullPath(path, isinbasedir);
+            File.AppendAllText(path, content);
         }
     }
 }

@@ -82,8 +82,11 @@ namespace ProjectEvent
         protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
+            //保存事件日志
             var evlog = _serviceProvider.GetService<IEventLog>();
             evlog.Save();
+            //保存程序日志
+            LogHelper.Save();
         }
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
