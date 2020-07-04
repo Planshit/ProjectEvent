@@ -32,9 +32,14 @@ namespace ProjectEvent.UI.Services
             HandleSettingsChanged();
             GetVersions();
         }
+
+        /// <summary>
+        /// 获取并设置程序版本号到配置数据中
+        /// </summary>
         private void GetVersions()
         {
             Settings.UIVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            Settings.CoreVersion = typeof(IOHelper).Assembly.GetName().Version.ToString();
         }
         private SettingsModel GetCreateDefaultSettings()
         {
