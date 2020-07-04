@@ -87,6 +87,17 @@ namespace ProjectEvent.UI.Controls.ItemSelect
                     container.Children.Clear();
                 }
             }
+            else if (e.Action == NotifyCollectionChangedAction.Replace)
+            {
+                foreach (var obj in e.NewItems)
+                {
+                    var item = obj as ItemModel;
+                    itemControls[item.ID].Tag = item.Tag;
+                    itemControls[item.ID].Title = item.Title;
+                    itemControls[item.ID].Icon = item.Icon;
+                    itemControls[item.ID].Description = item.Description;
+                }
+            }
         }
         #endregion
 
