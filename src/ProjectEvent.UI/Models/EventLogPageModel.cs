@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ProjectEvent.UI.Models
 {
-    public class EventLogModel : UINotifyPropertyChanged
+    public class EventLogPageModel : UINotifyPropertyChanged
     {
         private string Log_;
         public string Log

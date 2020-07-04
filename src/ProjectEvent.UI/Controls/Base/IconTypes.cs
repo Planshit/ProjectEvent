@@ -72,6 +72,9 @@ namespace ProjectEvent.UI.Controls.Base
         DownloadDocument,
         Delete,
         EditStyle,
-        OpenWithMirrored
+        OpenWithMirrored,
+        FileCode,
+        BuildIssue,
+
     }
 }

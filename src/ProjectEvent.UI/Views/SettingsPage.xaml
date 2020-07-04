@@ -4,11 +4,72 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ProjectEvent.UI.Views"
+      xmlns:InputGroup="clr-namespace:ProjectEvent.UI.Controls.InputGroup"
+      xmlns:base="clr-namespace:ProjectEvent.UI.Controls.Base"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="SettingsPage">
 
-    <Grid>
-      
+    <Grid >
+        <!--主要内容-->
+        <Grid Margin="10,96,10,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="50"/>
+
+            </Grid.RowDefinitions>
+
+            <TabControl Grid.Row="0">
+                <TabItem Header="常规">
+                    <InputGroup:InputGroup Groups="{Binding GeneralInputModels}" DataSource="{Binding Settings.General}"/>
+                </TabItem>
+                <TabItem Header="关于">
+                    <ScrollViewer>
+                        <StackPanel>
+                            <TextBlock Text="选择事件创建你的自动化方案，当事件触发时自动执行方案所设置的操作。" TextWrapping="Wrap" Margin="5,0,0,10"/>
+                            <TextBlock Text="图标来自 Fluent UI Icons" TextWrapping="Wrap" Margin="5,0,0,10" />
+                            <TextBlock Style="{DynamicResource LabelName}" Text="链接" Margin="5,20,0,5"/>
+                            <Button Command="{Binding OpenUrlCommand}" CommandParameter="https://github.com/Planshit/ProjectEvent/" Style="{DynamicResource Icon}" HorizontalAlignment="Left" Foreground="{DynamicResource PrimaryColorBrush}" Padding="5,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <!--<base:Icon IconType="FileCode" Margin="0,0,5,0" VerticalAlignment="Center"/>-->
+                                    <TextBlock Text="开源程序代码" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                
+                            </Button>
+                            <Button Command="{Binding OpenUrlCommand}" CommandParameter="https://github.com/Planshit/ProjectEvent/projects" Style="{DynamicResource Icon}" HorizontalAlignment="Left" Foreground="{DynamicResource PrimaryColorBrush}" Padding="5,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <!--<base:Icon IconType="ClipboardList" Margin="0,0,5,0" VerticalAlignment="Center"/>-->
+                                    <TextBlock Text="软件开发计划" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                            </Button>
+                            <Button Command="{Binding OpenUrlCommand}" CommandParameter="https://github.com/Planshit/ProjectEvent/issues/new" Style="{DynamicResource Icon}" HorizontalAlignment="Left" Foreground="{DynamicResource PrimaryColorBrush}" Padding="5,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <!--<base:Icon IconType="BuildIssue" Margin="0,0,5,0" VerticalAlignment="Center"/>-->
+                                    <TextBlock Text="问题反馈" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                            </Button>
+                            <TextBlock Style="{DynamicResource LabelName}" Text="Project Event" Margin="5,20,0,10"/>
+                            <TextBlock Foreground="{DynamicResource DisabledTextBrush}" Margin="5,0,0,10">
+                                <Run Text="UI程序集版本："/><Run Text="{Binding Settings.UIVersion}"/>
+                            </TextBlock>
+                            <TextBlock Foreground="{DynamicResource DisabledTextBrush}" Margin="5,0,0,10">
+                                <Run Text="核心程序集版本："/><Run Text="{Binding Settings.CoreVersion}"/>
+                            </TextBlock>
+                            <Button Command="{Binding OpenUrlCommand}" CommandParameter="https://github.com/Planshit/ProjectEvent/releases" Style="{DynamicResource Icon}" HorizontalAlignment="Left" Foreground="{DynamicResource PrimaryColorBrush}" Padding="5,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <base:Icon IconType="ProductVariant" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="查看所有软件版本" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                            </Button>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+            </TabControl>
+
+        </Grid>
     </Grid>
+
 </Page>

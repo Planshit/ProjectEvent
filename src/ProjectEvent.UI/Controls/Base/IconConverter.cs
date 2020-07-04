@@ -48,6 +48,8 @@ namespace ProjectEvent.UI.Controls.Base
             {IconTypes.Delete,"\xE74D"},
             {IconTypes.EditStyle,"\xEF60"},
             {IconTypes.OpenWithMirrored,"\xEA5C"},
+            {IconTypes.FileCode,"\xF30E"},
+            {IconTypes.BuildIssue,"\xF319"},
 
             {IconTypes.ChevronUp,"\xE70E"}
 

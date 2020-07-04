@@ -28,14 +28,15 @@ namespace ProjectEvent.UI.Services
         private readonly IProjects projects;
         private readonly IGroup group;
         private readonly IEventLog eventLog;
-
+        private readonly ISettingsService settingsService;
         public App(
             ITrayService trayService,
             IEventService eventContainerService,
             IMainService mainService,
             IProjects projects,
             IGroup group,
-            IEventLog eventLog
+            IEventLog eventLog,
+            ISettingsService settingsService
             )
         {
             this.trayService = trayService;
@@ -44,15 +45,16 @@ namespace ProjectEvent.UI.Services
             this.projects = projects;
             this.group = group;
             this.eventLog = eventLog;
+            this.settingsService = settingsService;
         }
         public void Run()
         {
+            //加载配置项
+            settingsService.Load();
             //初始化事件日志
             eventLog.Listen();
-            //加载项目
+            //加载自动化方案
             LoadProject();
-            //初始化应用
-            InitApp();
             //启动主服务
             mainService.Run();
             //加载分组数据
@@ -112,18 +114,6 @@ namespace ProjectEvent.UI.Services
                 Condition = condition,
                 Actions = project.Actions
             };
-            //eventService.Add(new Core.Event.Models.EventModel()
-            //{
-            //    ID = project.ID,
-            //    EventType = (EventType)project.EventID,
-            //    Condition = condition,
-            //    Actions = project.Actions
-            //});
-        }
-
-        private void InitApp()
-        {
-            SystemHelper.SetStartup();
         }
 
         public void Add(ProjectModel project)

@@ -50,6 +50,7 @@ namespace ProjectEvent
             services.AddSingleton<IProjects, Projects>();
             services.AddSingleton<IGroup, Group>();
             services.AddSingleton<IEventLog, UI.Services.EventLog>();
+            services.AddSingleton<ISettingsService, UI.Services.SettingsService>();
 
             //services.AddTransient<PageContainer>();
             services.AddSingleton<MainViewModel>();

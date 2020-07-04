@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ProjectEvent.UI.ViewModels
 {
-    public class EventLogPageVM : EventLogModel
+    public class EventLogPageVM : EventLogPageModel
     {
         private readonly IEventLog eventLog;
         private readonly IProjects projects;
