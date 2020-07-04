@@ -84,16 +84,16 @@ namespace ProjectEvent.Core.Services
 
 
                 });
+                //响应触发事件
+                OnEventTrigger?.Invoke(ev, true);
+                //记录event触发
+                EventLoger.Add(new EventLogModel()
+                {
+                    EventType = ev.EventType,
+                    IsSuccess = isSuccess,
+                });
             }
 
-            //记录event触发
-            EventLoger.Add(new EventLogModel()
-            {
-                EventType = ev.EventType,
-                IsSuccess = isSuccess,
-            });
-            //响应触发事件
-            OnEventTrigger?.Invoke(ev, isSuccess);
         }
 
         public void Remove(int id)

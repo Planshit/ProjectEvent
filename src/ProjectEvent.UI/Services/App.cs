@@ -27,12 +27,15 @@ namespace ProjectEvent.UI.Services
         private readonly IMainService mainService;
         private readonly IProjects projects;
         private readonly IGroup group;
+        private readonly IEventLog eventLog;
+
         public App(
             ITrayService trayService,
             IEventService eventContainerService,
             IMainService mainService,
             IProjects projects,
-            IGroup group
+            IGroup group,
+            IEventLog eventLog
             )
         {
             this.trayService = trayService;
@@ -40,11 +43,12 @@ namespace ProjectEvent.UI.Services
             this.mainService = mainService;
             this.projects = projects;
             this.group = group;
+            this.eventLog = eventLog;
         }
         public void Run()
         {
-            //初始化托盘功能
-            trayService.Init();
+            //初始化事件日志
+            eventLog.Listen();
             //加载项目
             LoadProject();
             //初始化应用
@@ -53,6 +57,10 @@ namespace ProjectEvent.UI.Services
             mainService.Run();
             //加载分组数据
             group.Load();
+
+
+            //初始化托盘功能（必须在主要服务初始化后进行）
+            trayService.Init();
         }
         private void LoadProject()
         {

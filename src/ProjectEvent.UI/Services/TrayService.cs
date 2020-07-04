@@ -16,6 +16,7 @@ namespace ProjectEvent.UI.Services
     public class TrayService : ITrayService
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly IEventLog eventLog;
 
         //隐藏窗口
         private Window stateWindow;
@@ -31,9 +32,11 @@ namespace ProjectEvent.UI.Services
 
         public TrayService(
             MainWindow mainWindow,
-            IServiceProvider _serviceProvider)
+            IServiceProvider _serviceProvider,
+            IEventLog eventLog)
         {
             this._serviceProvider = _serviceProvider;
+            this.eventLog = eventLog;
 
             notifyIcon = new System.Windows.Forms.NotifyIcon();
             stateWindow = new Window();
@@ -111,6 +114,7 @@ namespace ProjectEvent.UI.Services
 
         private void menuItem_Exit_Click(object sender, EventArgs e)
         {
+            eventLog.Save();
             Application.Current.Shutdown();
         }
         private void UpdateIcon(string name = "")

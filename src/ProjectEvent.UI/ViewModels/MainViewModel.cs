@@ -166,6 +166,10 @@ namespace ProjectEvent.UI.ViewModels
             {
                 //分组功能
                 SelectedGroup = group.GetGroup(NavSelectedItem.ID);
+                if (Uri != nameof(IndexPage))
+                {
+                    Uri = nameof(IndexPage);
+                }
             }
             Debug.Write(NavSelectedItem.ID);
         }
@@ -183,7 +187,8 @@ namespace ProjectEvent.UI.ViewModels
             {
                 Icon = Controls.Base.IconTypes.ClipboardList,
                 Title = "触发日志",
-                ID = 2
+                ID = 2,
+                Uri = nameof(EventLogPage)
             });
             Items.Add(new Controls.Navigation.Models.NavigationItemModel()
             {

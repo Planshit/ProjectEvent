@@ -49,6 +49,7 @@ namespace ProjectEvent
             services.AddSingleton<IApp, ProjectEvent.UI.Services.App>();
             services.AddSingleton<IProjects, Projects>();
             services.AddSingleton<IGroup, Group>();
+            services.AddSingleton<IEventLog, UI.Services.EventLog>();
 
             //services.AddTransient<PageContainer>();
             services.AddSingleton<MainViewModel>();
@@ -62,6 +63,10 @@ namespace ProjectEvent
             //添加页
             services.AddTransient<AddEventPage>();
             services.AddTransient<AddEventPageVM>();
+            //事件日志页
+            services.AddTransient<EventLogPage>();
+            services.AddTransient<EventLogPageVM>();
+
             services.AddSingleton<IServiceProvider>(services.BuildServiceProvider());
         }
 
@@ -73,10 +78,18 @@ namespace ProjectEvent
             app.Run();
         }
 
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+            var evlog = _serviceProvider.GetService<IEventLog>();
+            evlog.Save();
+        }
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             LogHelper.Error(e.Exception.ToString());
             e.Handled = true;
+            var evlog = _serviceProvider.GetService<IEventLog>();
+            evlog.Save();
         }
     }
 }
