@@ -8,6 +8,16 @@
     <ApplicationIcon>Assets\Icons\icon_max.ico</ApplicationIcon>
     <Version>0.0.2</Version>
     <PackageIcon></PackageIcon>
+    <Authors>Little Panda</Authors>
+    <Company>Plan Panda</Company>
+    <Product>Project Event</Product>
+    <Description>在Windows上创建事件监听方案，当事件触发时自动执行方案所设置的操作。</Description>
+    <Copyright>http://thelittlepandaisbehind.com/</Copyright>
+    <PackageProjectUrl>https://github.com/Planshit/ProjectEvent</PackageProjectUrl>
+    <NeutralLanguage>zh-CN</NeutralLanguage>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <AssemblyName>ProjectEvent.UI</AssemblyName>
+    <PackageId>ProjectEvent.UI</PackageId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
