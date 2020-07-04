@@ -18,7 +18,7 @@ namespace ProjectEvent.UI.Services
         private readonly IServiceProvider _serviceProvider;
         private readonly IEventLog eventLog;
 
-        //隐藏窗口
+        //隐藏窗口，用于处理托盘菜单关闭功能
         private Window stateWindow;
         //托盘图标
         private System.Windows.Forms.NotifyIcon notifyIcon;
@@ -29,7 +29,8 @@ namespace ProjectEvent.UI.Services
 
         private MenuItem menuItem_Options;
         private MenuItem menuItem_Quit;
-
+        private bool IsMainWindowShow = false;
+        private DefaultWindow mainWindow;
         public TrayService(
             MainWindow mainWindow,
             IServiceProvider _serviceProvider,
@@ -66,13 +67,32 @@ namespace ProjectEvent.UI.Services
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
-                DefaultWindow mainWindow = _serviceProvider.GetService<MainWindow>();
-                mainWindow.DataContext = _serviceProvider.GetService<MainViewModel>();
-                mainWindow.Show();
-
-
-
+                if (IsMainWindowShow && mainWindow!=null)
+                {
+                    mainWindow.Show();
+                    mainWindow.Activate();
+                }
+                else
+                {
+                    DefaultWindow mainWindow = _serviceProvider.GetService<MainWindow>();
+                    var dataContext = _serviceProvider.GetService<MainViewModel>();
+                    mainWindow.DataContext = dataContext;
+                    dataContext.SelectGroup(-1);
+                    dataContext.Uri = nameof(IndexPage);
+                    mainWindow.Closed += MainWindow_Closed;
+                    mainWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                    mainWindow.Focus();
+                    mainWindow.Show();
+                    IsMainWindowShow = true;
+                    this.mainWindow = mainWindow;
+                }
             }
+        }
+
+        private void MainWindow_Closed(object sender, EventArgs e)
+        {
+            IsMainWindowShow = false;
+            this.mainWindow = null;
         }
 
         private void notifyIcon_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)

@@ -329,7 +329,7 @@ namespace ProjectEvent.UI.ViewModels
             groupManagerContextMenu.Items.Add(delItem);
 
         }
-        private void SelectGroup(int ID)
+        public void SelectGroup(int ID)
         {
             NavSelectedItem = Items.Where(m => m.ID == ID).FirstOrDefault();
             SelectedGroup = group.GetGroup(ID);
