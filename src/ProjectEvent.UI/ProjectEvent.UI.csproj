@@ -5,8 +5,9 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
-    <ApplicationIcon>Assets\Icons\tray.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\Icons\icon_max.ico</ApplicationIcon>
     <Version>0.0.2</Version>
+    <PackageIcon></PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -17,18 +18,26 @@
     <Compile Remove="Structs\**" />
     <EmbeddedResource Remove="Structs\**" />
     <None Remove="Structs\**" />
+    <None Include="Assets\Icons\icon_max.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <Page Remove="Structs\**" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="Assets\Fonts\fabric-icons.ttf" />
     <None Remove="Assets\Fonts\SegMDL2.ttf" />
+    <None Remove="Assets\Icons\icon_max.ico" />
+    <None Remove="Assets\Icons\icon_max.png" />
     <None Remove="Assets\Icons\tray.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Assets\Fonts\fabric-icons.ttf" />
     <Resource Include="Assets\Fonts\SegMDL2.ttf" />
+    <Resource Include="Assets\Icons\icon_max.ico" />
+    <Resource Include="Assets\Icons\icon_max.png" />
     <Resource Include="Assets\Icons\tray.ico" />
   </ItemGroup>
 
