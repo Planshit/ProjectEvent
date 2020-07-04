@@ -14,12 +14,12 @@ namespace ProjectEvent.Core.Action.Types
         /// </summary>
         Runing,
         /// <summary>
-        /// 成功
+        /// 完成
         /// </summary>
-        Success,
+        Done,
         /// <summary>
-        /// 失败
+        /// 繁忙
         /// </summary>
-        Failed
+        Busy
     }
 }

@@ -35,7 +35,6 @@ namespace ProjectEvent.UI.Controls.Action
 
         private static void OnEventTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Debug.WriteLine(e.NewValue);
             if (e.NewValue != e.OldValue)
             {
                 (d as ActionInput).RenderEventVariable();

@@ -119,17 +119,44 @@ namespace ProjectEvent.UI.Models
             get { return EventType_; }
             set { EventType_ = value; OnPropertyChanged(); }
         }
-        private Visibility RunActionsButtonVisibility_ = Visibility.Hidden;
+        private Visibility RunActionsButtonVisibility_ = Visibility.Collapsed;
         public Visibility RunActionsButtonVisibility
         {
             get { return RunActionsButtonVisibility_; }
             set { RunActionsButtonVisibility_ = value; OnPropertyChanged(); }
         }
-        private Visibility StopActionsButtonVisibility_;
+        private Visibility StopActionsButtonVisibility_ = Visibility.Collapsed;
         public Visibility StopActionsButtonVisibility
         {
             get { return StopActionsButtonVisibility_; }
             set { StopActionsButtonVisibility_ = value; OnPropertyChanged(); }
+        }
+
+        private Visibility ActionsStateVisibility_ = Visibility.Collapsed;
+        public Visibility ActionsStateVisibility
+        {
+            get { return ActionsStateVisibility_; }
+            set { ActionsStateVisibility_ = value; OnPropertyChanged(); }
+        }
+
+        private int RuningActionID_;
+        public int RuningActionID
+        {
+            get { return RuningActionID_; }
+            set { RuningActionID_ = value; OnPropertyChanged(); }
+        }
+        private Core.Action.Types.ActionInvokeStateType RuningActionState_;
+        public Core.Action.Types.ActionInvokeStateType RuningActionState
+        {
+            get { return RuningActionState_; }
+            set { RuningActionState_ = value; OnPropertyChanged(); }
+        }
+
+        private Core.Action.Types.ActionInvokeStateType ContainerState_ = Core.Action.Types.ActionInvokeStateType.Done;
+        public Core.Action.Types.ActionInvokeStateType ContainerState
+        {
+            get { return ContainerState_; }
+            set { ContainerState_ = value; OnPropertyChanged(); }
         }
     }
 }

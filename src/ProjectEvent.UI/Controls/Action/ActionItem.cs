@@ -79,6 +79,76 @@ namespace ProjectEvent.UI.Controls.Action
                 }
             }
         }
+
+        public int RuningID
+        {
+            get { return (int)GetValue(RuningIDProperty); }
+            set { SetValue(RuningIDProperty, value); }
+        }
+        public static readonly DependencyProperty RuningIDProperty =
+            DependencyProperty.Register("RuningID",
+                typeof(int),
+                typeof(ActionItem), new PropertyMetadata(new PropertyChangedCallback(OnRuningStateChanged)));
+
+        private static void OnRuningStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var control = d as ActionItem;
+
+            if (control.RuningID == control.ID)
+            {
+                control.State = control.RuningState;
+            }
+            else
+            {
+                control.State = Core.Action.Types.ActionInvokeStateType.Done;
+            }
+        }
+
+        /// <summary>
+        /// 运行中的action state
+        /// </summary>
+        public ProjectEvent.Core.Action.Types.ActionInvokeStateType RuningState
+        {
+            get { return (ProjectEvent.Core.Action.Types.ActionInvokeStateType)GetValue(RuningStateProperty); }
+            set { SetValue(RuningStateProperty, value); }
+        }
+        public static readonly DependencyProperty RuningStateProperty =
+            DependencyProperty.Register("RuningState",
+                typeof(ProjectEvent.Core.Action.Types.ActionInvokeStateType),
+                typeof(ActionItem), new PropertyMetadata(new PropertyChangedCallback(OnRuningStateChanged)));
+
+        /// <summary>
+        /// 当前状态
+        /// </summary>
+        public ProjectEvent.Core.Action.Types.ActionInvokeStateType State
+        {
+            get { return (ProjectEvent.Core.Action.Types.ActionInvokeStateType)GetValue(StateProperty); }
+            set { SetValue(StateProperty, value); }
+        }
+        public static readonly DependencyProperty StateProperty =
+            DependencyProperty.Register("State",
+                typeof(ProjectEvent.Core.Action.Types.ActionInvokeStateType),
+                typeof(ActionItem), new PropertyMetadata(ProjectEvent.Core.Action.Types.ActionInvokeStateType.Done, new PropertyChangedCallback(OnStateChanged)));
+
+        private static void OnStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var control = d as ActionItem;
+            if (e.NewValue != e.OldValue)
+            {
+                VisualStateManager.GoToState(control, control.State == Core.Action.Types.ActionInvokeStateType.Done ? "Done" : "Runing", true);
+            }
+        }
+
+        public ProjectEvent.Core.Action.Types.ActionInvokeStateType ContainerState
+        {
+            get { return (ProjectEvent.Core.Action.Types.ActionInvokeStateType)GetValue(ContainerStateProperty); }
+            set { SetValue(ContainerStateProperty, value); }
+        }
+        public static readonly DependencyProperty ContainerStateProperty =
+            DependencyProperty.Register("ContainerState",
+                typeof(ProjectEvent.Core.Action.Types.ActionInvokeStateType),
+                typeof(ActionItem), new PropertyMetadata(ProjectEvent.Core.Action.Types.ActionInvokeStateType.Done));
+
         public event EventHandler OnRenderDone;
 
         public event EventHandler OnClick;

@@ -41,11 +41,11 @@ namespace ProjectEvent.Core.Action.Actions
 
                 if (isPass)
                 {
-                    ActionTask.InvokeAction(taskID, p.PassActions);
+                    ActionTask.Invoke(taskID, p.PassActions, taskID == ActionTask.TestTaskID, true);
                 }
                 else
                 {
-                    ActionTask.InvokeAction(taskID, p.NoPassActions);
+                    ActionTask.Invoke(taskID, p.NoPassActions, taskID == ActionTask.TestTaskID, true);
                 }
 
                 var result = new ActionResultModel();
@@ -64,6 +64,6 @@ namespace ProjectEvent.Core.Action.Actions
 
         }
 
-       
+
     }
 }

@@ -53,21 +53,7 @@ namespace ProjectEvent.UI.Services
             mainService.Run();
             //加载分组数据
             group.Load();
-            eventService.OnEventTrigger += EventService_OnEventTrigger;
-            eventService.OnActionInvoke += EventService_OnActionInvoke;
         }
-
-        private void EventService_OnActionInvoke(int taskID, int actionID, Core.Action.Types.ActionInvokeStateType state)
-        {
-            Debug.WriteLine("action invoke:" + taskID + ",actionid:" + actionID + ",state:" + state.ToString());
-        }
-
-        private void EventService_OnEventTrigger(Core.Event.Models.EventModel ev, bool isSuccess)
-        {
-            Debug.WriteLine("event:" + ev.ID + ",issuccess:" + isSuccess.ToString());
-
-        }
-
         private void LoadProject()
         {
             //查找并加载方案数据

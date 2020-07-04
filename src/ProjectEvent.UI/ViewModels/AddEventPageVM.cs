@@ -13,6 +13,7 @@ using ProjectEvent.UI.Models.DataModels;
 using ProjectEvent.UI.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -88,18 +89,63 @@ namespace ProjectEvent.UI.ViewModels
         }
         private void RunActions()
         {
-            ActionTask.OnActionInvoke += ActionTask_OnActionInvoke;
-            ActionTask.RunTestInvokeAction(actionContainer.GenerateActions());
+            var actions = actionContainer.GenerateActions();
+            if (actions == null || actions.Count == 0)
+            {
+                mainVM.Toast("请至少添加一个操作", Types.ToastType.Failed);
+            }
+            else
+            {
+                mainVM.Toast("正在执行操作", Types.ToastType.Warning);
+                VisualStateManager.GoToElementState(page, "ActionsRuning", true);
+                ActionTask.OnActionState += ActionTask_OnActionInvoke;
+                ActionTask.OnActionsState += ActionTask_OnActionsState;
+                ActionTask.RunTestInvokeAction(actions);
+            }
         }
+
+        private void ActionTask_OnActionsState(int taskID, Core.Action.Types.ActionInvokeStateType state)
+        {
+            if (taskID == ActionTask.TestTaskID)
+            {
+                ContainerState = state;
+                if (state == Core.Action.Types.ActionInvokeStateType.Done)
+                {
+                    ActionTask.OnActionsState -= ActionTask_OnActionsState;
+                    ActionTask.OnActionState -= ActionTask_OnActionInvoke;
+                    RunActionsButtonVisibility = Visibility.Visible;
+                    StopActionsButtonVisibility = Visibility.Collapsed;
+                    ActionsStateVisibility = Visibility.Collapsed;
+                    page.Dispatcher.Invoke(() =>
+                    {
+                        UpdateVisualState();
+                    });
+                    mainVM.Toast("操作已执行完成", Types.ToastType.Success);
+                }
+                else if (state == Core.Action.Types.ActionInvokeStateType.Busy)
+                {
+                    RunActionsButtonVisibility = Visibility.Collapsed;
+                    StopActionsButtonVisibility = Visibility.Collapsed;
+                    ActionsStateVisibility = Visibility.Visible;
+                }
+                else
+                {
+                    RunActionsButtonVisibility = Visibility.Collapsed;
+                    StopActionsButtonVisibility = Visibility.Visible;
+                    ActionsStateVisibility = Visibility.Collapsed;
+                }
+            }
+        }
+
         private void StopActions()
         {
             ActionTask.StopTestInvokeAction();
-            ActionTask.OnActionInvoke -= ActionTask_OnActionInvoke;
         }
 
         private void ActionTask_OnActionInvoke(int taskID, int actionID, Core.Action.Types.ActionInvokeStateType state)
         {
-            ActionTask.OnActionInvoke -= ActionTask_OnActionInvoke;
+            RuningActionID = actionID;
+            RuningActionState = state;
         }
         #endregion
 
@@ -173,6 +219,7 @@ namespace ProjectEvent.UI.ViewModels
                 case nameof(IsConditionTabItemSelected):
                 case nameof(IsEventTabItemSelected):
                 case nameof(IsInfoTabItemSelected):
+                    //case nameof(ContainerState):
                     UpdateVisualState();
                     break;
             }
@@ -185,8 +232,13 @@ namespace ProjectEvent.UI.ViewModels
             {
                 return;
             }
-            RunActionsButtonVisibility = Visibility.Hidden;
-            if (IsActionsTabItemSelected)
+            RunActionsButtonVisibility = Visibility.Collapsed;
+
+            if (ContainerState == Core.Action.Types.ActionInvokeStateType.Runing || ContainerState == Core.Action.Types.ActionInvokeStateType.Busy)
+            {
+                VisualStateManager.GoToElementState(page, "ActionsRuning", true);
+            }
+            else if (IsActionsTabItemSelected)
             {
                 VisualStateManager.GoToElementState(page, "ActionsTabSelected", true);
                 RunActionsButtonVisibility = Visibility.Visible;

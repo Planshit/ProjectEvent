@@ -4,6 +4,9 @@
                     xmlns:base="clr-namespace:ProjectEvent.UI.Controls.Base">
     <Style TargetType="{x:Type local:ActionItem}">
         <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="1"/>
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:ActionItem}">
@@ -12,10 +15,25 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Margin="5"
                             CornerRadius="2"
-                            Padding="10">
+                            Padding="10"
+                            x:Name="Border">
                         <Border.Effect>
                             <DropShadowEffect Color="{DynamicResource PrimaryColor}" BlurRadius="5" Opacity="0.1"  ShadowDepth="0"/>
                         </Border.Effect>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Done"/>
+                                <VisualState x:Name="Runing">
+                                    <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
+                                                Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)">
+                                            <EasingColorKeyFrame KeyTime="00:00:0.5"
+                                         Value="{DynamicResource PrimaryColor}" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="30"/>
@@ -28,17 +46,25 @@
                                     <TextBlock Text="{TemplateBinding ActionName}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center"  Foreground="{DynamicResource StandardTextBrush}"/>
 
                                 </StackPanel>
-                                <Button x:Name="ButtonRemove" Command="{Binding RemoveCommand}" CommandParameter="{TemplateBinding ID}" Style="{DynamicResource Icon}" HorizontalAlignment="Right" Width="30" Height="30">
+                                <Button x:Name="ButtonRemove" Command="{Binding RemoveCommand}" CommandParameter="{TemplateBinding ID}" Style="{DynamicResource Icon}" HorizontalAlignment="Right" Width="30" Height="30" IsEnabled="{TemplateBinding IsEnabled}">
                                     <base:Icon IconType="ChromeClose" FontSize="12"/>
 
                                 </Button>
                             </Grid>
-                            <Border x:Name="Input" Grid.Row="1"/>
+                            <Border x:Name="Input" Grid.Row="1" IsEnabled="{TemplateBinding IsEnabled}"/>
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="Icon" Value="None">
                             <Setter TargetName="Icon" Property="Visibility" Value="Collapsed"/>
+                        </Trigger>
+                        <Trigger Property="ContainerState" Value="Runing">
+                            <Setter Property="IsEnabled" Value="False"/>
+                            <Setter Property="Cursor" Value="No"/>
+
+                        </Trigger>
+                        <Trigger Property="State" Value="Runing">
+                            <Setter Property="BorderThickness" Value="2"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

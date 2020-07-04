@@ -69,6 +69,17 @@
                     </ColorAnimationUsingKeyFrames>
                 </Storyboard>
             </VisualState>
+            
+            <!--action runing-->
+            <VisualState x:Name="ActionsRuning">
+                <Storyboard>
+                    <ColorAnimationUsingKeyFrames Storyboard.TargetName="Page"
+                                                Storyboard.TargetProperty="(Page.Background).                     (SolidColorBrush.Color)">
+                        <EasingColorKeyFrame KeyTime="00:00:0.3"
+                                         Value="{DynamicResource SubBorderColor}"/>
+                    </ColorAnimationUsingKeyFrames>
+                </Storyboard>
+            </VisualState>
         </VisualStateGroup>
     </VisualStateManager.VisualStateGroups>
     <Grid >
@@ -115,12 +126,13 @@
                 <TabItem Header="操作" IsSelected="{Binding IsActionsTabItemSelected, Mode=TwoWay}">
                     <Grid>
 
-                        <Action:ActionContainer x:Name="container" Grid.Row="1" AddActionCommand="{Binding ShowActionDialogCommand}"/>
+                        <Action:ActionContainer x:Name="container" Grid.Row="1" AddActionCommand="{Binding ShowActionDialogCommand}" State="{Binding ContainerState}"/>
                     </Grid>
                 </TabItem>
             </TabControl>
             <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right">
-                <Button Content="停止操作" Width="120" Height="35" Command="{Binding ActionInvokeCommand}" CommandParameter="stop" Style="{DynamicResource Standard}" Margin="0,0,10,0" Visibility="{Binding RunActionsButtonVisibility}"/>
+                <TextBlock VerticalAlignment="Center" Text="正在停止，请等待..." Visibility="{Binding ActionsStateVisibility}" Margin="0,0,10,0"/>
+                <Button Content="停止操作" Width="120" Height="35" Command="{Binding ActionInvokeCommand}" CommandParameter="stop" Style="{DynamicResource Standard}" Margin="0,0,10,0" Visibility="{Binding StopActionsButtonVisibility}"/>
 
                 <Button Content="执行操作" Width="120" Height="35" Command="{Binding ActionInvokeCommand}" CommandParameter="run" Style="{DynamicResource Standard}" Margin="0,0,10,0" Visibility="{Binding RunActionsButtonVisibility}"/>
 

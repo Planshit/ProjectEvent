@@ -34,7 +34,32 @@ namespace ProjectEvent.UI.Controls.Action
             DependencyProperty.Register("AddActionCommand",
                 typeof(ICommand),
                 typeof(ActionContainer));
+        public Core.Action.Types.ActionInvokeStateType State
+        {
+            get { return (Core.Action.Types.ActionInvokeStateType)GetValue(StateProperty); }
+            set { SetValue(StateProperty, value); }
+        }
+        public static readonly DependencyProperty StateProperty =
+            DependencyProperty.Register("State",
+                typeof(Core.Action.Types.ActionInvokeStateType),
+                typeof(ActionContainer), new PropertyMetadata(Core.Action.Types.ActionInvokeStateType.Done, new PropertyChangedCallback(OnStateChanged)));
 
+        private static void OnStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var control = d as ActionContainer;
+            if (e.NewValue != e.OldValue && control.AddActionBtn != null)
+            {
+                if (control.State == Core.Action.Types.ActionInvokeStateType.Done)
+                {
+
+                    control.AddActionBtn.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    control.AddActionBtn.Visibility = Visibility.Hidden;
+                }
+            }
+        }
         #endregion
 
         public event RoutedEventHandler RenderDone;
@@ -120,6 +145,24 @@ namespace ProjectEvent.UI.Controls.Action
             item.ActionContainer = this;
             item.DataContext = this;
             item.VMDataContext = this.DataContext;
+            BindingOperations.SetBinding(item, ActionItem.ContainerStateProperty, new Binding()
+            {
+                Source = this,
+                Path = new PropertyPath(nameof(State)),
+                Mode = BindingMode.Default,
+            });
+            BindingOperations.SetBinding(item, ActionItem.RuningIDProperty, new Binding()
+            {
+                Source = DataContext,
+                Path = new PropertyPath("RuningActionID"),
+                Mode = BindingMode.Default,
+            });
+            BindingOperations.SetBinding(item, ActionItem.RuningStateProperty, new Binding()
+            {
+                Source = DataContext,
+                Path = new PropertyPath("RuningActionState"),
+                Mode = BindingMode.Default,
+            });
             item.ID = action.ID;
             item.InputDataModel = inputdata == null ? GetCreateDefaultInputData(action.ActionType) : inputdata;
             item.Action = action;

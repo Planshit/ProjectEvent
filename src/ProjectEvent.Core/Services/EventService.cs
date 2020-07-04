@@ -80,7 +80,7 @@ namespace ProjectEvent.Core.Services
                     EventTemporaryObject.Add(taskID, ev, data);
 
                     //执行actions
-                    ActionTask.InvokeAction(taskID, ev.Actions);
+                    ActionTask.Invoke(taskID, ev.Actions);
 
 
                 });

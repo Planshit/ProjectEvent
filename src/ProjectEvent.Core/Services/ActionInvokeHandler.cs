@@ -7,4 +7,6 @@ using System.Text;
 namespace ProjectEvent.Core.Services
 {
     public delegate void ActionInvokeHandler(int taskID, int actionID, ActionInvokeStateType state);
+    public delegate void ActionsInvokeHandler(int taskID, ActionInvokeStateType state);
+
 }

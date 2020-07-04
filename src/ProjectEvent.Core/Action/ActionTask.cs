@@ -16,19 +16,28 @@ namespace ProjectEvent.Core.Action
 {
     public static class ActionTask
     {
-        public static event ActionInvokeHandler OnActionInvoke;
+        /// <summary>
+        /// 单个action状态发生改变时发生
+        /// </summary>
+        public static event ActionInvokeHandler OnActionState;
+        /// <summary>
+        /// 一组action状态发生改变时发生
+        /// </summary>
+        public static event ActionsInvokeHandler OnActionsState;
+        public const int TestTaskID = 17290302;
         private static CancellationTokenSource testcts;
         public static void StopTestInvokeAction()
         {
+            OnActionsState?.Invoke(TestTaskID, ActionInvokeStateType.Busy);
             testcts.Cancel();
         }
         public static void RunTestInvokeAction(IEnumerable<ActionModel> actions)
         {
             testcts = new CancellationTokenSource();
             //执行actions
-            InvokeAction(17290302, actions, true);
+            Invoke(TestTaskID, actions, true);
         }
-        public static void InvokeAction(int taskID, IEnumerable<ActionModel> actions, bool isTest = false)
+        public static void Invoke(int taskID, IEnumerable<ActionModel> actions, bool isTest = false, bool isChildren = false)
         {
             if (actions == null)
             {
@@ -45,63 +54,57 @@ namespace ProjectEvent.Core.Action
             }
 
             CancellationToken ct = cts.Token;
-            var task = new Task(() =>
+
+
+            if (isChildren)
             {
-                try
+                InvokeActions(taskID, actions, ct);
+            }
+            else
+            {
+                var task = new Task(() =>
                 {
-                    Debug.WriteLine("进入");
-                    ct.ThrowIfCancellationRequested();
-                    foreach (var action in actions)
+                    try
                     {
-
-                        GetAction(taskID, action).Invoke();
-                        if (ct.IsCancellationRequested)
-                        {
-                            ct.ThrowIfCancellationRequested();
-                        }
-
-                        //var actionBuilder = new ActionBuilder(action.Action, action.Parameter);
-                        //var actionTask = actionBuilder.Builer(taskID, action.ID);
-                        //OnActionInvoke?.Invoke(taskID, action.ID, Types.ActionInvokeStateType.Runing);
-
-                        //if (actionTask != null)
-                        //{
-                        //    Debug.WriteLine(actionTask.Status);
-                        //    actionTask.Start();
-                        //    var actionResult = actionTask.Result;
-                        //    if (actionBuilder.IsHasResult())
-                        //    {
-                        //        ActionTaskResulter.Add(taskID, actionResult);
-                        //    }
-                        //    OnActionInvoke?.Invoke(taskID, action.ID, Types.ActionInvokeStateType.Success);
-
-                        //}
-                        //else
-                        //{
-                        //    OnActionInvoke?.Invoke(taskID, action.ID, Types.ActionInvokeStateType.Failed);
-                        //    LogHelper.Warning($"找不到Action Type：{action.Action}");
-                        //}
-
-                        //if (ct.IsCancellationRequested)
-                        //{
-                        //    cts.Dispose();
-                        //}
-
+                        OnActionsState?.Invoke(taskID, ActionInvokeStateType.Runing);
+                        InvokeActions(taskID, actions, ct);
                     }
-                }
-                catch (OperationCanceledException e)
-                {
-                    Debug.WriteLine("OperationCanceledException:" + e.Message);
-                }
-                catch (Exception e)
-                {
-                    Debug.WriteLine("Exception:" + e.Message);
-                }
-            }, ct);
+                    catch (OperationCanceledException)
+                    {
+                    }
+                    catch (Exception e)
+                    {
+                        LogHelper.Error(e.ToString());
+                    }
+                    finally
+                    {
+                        OnActionsState?.Invoke(taskID, ActionInvokeStateType.Done);
+                        cts.Dispose();
+                    }
+                }, ct);
 
-            task.Start();
+                task.Start();
+            }
+
         }
 
+        private static void InvokeActions(int taskID, IEnumerable<ActionModel> actions, CancellationToken ct)
+        {
+            //OnActionsState?.Invoke(taskID, ActionInvokeStateType.Runing);
+            ct.ThrowIfCancellationRequested();
+            foreach (var action in actions)
+            {
+                OnActionState?.Invoke(taskID, action.ID, Types.ActionInvokeStateType.Runing);
+                GetAction(taskID, action).Invoke();
+                if (ct.IsCancellationRequested)
+                {
+                    OnActionState?.Invoke(taskID, action.ID, Types.ActionInvokeStateType.Done);
+                    ct.ThrowIfCancellationRequested();
+                }
+                OnActionState?.Invoke(taskID, action.ID, Types.ActionInvokeStateType.Done);
+            }
+            //OnActionsState?.Invoke(taskID, ActionInvokeStateType.Done);
+        }
         private static System.Action GetAction(int taskID, ActionModel action)
         {
             switch (action.Action)
