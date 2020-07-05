@@ -1,5 +1,5 @@
 # Project Event
-一个类似于iOS自动化快捷指令的PC版软件，使你可以在Windows上创建各种事件监听，当事件触发时自动执行设定的操作。依靠Project Event软件，无需编写代码也可以创造出各种实用、有趣的功能。
+一个类似于iOS自动化快捷指令的PC版软件，提供了可以在Windows上创建各种事件监听方案的能力，当事件触发时自动执行方案所设置的操作。依靠Project Event软件，无需编写代码也可以创造出各种实用、有趣的功能。
 <p align="center">
   <img alt="VS Code in action" src="https://i.loli.net/2020/07/05/Cu4DA7KHd1vqRcZ.jpg">
 </p>
