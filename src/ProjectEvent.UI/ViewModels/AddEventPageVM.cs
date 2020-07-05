@@ -310,8 +310,8 @@ namespace ProjectEvent.UI.ViewModels
             });
             ComBoxActions.Add(new ComBoxActionModel()
             {
-                ID = (int)Types.ActionType.HttpGet,
-                Name = ActionNameData.Names[Types.ActionType.HttpGet]
+                ID = (int)Types.ActionType.HttpRequest,
+                Name = ActionNameData.Names[Types.ActionType.HttpRequest]
             });
             ComBoxActions.Add(new ComBoxActionModel()
             {

@@ -26,12 +26,12 @@ namespace ProjectEvent.UI.Types
         /// </summary>
         IFEnd = 4,
         /// <summary>
-        /// HTTP GET请求
+        /// HTTP请求
         /// </summary>
-        HttpGet = 5,
+        HttpRequest = 5,
         /// <summary>
         /// 关机
         /// </summary>
-        Shutdown=6
+        Shutdown = 6
     }
 }

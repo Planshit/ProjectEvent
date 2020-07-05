@@ -19,9 +19,9 @@ namespace ProjectEvent.Core.Action.Types
         /// </summary>
         IF = 3,
         /// <summary>
-        /// HTTP GET
+        /// HTTP请求
         /// </summary>
-        HttpGet = 4,
+        HttpRequest = 4,
         /// <summary>
         /// 关机
         /// </summary>

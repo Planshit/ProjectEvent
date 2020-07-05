@@ -114,8 +114,8 @@ namespace ProjectEvent.Core.Action
 
                 case ActionType.IF:
                     return new IFAction().GenerateAction(taskID, action);
-                case ActionType.HttpGet:
-                    return new HttpGetAction().GenerateAction(taskID, action);
+                case ActionType.HttpRequest:
+                    return new HttpRequestAction().GenerateAction(taskID, action);
                 case ActionType.Shutdown:
                     return new ShutdownAction().GenerateAction(taskID, action);
 

@@ -10,7 +10,7 @@ namespace ProjectEvent.UI.Controls.Action.Data
         public static Dictionary<ActionType, string> Names = new Dictionary<ActionType, string>()
         {
             {
-                ActionType.HttpGet,"HTTP GET请求"
+                ActionType.HttpRequest,"HTTP请求"
             },
             {
                 ActionType.IF,"判断"

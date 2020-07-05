@@ -229,8 +229,8 @@ namespace ProjectEvent.UI.Controls.Action
                         Content = ""
                     };
                     break;
-                case UI.Types.ActionType.HttpGet:
-                    result = new HttpGetActionInputModel()
+                case UI.Types.ActionType.HttpRequest:
+                    result = new HttpRequestActionInputModel()
                     {
                         Url = ""
                     };
@@ -748,12 +748,12 @@ namespace ProjectEvent.UI.Controls.Action
                         };
                         result.Num = 1;
                         break;
-                    case UI.Types.ActionType.HttpGet:
+                    case UI.Types.ActionType.HttpRequest:
                         result = new Core.Action.Models.ActionModel();
-                        var httpgetInputdata = action.GetInputData() as HttpGetActionInputModel;
-                        result.Action = Core.Action.Types.ActionType.HttpGet;
+                        var httpgetInputdata = action.GetInputData() as HttpRequestActionInputModel;
+                        result.Action = Core.Action.Types.ActionType.HttpRequest;
                         result.ID = action.Action.ID;
-                        result.Parameter = new HttpGetActionParameterModel()
+                        result.Parameter = new HttpRequestActionParameterModel()
                         {
                             Url = httpgetInputdata.Url
                         };
@@ -880,12 +880,12 @@ namespace ProjectEvent.UI.Controls.Action
                         };
                     }
                     break;
-                case Core.Action.Types.ActionType.HttpGet:
-                    actionModel = ActionItemsData.Get(UI.Types.ActionType.HttpGet);
-                    var httpgetParameter = ObjectConvert.Get<HttpGetActionParameterModel>(action.Parameter);
+                case Core.Action.Types.ActionType.HttpRequest:
+                    actionModel = ActionItemsData.Get(UI.Types.ActionType.HttpRequest);
+                    var httpgetParameter = ObjectConvert.Get<HttpRequestActionParameterModel>(action.Parameter);
                     if (httpgetParameter != null)
                     {
-                        inputdata = new HttpGetActionInputModel()
+                        inputdata = new HttpRequestActionInputModel()
                         {
                             Url = httpgetParameter.Url
                         };

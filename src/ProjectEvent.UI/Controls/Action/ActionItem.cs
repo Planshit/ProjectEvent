@@ -281,7 +281,7 @@ namespace ProjectEvent.UI.Controls.Action
                         BindingName = "Right"
                     });
                     break;
-                case ActionType.HttpGet:
+                case ActionType.HttpRequest:
                     inputs.Add(new ActionInputModel()
                     {
                         Title = "URL",

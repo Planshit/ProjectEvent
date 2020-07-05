@@ -13,13 +13,13 @@ using System.Threading.Tasks;
 
 namespace ProjectEvent.Core.Action.Actions
 {
-    public class HttpGetAction : IAction
+    public class HttpRequestAction : IAction
     {
         public System.Action GenerateAction(int taskID, ActionModel action)
         {
             return () =>
              {
-                 var p = ObjectConvert.Get<HttpGetActionParameterModel>(action.Parameter);
+                 var p = ObjectConvert.Get<HttpRequestActionParameterModel>(action.Parameter);
                  var result = new ActionResultModel();
                  result.ID = action.ID;
                  result.Result = new Dictionary<int, string>();
@@ -27,12 +27,16 @@ namespace ProjectEvent.Core.Action.Actions
                  if (p != null)
                  {
                      p.Url = ActionParameterConverter.ConvertToString(taskID, p.Url);
-                     Debug.WriteLine("http get:" + p.Url);
+                     Debug.WriteLine("http request:" + p.Url);
                      var http = new HttpRequest();
                      http.Url = p.Url;
+                     http.Headers = p.Headers;
+                     http.Data = p.Data;
+                     http.Files = p.Files;
+                     http.PostType = p.PostType;
                      try
                      {
-                         var content = http.GetAsync().Result;
+                         var content = http.PostAsync().Result;
                          result.Result.Add((int)HttpResultType.StatusCode, content.StatusCode.ToString());
                          result.Result.Add((int)HttpResultType.Content, content.Content);
                          result.Result[(int)HttpResultType.IsSuccess] = content.IsSuccess.ToString().ToLower();

@@ -323,7 +323,7 @@ namespace ProjectEvent.UI.Controls.Action
                             DisplayName = "是否成功"
                         });
                         break;
-                    case UI.Types.ActionType.HttpGet:
+                    case UI.Types.ActionType.HttpRequest:
                         results.Add(new ComBoxModel()
                         {
                             ID = (int)HttpResultType.IsSuccess,

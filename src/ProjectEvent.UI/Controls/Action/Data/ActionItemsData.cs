@@ -20,7 +20,7 @@ namespace ProjectEvent.UI.Controls.Action.Data
             action.ActionName = ActionNameData.Names[uiactionType];
             switch (uiactionType)
             {
-                case ActionType.HttpGet:
+                case ActionType.HttpRequest:
                     action.Icon = Base.IconTypes.DownloadDocument;
                     break;
                 case ActionType.IF:
