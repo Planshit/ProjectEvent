@@ -27,29 +27,12 @@
                     <ScrollViewer>
                         <StackPanel>
                             <Image Source="/Assets/Icons/icon_max.png" Height="30" Width="30" HorizontalAlignment="Left" Margin="5,0,0,10"/>
-                            <TextBlock Text="创建事件监听方案，当事件触发时自动执行方案所设置的操作。" TextWrapping="Wrap" Margin="5,0,0,10"/>
+                            <TextBlock Text="Project Event提供了可以在Windows上创建各种事件监听方案的能力，当事件触发时自动执行方案所设置的操作。" TextWrapping="Wrap" Margin="5,0,0,10"/>
                             <TextBlock Style="{DynamicResource LabelName}" Text="链接" Margin="5,20,0,5"/>
-                            <Button Command="{Binding OpenUrlCommand}" CommandParameter="https://github.com/Planshit/ProjectEvent/" Style="{DynamicResource Icon}" HorizontalAlignment="Left" Foreground="{DynamicResource PrimaryColorBrush}" Padding="5,0">
-                                <StackPanel Orientation="Horizontal">
-                                    <!--<base:Icon IconType="FileCode" Margin="0,0,5,0" VerticalAlignment="Center"/>-->
-                                    <TextBlock Text="开源程序代码" VerticalAlignment="Center"/>
-                                </StackPanel>
-
-                            </Button>
-                            <Button Command="{Binding OpenUrlCommand}" CommandParameter="https://github.com/Planshit/ProjectEvent/projects" Style="{DynamicResource Icon}" HorizontalAlignment="Left" Foreground="{DynamicResource PrimaryColorBrush}" Padding="5,0">
-                                <StackPanel Orientation="Horizontal">
-                                    <!--<base:Icon IconType="ClipboardList" Margin="0,0,5,0" VerticalAlignment="Center"/>-->
-                                    <TextBlock Text="软件开发计划" VerticalAlignment="Center"/>
-                                </StackPanel>
-
-                            </Button>
-                            <Button Command="{Binding OpenUrlCommand}" CommandParameter="https://github.com/Planshit/ProjectEvent/issues/new" Style="{DynamicResource Icon}" HorizontalAlignment="Left" Foreground="{DynamicResource PrimaryColorBrush}" Padding="5,0">
-                                <StackPanel Orientation="Horizontal">
-                                    <!--<base:Icon IconType="BuildIssue" Margin="0,0,5,0" VerticalAlignment="Center"/>-->
-                                    <TextBlock Text="问题反馈" VerticalAlignment="Center"/>
-                                </StackPanel>
-
-                            </Button>
+                            <Button Content="开源程序代码" Command="{Binding OpenUrlCommand}" CommandParameter="https://github.com/Planshit/ProjectEvent/" Style="{DynamicResource Icon}" HorizontalAlignment="Left" Foreground="{DynamicResource PrimaryColorBrush}" Padding="5,0"/>
+                            <Button Content="软件开发计划" Command="{Binding OpenUrlCommand}" CommandParameter="https://github.com/Planshit/ProjectEvent/projects" Style="{DynamicResource Icon}" HorizontalAlignment="Left" Foreground="{DynamicResource PrimaryColorBrush}" Padding="5,0"/>
+                            <Button Content="问题反馈" Command="{Binding OpenUrlCommand}" CommandParameter="https://github.com/Planshit/ProjectEvent/issues/new" Style="{DynamicResource Icon}" HorizontalAlignment="Left" Foreground="{DynamicResource PrimaryColorBrush}" Padding="5,0"/>
+                            <Button Content="关于开发者" Command="{Binding OpenUrlCommand}" CommandParameter="https://thelittlepandaisbehind.com/about.html" Style="{DynamicResource Icon}" HorizontalAlignment="Left" Foreground="{DynamicResource PrimaryColorBrush}" Padding="5,0"/>
                             <TextBlock Style="{DynamicResource LabelName}" Text="Project Event" Margin="5,20,0,10"/>
                             <TextBlock Foreground="{DynamicResource DisabledTextBrush}" Margin="5,0,0,10">
                                 <Run Text="UI程序集版本："/><Run Text="{Binding Settings.UIVersion}"/>
