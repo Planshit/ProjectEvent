@@ -19,14 +19,14 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>
-                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="50"/>
                             </Grid.RowDefinitions>
 
                             <StackPanel x:Name="Container">
                                 
                             </StackPanel>
                             <Border Grid.Row="1">
-                                <Button  Style="{DynamicResource Icon}" Padding="0" x:Name="AddBtn">
+                                <Button Height="28" Style="{DynamicResource Icon}" Padding="0" x:Name="AddBtn" VerticalAlignment="Center">
                                     <Grid>
                                         <TextBlock Text="添加一个键值" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 

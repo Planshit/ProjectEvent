@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace ProjectEvent.UI.Controls.Action
 {
@@ -16,6 +17,7 @@ namespace ProjectEvent.UI.Controls.Action
     public class ActionForm : Control
     {
         #region 依赖属性
+
         #region 单行输入可视状态
         /// <summary>
         /// 单行输入可视状态
@@ -113,11 +115,11 @@ namespace ProjectEvent.UI.Controls.Action
             var control = d as ActionForm;
             if (control.IsExpandMultiForm)
             {
-                control.MultiLineGrid.Visibility = Visibility.Visible;
+                control.MultiLineBorder.Visibility = Visibility.Visible;
             }
             else
             {
-                control.MultiLineGrid.Visibility = Visibility.Collapsed;
+                control.MultiLineBorder.Visibility = Visibility.Collapsed;
             }
         }
         #endregion
@@ -140,7 +142,7 @@ namespace ProjectEvent.UI.Controls.Action
         /// <summary>
         /// 多行容器外容器
         /// </summary>
-        private Grid MultiLineGrid;
+        private Border MultiLineBorder;
         #endregion
 
         public event EventHandler OnRenderDone;
@@ -154,13 +156,13 @@ namespace ProjectEvent.UI.Controls.Action
             LineContainer = GetTemplateChild("LineContainer") as WrapPanel;
             ExpandBtn = GetTemplateChild("ExpandBtn") as Button;
             MultiLineContainer = GetTemplateChild("MultiLineContainer") as StackPanel;
-            MultiLineGrid = GetTemplateChild("MultiLineGrid") as Grid;
+            MultiLineBorder = GetTemplateChild("MultiLineBorder") as Border;
             ExpandBtn.Click += (e, c) =>
             {
                 IsExpandMultiForm = !IsExpandMultiForm;
             };
             Render();
-           
+
         }
 
         #region 渲染输入控件
@@ -171,7 +173,7 @@ namespace ProjectEvent.UI.Controls.Action
             MultiLineContainer.Loaded += (e, c) =>
             {
                 Debug.WriteLine("action form height:" + this.ActualHeight);
-                MultiLineGrid.Visibility = Visibility.Collapsed;
+                MultiLineBorder.Visibility = Visibility.Collapsed;
                 OnRenderDone?.Invoke(this, null);
             };
         }
@@ -247,6 +249,13 @@ namespace ProjectEvent.UI.Controls.Action
         {
             var inputBox = new InputBox();
             inputBox.Placeholder = item.Placeholder;
+            //绑定数据
+            BindingOperations.SetBinding(inputBox, TextBox.TextProperty, new Binding()
+            {
+                Source = DataContext,
+                Path = new PropertyPath(item.BindingName),
+                Mode = BindingMode.TwoWay,
+            });
             if (!isMultiLine)
             {
                 //单行输入
@@ -293,7 +302,14 @@ namespace ProjectEvent.UI.Controls.Action
         private void RenderKVForm(ActionInputModel item)
         {
             var form = new ActionCustomKVForm();
-            var label = GetLabel(item);
+            var label = GetLabel(item, true);
+            //绑定数据
+            BindingOperations.SetBinding(form, ActionCustomKVForm.KeyValuesProperty, new Binding()
+            {
+                Source = DataContext,
+                Path = new PropertyPath(item.BindingName),
+                Mode = BindingMode.TwoWay,
+            });
             MultiLineContainer.Children.Add(label);
             MultiLineContainer.Children.Add(form);
 
@@ -306,10 +322,14 @@ namespace ProjectEvent.UI.Controls.Action
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        private TextBlock GetLabel(ActionInputModel item)
+        private TextBlock GetLabel(ActionInputModel item, bool isLabelName = false)
         {
             var lable = new TextBlock();
             lable.Text = item.Title;
+            if (isLabelName)
+            {
+                lable.Style = FindResource("LabelName") as Style;
+            }
             lable.Margin = new Thickness(0, 0, 10, 0);
             lable.VerticalAlignment = VerticalAlignment.Center;
             return lable;
@@ -342,6 +362,23 @@ namespace ProjectEvent.UI.Controls.Action
                 control.ItemsSource = item.SelectItems;
                 control.SelectedValuePath = "ID";
                 control.DisplayMemberPath = "DisplayName";
+                //绑定数据
+                BindingOperations.SetBinding(control, ComboBox.SelectedValueProperty, new Binding()
+                {
+                    Source = DataContext,
+                    Path = new PropertyPath(item.BindingName + ".ID"),
+                    Mode = BindingMode.TwoWay,
+
+                });
+                BindingOperations.SetBinding(control, ComboBox.SelectedItemProperty, new Binding()
+                {
+                    Source = DataContext,
+                    Path = new PropertyPath(item.BindingName),
+                    Mode = BindingMode.TwoWay,
+
+                });
+
+
                 if (!isMultiLine)
                 {
                     //单行输入

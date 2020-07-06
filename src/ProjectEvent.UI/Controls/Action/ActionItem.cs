@@ -206,6 +206,7 @@ namespace ProjectEvent.UI.Controls.Action
                 ActionName = $"[{Action.ID}] {Action.ActionName}";
                 //item.Data = InputDataModel;
                 Icon = Action.Icon;
+                ActionForm.DataContext = InputDataModel;
                 ActionForm.LineInputGroups = GetCreateActionLineInputGroups();
                 ActionForm.MultiLineInputGroups = GetCreateActionMultiLineInputGroups();
                 //Input.Child = item;
@@ -250,13 +251,15 @@ namespace ProjectEvent.UI.Controls.Action
                     {
                         InputType = Types.InputType.Text,
                         Placeholder = "请输入文件路径",
-                        Title = "路径"
+                        Title = "路径",
+                        BindingName = nameof(WriteFileActionInputModel.FilePath)
                     });
                     groups.Add(new ActionInputModel()
                     {
                         InputType = Types.InputType.Text,
                         Placeholder = "请输入文件内容",
-                        Title = "内容"
+                        Title = "内容",
+                        BindingName = nameof(WriteFileActionInputModel.Content)
                     });
                     break;
                 case ActionType.IF:
@@ -264,17 +267,20 @@ namespace ProjectEvent.UI.Controls.Action
                     {
                         InputType = Types.InputType.Text,
                         Title = "如果",
-                        Placeholder = "请输入"
+                        Placeholder = "请输入",
+                        BindingName = nameof(IFActionInputModel.Left)
                     });
                     groups.Add(new ActionInputModel()
                     {
                         InputType = Types.InputType.Select,
                         SelectItems = IFActionConditionData.ComBoxData,
+                        BindingName = nameof(IFActionInputModel.Condition)
                     });
                     groups.Add(new ActionInputModel()
                     {
                         InputType = Types.InputType.Text,
-                        Placeholder = "请输入"
+                        Placeholder = "请输入",
+                        BindingName = nameof(IFActionInputModel.Right)
                     });
                     break;
                 case ActionType.HttpRequest:
@@ -283,7 +289,8 @@ namespace ProjectEvent.UI.Controls.Action
                         InputType = Types.InputType.Text,
                         Title = "请求地址",
                         Placeholder = "请输入完整地址",
-                        IsStretch = true
+                        IsStretch = true,
+                        BindingName = nameof(HttpRequestActionInputModel.Url)
                     });
                     break;
             }
@@ -301,70 +308,41 @@ namespace ProjectEvent.UI.Controls.Action
                     groups.Add(new ActionInputModel()
                     {
                         InputType = Types.InputType.Select,
-                        Title = "参数类型",
-                        SelectItems = HttpRequestActionData.PamramsTypes
+                        Title = "方法",
+                        SelectItems = HttpRequestActionData.MethodTypes,
+                        BindingName = nameof(HttpRequestActionInputModel.Method)
                     });
+                    groups.Add(new ActionInputModel()
+                    {
+                        InputType = Types.InputType.Select,
+                        Title = "参数类型",
+                        SelectItems = HttpRequestActionData.PamramsTypes,
+                        BindingName = nameof(HttpRequestActionInputModel.PamramsType)
+                    });
+
                     groups.Add(new ActionInputModel()
                     {
                         InputType = Types.InputType.CustomKeyValue,
                         Title = "请求参数",
+                        BindingName = nameof(HttpRequestActionInputModel.QueryParams)
                     });
-
+                    groups.Add(new ActionInputModel()
+                    {
+                        InputType = Types.InputType.CustomKeyValue,
+                        Title = "请求头",
+                        BindingName = nameof(HttpRequestActionInputModel.Headers)
+                    });
+                    groups.Add(new ActionInputModel()
+                    {
+                        InputType = Types.InputType.CustomKeyValue,
+                        Title = "文件（仅Form参数类型时有效）",
+                        BindingName = nameof(HttpRequestActionInputModel.Files)
+                    });
                     break;
 
             }
             return groups;
         }
         #endregion
-        private List<ActionInputModel> GetInputs()
-        {
-            var inputs = new List<ActionInputModel>();
-            switch (Action.ActionType)
-            {
-                case ActionType.WriteFile:
-                    inputs.Add(new ActionInputModel()
-                    {
-                        Title = "路径",
-                        InputType = Types.InputType.Text,
-                        BindingName = "FilePath"
-                    });
-                    inputs.Add(new ActionInputModel()
-                    {
-                        Title = "内容",
-                        InputType = Types.InputType.Text,
-                        BindingName = "Content"
-                    });
-                    break;
-                case ActionType.IF:
-                    inputs.Add(new ActionInputModel()
-                    {
-                        Title = "如果",
-                        InputType = Types.InputType.Text,
-                        BindingName = "Left"
-                    });
-                    inputs.Add(new ActionInputModel()
-                    {
-                        InputType = Types.InputType.Select,
-                        SelectItems = IFActionConditionData.ComBoxData,
-                        BindingName = "Condition"
-                    });
-                    inputs.Add(new ActionInputModel()
-                    {
-                        InputType = Types.InputType.Text,
-                        BindingName = "Right"
-                    });
-                    break;
-                case ActionType.HttpRequest:
-                    inputs.Add(new ActionInputModel()
-                    {
-                        Title = "URL",
-                        InputType = Types.InputType.Text,
-                        BindingName = "Url"
-                    });
-                    break;
-            }
-            return inputs;
-        }
-
     }
 }

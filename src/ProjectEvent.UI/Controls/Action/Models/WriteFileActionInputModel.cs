@@ -8,11 +8,9 @@ namespace ProjectEvent.UI.Controls.Action.Models
     /// <summary>
     /// 写文件action输入UI模型
     /// </summary>
-    public class WriteFileActionInputModel : UINotifyPropertyChanged
+    public class WriteFileActionInputModel
     {
-        private string FilePath_ = "";
-        public string FilePath { get { return FilePath_; } set { FilePath_ = value; } }
-        private string Content_ = "";
-        public string Content { get { return Content_; } set { Content_ = value; } }
+        public string FilePath { get; set; }
+        public string Content { get; set; }
     }
 }

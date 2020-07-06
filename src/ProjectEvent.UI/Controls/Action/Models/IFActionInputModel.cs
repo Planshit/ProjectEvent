@@ -8,13 +8,10 @@ namespace ProjectEvent.UI.Controls.Action.Models
     /// <summary>
     /// if action输入UI模型
     /// </summary>
-    public class IFActionInputModel : UINotifyPropertyChanged
+    public class IFActionInputModel
     {
-        private string Left_ = "";
-        public string Left { get { return Left_; } set { Left_ = value; } }
-        private string Right_ = "";
-        public string Right { get { return Right_; } set { Right_ = value; } }
-        private ComBoxModel Condition_;
-        public ComBoxModel Condition { get { return Condition_; } set { Condition_ = value; } }
+        public string Left { get; set; }
+        public string Right { get; set; }
+        public ComBoxModel Condition { get; set; }
     }
 }

@@ -15,7 +15,7 @@ namespace ProjectEvent.UI.Controls.Action.Data
             new ComBoxModel()
             {
                 ID = (int)ParamsType.Json,
-                DisplayName = "JSON"
+                DisplayName = "Json"
             },
             new ComBoxModel()
             {
@@ -27,6 +27,25 @@ namespace ProjectEvent.UI.Controls.Action.Data
         public static ComBoxModel GetPamramsType(int id)
         {
             return PamramsTypes.Where(m => m.ID == id).FirstOrDefault();
+        }
+
+        public static List<ComBoxModel> MethodTypes = new List<ComBoxModel>()
+        {
+            new ComBoxModel()
+            {
+                ID = (int)MethodType.GET,
+                DisplayName = "GET"
+            },
+            new ComBoxModel()
+            {
+                ID = (int)MethodType.POST,
+                DisplayName = "POST"
+            },
+
+        };
+        public static ComBoxModel GetMethodType(int id)
+        {
+            return MethodTypes.Where(m => m.ID == id).FirstOrDefault();
         }
     }
 }

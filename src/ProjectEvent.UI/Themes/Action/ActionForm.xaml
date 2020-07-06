@@ -40,12 +40,15 @@
                                         </Grid>
                                     </Button>
                                 </Border>
-                                <Grid Grid.Row="1" x:Name="MultiLineGrid" Visibility="Hidden">
-                                    <ScrollViewer>
+                                <Border Grid.Row="1" x:Name="MultiLineBorder" Visibility="Hidden" Padding="10" CornerRadius="4" MaxHeight="200">
+                                    <Border.Background>
+                                        <SolidColorBrush Color="{DynamicResource SubBorderColor}" Opacity=".3"/>
+                                    </Border.Background>
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto">
                                         <StackPanel x:Name="MultiLineContainer" Grid.Row="1"  Margin="0,10,0,0">
                                         </StackPanel>
                                     </ScrollViewer>
-                                </Grid>
+                                </Border>
 
                             </Grid>
                         </Grid>

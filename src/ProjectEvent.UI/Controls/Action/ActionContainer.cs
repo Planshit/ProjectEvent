@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using ProjectEvent.Core.Action.Models;
 using ProjectEvent.Core.Helper;
+using ProjectEvent.Core.Net.Types;
 using ProjectEvent.UI.Controls.Action.Data;
 using ProjectEvent.UI.Controls.Action.Models;
 using ProjectEvent.UI.Models.DataModels;
@@ -272,7 +273,9 @@ namespace ProjectEvent.UI.Controls.Action
                 case UI.Types.ActionType.HttpRequest:
                     result = new HttpRequestActionInputModel()
                     {
-                        Url = ""
+                        Url = "",
+                        PamramsType = HttpRequestActionData.PamramsTypes[0],
+                        Method = HttpRequestActionData.MethodTypes[0]
                     };
                     break;
             }
@@ -791,12 +794,18 @@ namespace ProjectEvent.UI.Controls.Action
                         break;
                     case UI.Types.ActionType.HttpRequest:
                         result = new Core.Action.Models.ActionModel();
-                        var httpgetInputdata = action.GetInputData() as HttpRequestActionInputModel;
+                        var httprequestInputdata = action.GetInputData() as HttpRequestActionInputModel;
                         result.Action = Core.Action.Types.ActionType.HttpRequest;
                         result.ID = action.Action.ID;
                         result.Parameter = new HttpRequestActionParameterModel()
                         {
-                            Url = httpgetInputdata.Url
+                            Url = httprequestInputdata.Url,
+                            QueryParams = httprequestInputdata.QueryParams,
+                            Method = httprequestInputdata.Method == null ? Core.Net.Types.MethodType.GET : (MethodType)httprequestInputdata.Method.ID,
+
+                            ParamsType = httprequestInputdata.PamramsType == null ? Core.Net.Types.ParamsType.Json : (ParamsType)httprequestInputdata.PamramsType.ID,
+                            Files = httprequestInputdata.Files,
+                            Headers = httprequestInputdata.Headers
                         };
                         result.Num = 1;
                         break;
@@ -923,12 +932,17 @@ namespace ProjectEvent.UI.Controls.Action
                     break;
                 case Core.Action.Types.ActionType.HttpRequest:
                     actionModel = ActionItemsData.Get(UI.Types.ActionType.HttpRequest);
-                    var httpgetParameter = ObjectConvert.Get<HttpRequestActionParameterModel>(action.Parameter);
-                    if (httpgetParameter != null)
+                    var httpRequestParameter = ObjectConvert.Get<HttpRequestActionParameterModel>(action.Parameter);
+                    if (httpRequestParameter != null)
                     {
                         inputdata = new HttpRequestActionInputModel()
                         {
-                            Url = httpgetParameter.Url
+                            Url = httpRequestParameter.Url,
+                            Method = HttpRequestActionData.GetMethodType((int)httpRequestParameter.Method),
+                            PamramsType = HttpRequestActionData.GetPamramsType((int)httpRequestParameter.ParamsType),
+                            QueryParams = httpRequestParameter.QueryParams,
+                            Files = httpRequestParameter.Files,
+                            Headers = httpRequestParameter.Headers
                         };
                     }
                     break;
