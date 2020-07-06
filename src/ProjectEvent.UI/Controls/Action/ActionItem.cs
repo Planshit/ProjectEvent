@@ -157,6 +157,7 @@ namespace ProjectEvent.UI.Controls.Action
         private Grid Header;
         private Border Input;
         private Button ButtonRemove;
+        private ActionForm ActionForm;
         public ActionContainer ActionContainer { get; set; }
         public object VMDataContext { get; set; }
         public ActionItem()
@@ -174,6 +175,7 @@ namespace ProjectEvent.UI.Controls.Action
             Input = GetTemplateChild("Input") as Border;
             Header = GetTemplateChild("Header") as Grid;
             ButtonRemove = GetTemplateChild("ButtonRemove") as Button;
+            ActionForm = GetTemplateChild("ActionForm") as ActionForm;
             Render();
         }
         private void translateTransform_Changed(object sender, EventArgs e)
@@ -198,16 +200,21 @@ namespace ProjectEvent.UI.Controls.Action
             }
             else
             {
-                //SetInputData();
-                Action item = new Action(Action.ID, GetInputs());
-                item.VMDataContext = VMDataContext;
-                item.ActionContainer = ActionContainer;
+                //Action item = new Action(Action.ID, GetInputs());
+                //item.VMDataContext = VMDataContext;
+                //item.ActionContainer = ActionContainer;
                 ActionName = $"[{Action.ID}] {Action.ActionName}";
-                item.Data = InputDataModel;
+                //item.Data = InputDataModel;
                 Icon = Action.Icon;
-                Input.Child = item;
-                item.OnClick += Item_OnClick;
-                item.Loaded += (e, c) =>
+                ActionForm.LineInputGroups = GetCreateActionLineInputGroups();
+                ActionForm.MultiLineInputGroups = GetCreateActionMultiLineInputGroups();
+                //Input.Child = item;
+                //item.OnClick += Item_OnClick;
+                //item.Loaded += (e, c) =>
+                //{
+                //    OnRenderDone?.Invoke(this, null);
+                //};
+                ActionForm.OnRenderDone += (e, c) =>
                 {
                     OnRenderDone?.Invoke(this, null);
                 };
@@ -218,18 +225,7 @@ namespace ProjectEvent.UI.Controls.Action
             }
 
         }
-        //private void SetDefautlInputData()
-        //{
-        //    switch (Action.ActionType)
-        //    {
-        //        case ActionType.WriteFile:
-        //            InputDataModel = new WriteFileActionInputModel();
-        //            break;
-        //        case ActionType.IF:
-        //            InputDataModel = new IFActionInputModel();
-        //            break;
-        //    }
-        //}
+
         /// <summary>
         /// 获取输入数据
         /// </summary>
@@ -243,6 +239,83 @@ namespace ProjectEvent.UI.Controls.Action
             OnClick?.Invoke(sender, e);
         }
 
+        #region 获取创建单行输入组模板
+        private List<ActionInputModel> GetCreateActionLineInputGroups()
+        {
+            var groups = new List<ActionInputModel>();
+            switch (Action.ActionType)
+            {
+                case ActionType.WriteFile:
+                    groups.Add(new ActionInputModel()
+                    {
+                        InputType = Types.InputType.Text,
+                        Placeholder = "请输入文件路径",
+                        Title = "路径"
+                    });
+                    groups.Add(new ActionInputModel()
+                    {
+                        InputType = Types.InputType.Text,
+                        Placeholder = "请输入文件内容",
+                        Title = "内容"
+                    });
+                    break;
+                case ActionType.IF:
+                    groups.Add(new ActionInputModel()
+                    {
+                        InputType = Types.InputType.Text,
+                        Title = "如果",
+                        Placeholder = "请输入"
+                    });
+                    groups.Add(new ActionInputModel()
+                    {
+                        InputType = Types.InputType.Select,
+                        SelectItems = IFActionConditionData.ComBoxData,
+                    });
+                    groups.Add(new ActionInputModel()
+                    {
+                        InputType = Types.InputType.Text,
+                        Placeholder = "请输入"
+                    });
+                    break;
+                case ActionType.HttpRequest:
+                    groups.Add(new ActionInputModel()
+                    {
+                        InputType = Types.InputType.Text,
+                        Title = "请求地址",
+                        Placeholder = "请输入完整地址",
+                        IsStretch = true
+                    });
+                    break;
+            }
+            return groups;
+        }
+        #endregion
+
+        #region 获取创建多行输入组模板
+        private List<ActionInputModel> GetCreateActionMultiLineInputGroups()
+        {
+            var groups = new List<ActionInputModel>();
+            switch (Action.ActionType)
+            {
+                case ActionType.HttpRequest:
+                    groups.Add(new ActionInputModel()
+                    {
+                        InputType = Types.InputType.Select,
+                        Title = "参数类型",
+                        SelectItems = HttpRequestActionData.PamramsTypes
+                    });
+                    groups.Add(new ActionInputModel()
+                    {
+                        InputType = Types.InputType.CustomKeyValue,
+                        Title = "请求参数",
+                    });
+
+                    break;
+
+            }
+            return groups;
+        }
+        #endregion
         private List<ActionInputModel> GetInputs()
         {
             var inputs = new List<ActionInputModel>();

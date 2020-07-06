@@ -12,6 +12,6 @@ namespace ProjectEvent.Core.Action.Models
         public Dictionary<string, string> Headers { get; set; }
         public Dictionary<string, string> Data { get; set; }
         public Dictionary<string, string> Files { get; set; }
-        public PostType PostType { get; set; }
+        public ParamsType PostType { get; set; }
     }
 }

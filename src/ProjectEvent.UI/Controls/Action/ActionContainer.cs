@@ -65,6 +65,7 @@ namespace ProjectEvent.UI.Controls.Action
         public event RoutedEventHandler RenderDone;
         public event EventHandler ItemIndexChanged;
         private Grid ActionPanel;
+        private StackPanel ActionTempPanel;
         private Point oldPoint;
         private Button AddActionBtn;
         private int seedID = 0;
@@ -84,6 +85,10 @@ namespace ProjectEvent.UI.Controls.Action
         /// 当前移动的if action items暂存区
         /// </summary>
         private List<ActionItem> ifActionItems;
+        /// <summary>
+        /// action高度
+        /// </summary>
+        private Dictionary<int, double> actionsHeightTemp;
         public ActionContainer()
         {
             DefaultStyleKey = typeof(ActionContainer);
@@ -94,7 +99,7 @@ namespace ProjectEvent.UI.Controls.Action
             RemoveCommand = new Command(new Action<object>(OnRemoveCommand));
             appendInputDataList = new List<object>();
             isRendering = false;
-
+            actionsHeightTemp = new Dictionary<int, double>();
         }
 
 
@@ -109,6 +114,7 @@ namespace ProjectEvent.UI.Controls.Action
             base.OnApplyTemplate();
             ActionPanel = GetTemplateChild("ActionPanel") as Grid;
             AddActionBtn = GetTemplateChild("AddActionBtn") as Button;
+            ActionTempPanel = GetTemplateChild("ActionTempPanel") as StackPanel;
             ActionPanel.VerticalAlignment = VerticalAlignment.Top;
             AddActionBtn.Command = AddActionCommand;
             RenderDone?.Invoke(this, null);
@@ -177,6 +183,7 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 item.Y = ttf.Y;
             };
+
             item.OnRenderDone += (e, c) =>
             {
                 if (item.Tag != null)
@@ -190,7 +197,9 @@ namespace ProjectEvent.UI.Controls.Action
                 {
                     ActionPanel.Height = item.ActualHeight;
                 }
-
+                UpdateActionHeight(item);
+                ActionTempPanel.Children.Remove(item);
+                ActionPanel.Children.Add(item);
                 //继续队列
                 appendList.RemoveAt(0);
                 appendInputDataList.RemoveAt(0);
@@ -204,11 +213,42 @@ namespace ProjectEvent.UI.Controls.Action
                 {
                     ResetAllActionsMarigin();
                 }
+                //继续监控item高度变化
+                item.LayoutUpdated += (e, v) =>
+                {
+                    UpdateActionHeight(item);
+                };
             };
-            ActionPanel.Children.Add(item);
+            //ActionPanel.Children.Add(item);
+            //添加到临时容器中
+            ActionTempPanel.Children.Add(item);
             ActionItems.Add(item);
             SortAction();
         }
+
+        #region 刷新action高度
+        private void UpdateActionHeight(ActionItem item)
+        {
+
+            if (!actionsHeightTemp.ContainsKey(item.ID))
+            {
+                actionsHeightTemp.Add(item.ID, item.ActualHeight);
+            }
+            else
+            {
+                if (actionsHeightTemp[item.ID] != item.ActualHeight)
+                {
+
+                    //旧高度大于新高度时容器高度也随着变化
+                    ActionPanel.Height += (double)(item.ActualHeight - actionsHeightTemp[item.ID]);
+                    actionsHeightTemp[item.ID] = item.ActualHeight;
+                    //刷新控件位置
+                    UpdateActionsLocation();
+
+                }
+            }
+        }
+        #endregion
 
         private object GetCreateDefaultInputData(UI.Types.ActionType actionType)
         {
@@ -584,6 +624,7 @@ namespace ProjectEvent.UI.Controls.Action
             }
         }
         #endregion
+
         #region 调整所有action位置
         private void UpdateActionsLocation()
         {

@@ -4,9 +4,12 @@ using System.Text;
 
 namespace ProjectEvent.Core.Net.Types
 {
-    public enum PostType
+    /// <summary>
+    /// 参数类型
+    /// </summary>
+    public enum ParamsType
     {
-        Json,
-        FormData,
+        Json = 0,
+        FormData = 1,
     }
 }

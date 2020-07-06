@@ -51,7 +51,9 @@
 
                                 </Button>
                             </Grid>
-                            <Border x:Name="Input" Grid.Row="1" IsEnabled="{TemplateBinding IsEnabled}"/>
+                            <Border x:Name="Input" Grid.Row="1" IsEnabled="{TemplateBinding IsEnabled}">
+                                <local:ActionForm x:Name="ActionForm"/>
+                            </Border>
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>

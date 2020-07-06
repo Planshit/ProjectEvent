@@ -42,7 +42,7 @@ namespace ProjectEvent.Core.Net
         /// <summary>
         /// POST数据类型
         /// </summary>
-        public PostType PostType { get; set; } = PostType.Json;
+        public ParamsType PostType { get; set; } = ParamsType.Json;
         public HttpRequest()
         {
             httpClient = HttpClient.client;
@@ -71,11 +71,11 @@ namespace ProjectEvent.Core.Net
         {
             HandleConfig();
             HttpContent httpContent = null;
-            if (PostType == PostType.Json)
+            if (PostType == ParamsType.Json)
             {
                 httpContent = new StringContent(JsonConvert.SerializeObject(Data), Encoding.UTF8, "application/json");
             }
-            else if (PostType == PostType.FormData)
+            else if (PostType == ParamsType.FormData)
             {
                 var data = new MultipartFormDataContent();
                 //表单数据

@@ -9,6 +9,8 @@
         <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Action/ActionItem.xaml"/>
         <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Action/ActionInput.xaml"/>
         <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Action/Action.xaml"/>
+        <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Action/ActionForm.xaml"/>
+        <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Action/ActionCustomKVForm.xaml"/>
 
         <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/ItemSelect/ItemSelect.xaml" />
         <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/ItemSelect/Item.xaml"/>
