@@ -10,8 +10,9 @@ namespace ProjectEvent.Core.Action.Models
         public string Url { get; set; }
         public int Timeout { get; set; }
         public Dictionary<string, string> Headers { get; set; }
-        public Dictionary<string, string> Data { get; set; }
+        public Dictionary<string, string> QueryParams { get; set; }
         public Dictionary<string, string> Files { get; set; }
-        public ParamsType PostType { get; set; }
+        public ParamsType ParamsType { get; set; }
+        public MethodType Method { get; set; }
     }
 }

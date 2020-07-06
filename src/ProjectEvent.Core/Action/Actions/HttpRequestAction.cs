@@ -31,18 +31,19 @@ namespace ProjectEvent.Core.Action.Actions
                      var http = new HttpRequest();
                      http.Url = p.Url;
                      http.Headers = p.Headers;
-                     http.Data = p.Data;
+                     http.Data = p.QueryParams;
                      http.Files = p.Files;
-                     http.PostType = p.PostType;
+                     http.ParamsType = p.ParamsType;
                      try
                      {
-                         var content = http.PostAsync().Result;
+                         var content = p.Method == Net.Types.MethodType.GET ? http.GetAsync().Result : http.PostAsync().Result;
                          result.Result.Add((int)HttpResultType.StatusCode, content.StatusCode.ToString());
                          result.Result.Add((int)HttpResultType.Content, content.Content);
                          result.Result[(int)HttpResultType.IsSuccess] = content.IsSuccess.ToString().ToLower();
                      }
-                     catch
+                     catch (Exception e)
                      {
+                         Debug.WriteLine(e.ToString());
                      }
                  }
 

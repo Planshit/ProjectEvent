@@ -24,7 +24,7 @@ namespace ProjectEvent.Core.Action
         /// 一组action状态发生改变时发生
         /// </summary>
         public static event ActionsInvokeHandler OnActionsState;
-        public const int TestTaskID = 17290302;
+        public static int TestTaskID;
         private static CancellationTokenSource testcts;
         public static void StopTestInvokeAction()
         {
@@ -34,8 +34,13 @@ namespace ProjectEvent.Core.Action
         public static void RunTestInvokeAction(IEnumerable<ActionModel> actions)
         {
             testcts = new CancellationTokenSource();
-            //执行actions
-            Invoke(TestTaskID, actions, true);
+            TestTaskID = new Random().Next(10000, 999999999);
+            Task.Factory.StartNew(() =>
+            {
+                //执行actions
+                Invoke(TestTaskID, actions, true);
+            });
+
         }
         public static void Invoke(int taskID, IEnumerable<ActionModel> actions, bool isTest = false, bool isChildren = false)
         {
