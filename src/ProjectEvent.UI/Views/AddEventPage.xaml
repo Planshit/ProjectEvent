@@ -126,7 +126,7 @@
                 <TabItem Header="操作" IsSelected="{Binding IsActionsTabItemSelected, Mode=TwoWay}">
                     <Grid>
 
-                        <Action:ActionContainer x:Name="container" Grid.Row="1" AddActionCommand="{Binding ShowActionDialogCommand}" State="{Binding ContainerState}"/>
+                        <Action:ActionContainer x:Name="container" Grid.Row="1" AddActionCommand="{Binding ShowActionDialogCommand}" State="{Binding ContainerState}" EventType="{Binding EventType}"/>
                     </Grid>
                 </TabItem>
             </TabControl>

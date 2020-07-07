@@ -12,7 +12,7 @@ namespace ProjectEvent.UI.Controls.Action
     public class ActionCustomKVForm : Control
     {
         #region 依赖属性
-        #region 单行输入可视状态
+        #region 键值数据
         /// <summary>
         /// 键值数据
         /// </summary>
@@ -29,7 +29,22 @@ namespace ProjectEvent.UI.Controls.Action
         private static void OnKeyValuesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = d as ActionCustomKVForm;
-            if (e.NewValue != e.OldValue)
+            var oldValue = e.OldValue as Dictionary<string, string>;
+            var newValue = e.NewValue as Dictionary<string, string>;
+
+            string oldstr = string.Empty, newstr = string.Empty;
+            if (oldValue != null)
+            {
+                oldstr += string.Join('.', oldValue.Keys);
+                oldstr += string.Join('.', oldValue.Values);
+            }
+            if (newValue != null)
+            {
+                newstr += string.Join('.', newValue.Keys);
+                newstr += string.Join('.', newValue.Values);
+            }
+
+            if (oldstr != newstr)
             {
                 control.RenderData();
             }
@@ -41,6 +56,10 @@ namespace ProjectEvent.UI.Controls.Action
         private StackPanel Container;
         private Button AddBtn;
         private Dictionary<InputBox, InputBox> inputBoxs;
+        #endregion
+        #region 公共属性
+        public event EventHandler OnAddInputBoxEvent;
+        public event EventHandler OnRemoveInputBoxEvent;
         #endregion
         public ActionCustomKVForm()
         {
@@ -67,7 +86,6 @@ namespace ProjectEvent.UI.Controls.Action
         {
             if (KeyValues != null && Container != null)
             {
-                Debug.WriteLine("kvform render data");
                 Container.Children.Clear();
                 inputBoxs.Clear();
                 foreach (var item in KeyValues)
@@ -109,6 +127,9 @@ namespace ProjectEvent.UI.Controls.Action
                     Container.Children.Remove(grid);
                     inputBoxs.Remove(keyBox);
                     UpdateData();
+                    //响应事件
+                    OnRemoveInputBoxEvent?.Invoke(keyBox, null);
+                    OnRemoveInputBoxEvent?.Invoke(valueBox, null);
                 };
                 //填充数据
                 if (key != null)
@@ -129,6 +150,9 @@ namespace ProjectEvent.UI.Controls.Action
                 Container.Children.Add(grid);
 
                 inputBoxs.Add(keyBox, valueBox);
+                //响应事件
+                OnAddInputBoxEvent?.Invoke(keyBox, null);
+                OnAddInputBoxEvent?.Invoke(valueBox, null);
             }
 
 

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ProjectEvent.Core.Action.Models;
+using ProjectEvent.Core.Event.Types;
 using ProjectEvent.Core.Helper;
 using ProjectEvent.Core.Net.Types;
 using ProjectEvent.UI.Controls.Action.Data;
@@ -61,10 +62,33 @@ namespace ProjectEvent.UI.Controls.Action
                 }
             }
         }
+
+        #region 事件类型
+        public EventType EventType
+        {
+            get { return (EventType)GetValue(EventTypeProperty); }
+            set { SetValue(EventTypeProperty, value); }
+        }
+        public static readonly DependencyProperty EventTypeProperty =
+            DependencyProperty.Register("EventType",
+                typeof(EventType),
+                typeof(ActionContainer), new PropertyMetadata(new PropertyChangedCallback(OnEventTypeChanged)));
+
+        private static void OnEventTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var control = d as ActionContainer;
+            if (e.OldValue != e.NewValue)
+            {
+                control.EventTypeChanged?.Invoke(control, null);
+            }
+        }
+
+        #endregion
         #endregion
 
         public event RoutedEventHandler RenderDone;
         public event EventHandler ItemIndexChanged;
+        public event EventHandler EventTypeChanged;
         private Grid ActionPanel;
         private StackPanel ActionTempPanel;
         private Point oldPoint;

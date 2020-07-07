@@ -209,6 +209,8 @@ namespace ProjectEvent.UI.Controls.Action
                 ActionForm.DataContext = InputDataModel;
                 ActionForm.LineInputGroups = GetCreateActionLineInputGroups();
                 ActionForm.MultiLineInputGroups = GetCreateActionMultiLineInputGroups();
+                ActionForm.Action = Action;
+                ActionForm.ActionContainer = ActionContainer;
                 //Input.Child = item;
                 //item.OnClick += Item_OnClick;
                 //item.Loaded += (e, c) =>
