@@ -645,6 +645,7 @@ namespace ProjectEvent.UI.Controls.Action
                         DisplayName = $"[{action.ID}] {ActionNameData.Names[action.ActionType]}"
                     });
                 }
+                VariableActionComboBox.SelectedIndex = 0;
             }
 
         }
@@ -682,6 +683,7 @@ namespace ProjectEvent.UI.Controls.Action
                 {
                     VariableActionResultsItems.Add(item);
                 }
+                VariableActionResultsComboBox.SelectedIndex = 0;
             }
         }
         #endregion
