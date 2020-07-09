@@ -217,11 +217,20 @@ namespace ProjectEvent.UI.Controls.Action
                     return;
                 }
                 item.Tag = string.Empty;
-                ActionPanel.Height += item.ActualHeight;
-                if (double.IsNaN(ActionPanel.Height))
+                if (ActionItems.Count == 1)
                 {
-                    ActionPanel.Height = item.ActualHeight;
+                    //仅存在一个时使用auto height
+                    ActionPanel.Height = Double.NaN;
                 }
+                else
+                {
+                    ActionPanel.Height = ActionPanel.ActualHeight + item.ActualHeight;
+                }
+                //ActionPanel.Height += item.ActualHeight;
+                //if (double.IsNaN(ActionPanel.Height))
+                //{
+                //    ActionPanel.Height = item.ActualHeight;
+                //}
                 UpdateActionHeight(item);
                 ActionTempPanel.Children.Remove(item);
                 ActionPanel.Children.Add(item);
@@ -338,6 +347,10 @@ namespace ProjectEvent.UI.Controls.Action
             }
             ActionPanel.Children.Remove(item);
             ActionItems.Remove(item);
+            if (ActionItems.Count == 1)
+            {
+                ActionPanel.Height = Double.NaN;
+            }
             SortAction();
             UpdateActionsLocation();
         }
