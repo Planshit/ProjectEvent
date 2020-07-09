@@ -298,26 +298,19 @@ namespace ProjectEvent.UI.ViewModels
         #region 初始化Actions
         private void InitAcions()
         {
-            ComBoxActions.Add(new ComBoxActionModel()
+            foreach (var item in Enum.GetValues(typeof(Types.ActionType)))
             {
-                ID = (int)Types.ActionType.WriteFile,
-                Name = ActionNameData.Names[Types.ActionType.WriteFile]
-            });
-            ComBoxActions.Add(new ComBoxActionModel()
-            {
-                ID = (int)Types.ActionType.IF,
-                Name = ActionNameData.Names[Types.ActionType.IF]
-            });
-            ComBoxActions.Add(new ComBoxActionModel()
-            {
-                ID = (int)Types.ActionType.HttpRequest,
-                Name = ActionNameData.Names[Types.ActionType.HttpRequest]
-            });
-            ComBoxActions.Add(new ComBoxActionModel()
-            {
-                ID = (int)Types.ActionType.Shutdown,
-                Name = ActionNameData.Names[Types.ActionType.Shutdown]
-            });
+                var type = (Types.ActionType)item;
+                if(type!= Types.ActionType.IFElse && type!= Types.ActionType.IFEnd)
+                {
+                    ComBoxActions.Add(new ComBoxActionModel()
+                    {
+                        ID = (int)type,
+                        Name = ActionNameData.Names[type]
+                    });
+                }
+            }
+            
             ComBoxSelectedAction = ComBoxActions[0];
         }
         #endregion
