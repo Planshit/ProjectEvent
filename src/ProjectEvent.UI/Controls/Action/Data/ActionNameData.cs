@@ -27,6 +27,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
             {
                 ActionType.Shutdown,"关闭电脑"
             },
+            {
+                ActionType.StartProcess,"启动进程"
+            },
         };
     }
 }

@@ -32,6 +32,10 @@ namespace ProjectEvent.UI.Types
         /// <summary>
         /// 关机
         /// </summary>
-        Shutdown = 6
+        Shutdown = 6,
+        /// <summary>
+        /// 启动进程
+        /// </summary>
+        StartProcess = 7
     }
 }

@@ -295,6 +295,16 @@ namespace ProjectEvent.UI.Controls.Action
                         BindingName = nameof(HttpRequestActionInputModel.Url)
                     });
                     break;
+                case ActionType.StartProcess:
+                    groups.Add(new ActionInputModel()
+                    {
+                        InputType = Types.InputType.Text,
+                        Title = "进程路径",
+                        Placeholder = "请输入进程路径",
+                        IsStretch = true,
+                        BindingName = nameof(StartProcessActionInputModel.Path)
+                    });
+                    break;
             }
             return groups;
         }
@@ -339,6 +349,14 @@ namespace ProjectEvent.UI.Controls.Action
                         InputType = Types.InputType.CustomKeyValue,
                         Title = "文件（仅Form参数类型时有效）",
                         BindingName = nameof(HttpRequestActionInputModel.Files)
+                    });
+                    break;
+                case ActionType.StartProcess:
+                    groups.Add(new ActionInputModel()
+                    {
+                        InputType = Types.InputType.Text,
+                        Title = "启动参数",
+                        BindingName = nameof(StartProcessActionInputModel.Args)
                     });
                     break;
 

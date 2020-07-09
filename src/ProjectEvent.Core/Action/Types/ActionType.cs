@@ -25,6 +25,10 @@ namespace ProjectEvent.Core.Action.Types
         /// <summary>
         /// 关机
         /// </summary>
-        Shutdown=5,
+        Shutdown = 5,
+        /// <summary>
+        /// 启动一个进程
+        /// </summary>
+        StartProcess = 6,
     }
 }

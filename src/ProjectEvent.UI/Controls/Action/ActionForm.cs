@@ -268,7 +268,7 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 VariablePopup.IsOpen = false;
             };
-           
+
             VariablePopup.MouseDown += (e, c) =>
             {
                 //防止移动action
@@ -668,6 +668,9 @@ namespace ProjectEvent.UI.Controls.Action
                             break;
                         case UI.Types.ActionType.WriteFile:
                             data = WriteFileActionData.ActionResults;
+                            break;
+                        case UI.Types.ActionType.StartProcess:
+                            data = StartProcessActionData.ActionResults;
                             break;
                     }
                     SetActionResults(data);

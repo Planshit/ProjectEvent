@@ -21,5 +21,20 @@ namespace ProjectEvent.Core.Action
             return parameter;
         }
 
+        public static Dictionary<string, string> ConvertToKeyValues(int taskID, Dictionary<string, string> data)
+        {
+            var resval = new Dictionary<string, string>();
+            foreach (var item in data)
+            {
+                string key = ConvertToString(taskID, item.Key);
+                string value = ConvertToString(taskID, item.Value);
+                if (!resval.ContainsKey(key))
+                {
+                    resval.Add(key, value);
+                }
+            }
+            return resval;
+        }
+
     }
 }

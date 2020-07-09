@@ -32,6 +32,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
                 case ActionType.Shutdown:
                     action.Icon = Base.IconTypes.DeviceOff;
                     break;
+                case ActionType.StartProcess:
+                    action.Icon = Base.IconTypes.ProcessingRun;
+                    break;
             }
 
             return action;

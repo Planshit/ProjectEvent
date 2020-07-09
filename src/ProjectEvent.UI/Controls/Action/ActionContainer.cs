@@ -311,6 +311,13 @@ namespace ProjectEvent.UI.Controls.Action
                         Method = HttpRequestActionData.MethodTypes[0]
                     };
                     break;
+                case UI.Types.ActionType.StartProcess:
+                    result = new StartProcessActionInputModel()
+                    {
+                        Path = "",
+                        Args = ""
+                    };
+                    break;
             }
             return result;
         }
@@ -852,6 +859,18 @@ namespace ProjectEvent.UI.Controls.Action
                         result.ID = action.Action.ID;
                         result.Num = 1;
                         break;
+                    case UI.Types.ActionType.StartProcess:
+                        result = new Core.Action.Models.ActionModel();
+                        result.Action = Core.Action.Types.ActionType.StartProcess;
+                        result.ID = action.Action.ID;
+                        var spinputdata = action.GetInputData() as StartProcessActionInputModel;
+                        result.Num = 1;
+                        result.Parameter = new StartProcessActionParamsModel()
+                        {
+                            Path = spinputdata.Path,
+                            Args = spinputdata.Args
+                        };
+                        break;
                 }
             }
             return result;
@@ -985,6 +1004,18 @@ namespace ProjectEvent.UI.Controls.Action
                     break;
                 case Core.Action.Types.ActionType.Shutdown:
                     actionModel = ActionItemsData.Get(UI.Types.ActionType.Shutdown);
+                    break;
+                case Core.Action.Types.ActionType.StartProcess:
+                    actionModel = ActionItemsData.Get(UI.Types.ActionType.StartProcess);
+                    var spparams = ObjectConvert.Get<StartProcessActionParamsModel>(action.Parameter);
+                    if (spparams != null)
+                    {
+                        inputdata = new StartProcessActionInputModel()
+                        {
+                            Path = spparams.Path,
+                            Args = spparams.Args
+                        };
+                    }
                     break;
             }
             if (actionModel == null)
