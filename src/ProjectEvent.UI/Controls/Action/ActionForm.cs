@@ -163,6 +163,21 @@ namespace ProjectEvent.UI.Controls.Action
                 typeof(ActionContainer),
                 typeof(ActionForm));
         #endregion
+
+        #region 是否显示变量输入弹窗
+        /// <summary>
+        /// 是否显示变量输入弹窗
+        /// </summary>
+        public bool IsOpenVariablePopup
+        {
+            get { return (bool)GetValue(IsOpenVariablePopupProperty); }
+            set { SetValue(IsOpenVariablePopupProperty, value); }
+        }
+        public static readonly DependencyProperty IsOpenVariablePopupProperty =
+            DependencyProperty.Register("IsOpenVariablePopup",
+                typeof(bool),
+                typeof(ActionForm), new PropertyMetadata(false));
+        #endregion
         #endregion
 
         #region 私有属性
@@ -244,15 +259,20 @@ namespace ProjectEvent.UI.Controls.Action
             GlobalVariablePanel = GetTemplateChild("GlobalVariablePanel") as WrapPanel;
             EventVariablePanel = GetTemplateChild("EventVariablePanel") as WrapPanel;
             AddActionResultBtn = GetTemplateChild("AddActionResultBtn") as Button;
-
-            VariablePopup.Opened += (e, c) =>
+            var VariableTab = GetTemplateChild("VariableTab") as TabControl;
+            VariableTab.GotFocus += (e, c) =>
             {
-                IsInVariablePopup = true;
+                VariablePopup.IsOpen = true;
             };
-            VariablePopup.MouseLeave += (e, c) =>
+            VariableTab.LostFocus += (e, c) =>
             {
-                IsInVariablePopup = false;
                 VariablePopup.IsOpen = false;
+            };
+           
+            VariablePopup.MouseDown += (e, c) =>
+            {
+                //防止移动action
+                c.Handled = true;
             };
 
             ExpandBtn.Click += (e, c) =>
@@ -458,12 +478,7 @@ namespace ProjectEvent.UI.Controls.Action
             };
             inputBox.LostKeyboardFocus += (e, c) =>
             {
-                if (!IsInVariablePopup)
-                {
-                    VariablePopup.IsOpen = false;
-                    //KeyboradFocusInputBox = null;
-                    
-                }
+                VariablePopup.IsOpen = false;
                 //验证输入
                 Valid(inputBox);
             };

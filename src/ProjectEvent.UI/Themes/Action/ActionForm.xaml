@@ -52,13 +52,13 @@
 
                             </Grid>
                             <!--变量输入弹出层-->
-                            <Popup x:Name="VariablePopup" AllowsTransparency="True" Placement="Bottom">
+                            <Popup x:Name="VariablePopup" AllowsTransparency="True" Placement="Bottom" >
                                 <Border Width="350" Background="White" Padding="10" BorderBrush="#ccc" BorderThickness="1" CornerRadius="2" Margin="10">
                                     <Border.Effect>
                                         <DropShadowEffect Color="{DynamicResource PrimaryColor}" BlurRadius="10" Opacity="0.2"  ShadowDepth="0"/>
                                     </Border.Effect>
 
-                                    <TabControl>
+                                    <TabControl x:Name="VariableTab">
                                         <TabItem Header="全局变量">
                                             <WrapPanel x:Name="GlobalVariablePanel"/>
                                         </TabItem>

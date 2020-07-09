@@ -197,7 +197,7 @@ namespace ProjectEvent.UI.Controls.Action
             var newData = new Dictionary<string, string>();
             foreach (var item in inputBoxs)
             {
-                if (!string.IsNullOrEmpty(item.Key.Text))
+                if (!string.IsNullOrEmpty(item.Key.Text) && !newData.ContainsKey(item.Key.Text))
                 {
                     newData.Add(item.Key.Text, item.Value.Text);
                 }
