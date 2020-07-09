@@ -112,21 +112,31 @@ namespace ProjectEvent.Core.Action
         }
         private static System.Action GetAction(int taskID, ActionModel action)
         {
+            IAction actionInstance = null;
+
             switch (action.Action)
             {
                 case ActionType.WriteFile:
-                    return new WriteFileAction().GenerateAction(taskID, action);
-
+                    actionInstance = new WriteFileAction();
+                    break;
                 case ActionType.IF:
-                    return new IFAction().GenerateAction(taskID, action);
+                    actionInstance = new IFAction();
+                    break;
                 case ActionType.HttpRequest:
-                    return new HttpRequestAction().GenerateAction(taskID, action);
+                    actionInstance = new HttpRequestAction();
+                    break;
                 case ActionType.Shutdown:
-                    return new ShutdownAction().GenerateAction(taskID, action);
-
-                default:
-                    return null;
+                    actionInstance = new ShutdownAction();
+                    break;
+                case ActionType.StartProcess:
+                    actionInstance = new StartProcessAction();
+                    break;
             }
+            if (actionInstance != null)
+            {
+                return actionInstance.GenerateAction(taskID, action);
+            }
+            return null;
         }
     }
 }
