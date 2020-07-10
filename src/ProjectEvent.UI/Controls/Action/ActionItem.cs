@@ -1,4 +1,5 @@
-﻿using ProjectEvent.UI.Controls.Action.Data;
+﻿using ProjectEvent.UI.Controls.Action.Builders;
+using ProjectEvent.UI.Controls.Action.Data;
 using ProjectEvent.UI.Controls.Action.Models;
 using ProjectEvent.UI.Controls.Base;
 using ProjectEvent.UI.Models.DataModels;
@@ -160,13 +161,13 @@ namespace ProjectEvent.UI.Controls.Action
         private ActionForm ActionForm;
         public ActionContainer ActionContainer { get; set; }
         public object VMDataContext { get; set; }
+        public IActionBuilder Builder { get; set; }
         public ActionItem()
         {
             DefaultStyleKey = typeof(ActionItem);
             var translateTransform = new TranslateTransform() { X = 0, Y = 0 };
             translateTransform.Changed += translateTransform_Changed;
             RenderTransform = translateTransform;
-            //SetDefautlInputData();
         }
 
         public override void OnApplyTemplate()
@@ -200,23 +201,14 @@ namespace ProjectEvent.UI.Controls.Action
             }
             else
             {
-                //Action item = new Action(Action.ID, GetInputs());
-                //item.VMDataContext = VMDataContext;
-                //item.ActionContainer = ActionContainer;
                 ActionName = $"[{Action.ID}] {Action.ActionName}";
-                //item.Data = InputDataModel;
                 Icon = Action.Icon;
-                ActionForm.DataContext = InputDataModel;
-                ActionForm.LineInputGroups = GetCreateActionLineInputGroups();
-                ActionForm.MultiLineInputGroups = GetCreateActionMultiLineInputGroups();
+                ActionForm.DataContext = Builder.GetInputModelData();
+                ActionForm.LineInputGroups = Builder.GetBaseActionInputModels();
+                ActionForm.MultiLineInputGroups = Builder.GetDetailActionInputModels();
                 ActionForm.Action = Action;
+                
                 ActionForm.ActionContainer = ActionContainer;
-                //Input.Child = item;
-                //item.OnClick += Item_OnClick;
-                //item.Loaded += (e, c) =>
-                //{
-                //    OnRenderDone?.Invoke(this, null);
-                //};
                 ActionForm.OnRenderDone += (e, c) =>
                 {
                     OnRenderDone?.Invoke(this, null);
@@ -229,140 +221,11 @@ namespace ProjectEvent.UI.Controls.Action
 
         }
 
-        /// <summary>
-        /// 获取输入数据
-        /// </summary>
-        /// <returns></returns>
-        public object GetInputData()
-        {
-            return InputDataModel;
-        }
         private void Item_OnClick(object sender, EventArgs e)
         {
             OnClick?.Invoke(sender, e);
         }
 
-        #region 获取创建单行输入组模板
-        private List<ActionInputModel> GetCreateActionLineInputGroups()
-        {
-            var groups = new List<ActionInputModel>();
-            switch (Action.ActionType)
-            {
-                case ActionType.WriteFile:
-                    groups.Add(new ActionInputModel()
-                    {
-                        InputType = Types.InputType.Text,
-                        Placeholder = "请输入文件路径",
-                        Title = "路径",
-                        BindingName = nameof(WriteFileActionInputModel.FilePath)
-                    });
-                    groups.Add(new ActionInputModel()
-                    {
-                        InputType = Types.InputType.Text,
-                        Placeholder = "请输入文件内容",
-                        Title = "内容",
-                        BindingName = nameof(WriteFileActionInputModel.Content)
-                    });
-                    break;
-                case ActionType.IF:
-                    groups.Add(new ActionInputModel()
-                    {
-                        InputType = Types.InputType.Text,
-                        Title = "如果",
-                        Placeholder = "请输入",
-                        BindingName = nameof(IFActionInputModel.Left)
-                    });
-                    groups.Add(new ActionInputModel()
-                    {
-                        InputType = Types.InputType.Select,
-                        SelectItems = IFActionConditionData.ComBoxData,
-                        BindingName = nameof(IFActionInputModel.Condition)
-                    });
-                    groups.Add(new ActionInputModel()
-                    {
-                        InputType = Types.InputType.Text,
-                        Placeholder = "请输入",
-                        BindingName = nameof(IFActionInputModel.Right)
-                    });
-                    break;
-                case ActionType.HttpRequest:
-                    groups.Add(new ActionInputModel()
-                    {
-                        InputType = Types.InputType.Text,
-                        Title = "请求地址",
-                        Placeholder = "请输入完整地址",
-                        IsStretch = true,
-                        BindingName = nameof(HttpRequestActionInputModel.Url)
-                    });
-                    break;
-                case ActionType.StartProcess:
-                    groups.Add(new ActionInputModel()
-                    {
-                        InputType = Types.InputType.Text,
-                        Title = "进程路径",
-                        Placeholder = "请输入进程路径",
-                        IsStretch = true,
-                        BindingName = nameof(StartProcessActionInputModel.Path)
-                    });
-                    break;
-            }
-            return groups;
-        }
-        #endregion
 
-        #region 获取创建多行输入组模板
-        private List<ActionInputModel> GetCreateActionMultiLineInputGroups()
-        {
-            var groups = new List<ActionInputModel>();
-            switch (Action.ActionType)
-            {
-                case ActionType.HttpRequest:
-                    groups.Add(new ActionInputModel()
-                    {
-                        InputType = Types.InputType.Select,
-                        Title = "方法",
-                        SelectItems = HttpRequestActionData.MethodTypes,
-                        BindingName = nameof(HttpRequestActionInputModel.Method)
-                    });
-                    groups.Add(new ActionInputModel()
-                    {
-                        InputType = Types.InputType.Select,
-                        Title = "参数类型",
-                        SelectItems = HttpRequestActionData.PamramsTypes,
-                        BindingName = nameof(HttpRequestActionInputModel.PamramsType)
-                    });
-
-                    groups.Add(new ActionInputModel()
-                    {
-                        InputType = Types.InputType.CustomKeyValue,
-                        Title = "请求参数",
-                        BindingName = nameof(HttpRequestActionInputModel.QueryParams)
-                    });
-                    groups.Add(new ActionInputModel()
-                    {
-                        InputType = Types.InputType.CustomKeyValue,
-                        Title = "请求头",
-                        BindingName = nameof(HttpRequestActionInputModel.Headers)
-                    });
-                    groups.Add(new ActionInputModel()
-                    {
-                        InputType = Types.InputType.CustomKeyValue,
-                        Title = "文件（仅Form参数类型时有效）",
-                        BindingName = nameof(HttpRequestActionInputModel.Files)
-                    });
-                    break;
-                case ActionType.StartProcess:
-                    groups.Add(new ActionInputModel()
-                    {
-                        InputType = Types.InputType.Text,
-                        Title = "启动参数",
-                        BindingName = nameof(StartProcessActionInputModel.Args)
-                    });
-                    break;
-
-            }
-            return groups;
-        }
-        #endregion
     }
 }

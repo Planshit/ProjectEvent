@@ -62,13 +62,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Themes\Action\Action.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="Themes\Action\ActionCustomKVForm.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Themes\Action\ActionInput.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Themes\Action\ActionItem.xaml">

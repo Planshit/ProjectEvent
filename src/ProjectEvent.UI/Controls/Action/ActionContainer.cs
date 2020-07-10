@@ -4,6 +4,7 @@ using ProjectEvent.Core.Action.Models;
 using ProjectEvent.Core.Event.Types;
 using ProjectEvent.Core.Helper;
 using ProjectEvent.Core.Net.Types;
+using ProjectEvent.UI.Controls.Action.Builders;
 using ProjectEvent.UI.Controls.Action.Data;
 using ProjectEvent.UI.Controls.Action.Models;
 using ProjectEvent.UI.Models.DataModels;
@@ -99,8 +100,8 @@ namespace ProjectEvent.UI.Controls.Action
         /// <summary>
         /// 等待添加入容器的控件列表
         /// </summary>
-        private List<ActionItemModel> appendList;
-        private List<object> appendInputDataList;
+        private List<ActionItemModel> appendActionItemTempList;
+        private List<IActionBuilder> appendBuilderTempList;
 
         private bool isRendering;
         public Command RemoveCommand { get; set; }
@@ -119,10 +120,10 @@ namespace ProjectEvent.UI.Controls.Action
             DefaultStyleKey = typeof(ActionContainer);
             oldPoint = new Point();
             ActionItems = new List<ActionItem>();
-            appendList = new List<ActionItemModel>();
+            appendActionItemTempList = new List<ActionItemModel>();
             ifActionItems = new List<ActionItem>();
             RemoveCommand = new Command(new Action<object>(OnRemoveCommand));
-            appendInputDataList = new List<object>();
+            appendBuilderTempList = new List<IActionBuilder>();
             isRendering = false;
             actionsHeightTemp = new Dictionary<int, double>();
         }
@@ -146,21 +147,21 @@ namespace ProjectEvent.UI.Controls.Action
         }
 
         #region 添加控件
-        public void AddItem(ActionItemModel action, object inputdata = null)
+        public void AddItem(ActionItemModel action, IActionBuilder builder = null)
         {
-            if (!appendList.Contains(action))
+            if (!appendActionItemTempList.Contains(action))
             {
-                appendList.Add(action);
-                appendInputDataList.Add(inputdata);
+                appendActionItemTempList.Add(action);
+                appendBuilderTempList.Add(builder);
             }
 
             if (isRendering)
             {
                 return;
             }
-            AddItemControl(action, inputdata);
+            AddItemControl(action, builder);
         }
-        private void AddItemControl(ActionItemModel action, object inputdata = null)
+        private void AddItemControl(ActionItemModel action, IActionBuilder builder = null)
         {
             isRendering = true;
             double Y = 0;
@@ -195,7 +196,8 @@ namespace ProjectEvent.UI.Controls.Action
                 Mode = BindingMode.Default,
             });
             item.ID = action.ID;
-            item.InputDataModel = inputdata == null ? GetCreateDefaultInputData(action.ActionType) : inputdata;
+            //item.InputDataModel = inputdata == null ? ActionData.GetCreateDefaultInputData(action.ActionType) : inputdata;
+            item.Builder = builder == null ? ActionBuilder.BuilderByActionItem(action) : builder;
             item.Action = action;
             item.VerticalAlignment = VerticalAlignment.Top;
             var ttf = item.RenderTransform as TranslateTransform;
@@ -235,13 +237,13 @@ namespace ProjectEvent.UI.Controls.Action
                 ActionTempPanel.Children.Remove(item);
                 ActionPanel.Children.Add(item);
                 //继续队列
-                appendList.RemoveAt(0);
-                appendInputDataList.RemoveAt(0);
+                appendActionItemTempList.RemoveAt(0);
+                appendBuilderTempList.RemoveAt(0);
 
                 isRendering = false;
-                if (appendList.Count > 0)
+                if (appendActionItemTempList.Count > 0)
                 {
-                    AddItem(appendList[0], appendInputDataList[0]);
+                    AddItem(appendActionItemTempList[0], appendBuilderTempList[0]);
                 }
                 else
                 {
@@ -284,43 +286,7 @@ namespace ProjectEvent.UI.Controls.Action
         }
         #endregion
 
-        private object GetCreateDefaultInputData(UI.Types.ActionType actionType)
-        {
-            object result = null;
-            switch (actionType)
-            {
-                case UI.Types.ActionType.IF:
-                    result = new IFActionInputModel()
-                    {
-                        Condition = IFActionConditionData.ComBoxData[0]
-                    };
 
-                    break;
-                case UI.Types.ActionType.WriteFile:
-                    result = new WriteFileActionInputModel()
-                    {
-                        FilePath = "",
-                        Content = ""
-                    };
-                    break;
-                case UI.Types.ActionType.HttpRequest:
-                    result = new HttpRequestActionInputModel()
-                    {
-                        Url = "",
-                        PamramsType = HttpRequestActionData.PamramsTypes[0],
-                        Method = HttpRequestActionData.MethodTypes[0]
-                    };
-                    break;
-                case UI.Types.ActionType.StartProcess:
-                    result = new StartProcessActionInputModel()
-                    {
-                        Path = "",
-                        Args = ""
-                    };
-                    break;
-            }
-            return result;
-        }
         #endregion
 
         #region 移除控件
@@ -822,56 +788,58 @@ namespace ProjectEvent.UI.Controls.Action
             else
             {
                 //switch ActionType是UI中使用的Type，与Core使用的ActionType并不一致，这里需要转换
-                switch (action.Action.ActionType)
-                {
-                    case UI.Types.ActionType.WriteFile:
-                        result = new Core.Action.Models.ActionModel();
-                        var inputdata = action.GetInputData() as WriteFileActionInputModel;
-                        result.Action = Core.Action.Types.ActionType.WriteFile;
-                        result.ID = action.Action.ID;
-                        result.Parameter = new WriteFileActionParameterModel()
-                        {
-                            FilePath = inputdata.FilePath,
-                            Content = inputdata.Content
-                        };
-                        result.Num = 1;
-                        break;
-                    case UI.Types.ActionType.HttpRequest:
-                        result = new Core.Action.Models.ActionModel();
-                        var httprequestInputdata = action.GetInputData() as HttpRequestActionInputModel;
-                        result.Action = Core.Action.Types.ActionType.HttpRequest;
-                        result.ID = action.Action.ID;
-                        result.Parameter = new HttpRequestActionParameterModel()
-                        {
-                            Url = httprequestInputdata.Url,
-                            QueryParams = httprequestInputdata.QueryParams,
-                            Method = httprequestInputdata.Method == null ? Core.Net.Types.MethodType.GET : (MethodType)httprequestInputdata.Method.ID,
 
-                            ParamsType = httprequestInputdata.PamramsType == null ? Core.Net.Types.ParamsType.Json : (ParamsType)httprequestInputdata.PamramsType.ID,
-                            Files = httprequestInputdata.Files,
-                            Headers = httprequestInputdata.Headers
-                        };
-                        result.Num = 1;
-                        break;
-                    case UI.Types.ActionType.Shutdown:
-                        result = new Core.Action.Models.ActionModel();
-                        result.Action = Core.Action.Types.ActionType.Shutdown;
-                        result.ID = action.Action.ID;
-                        result.Num = 1;
-                        break;
-                    case UI.Types.ActionType.StartProcess:
-                        result = new Core.Action.Models.ActionModel();
-                        result.Action = Core.Action.Types.ActionType.StartProcess;
-                        result.ID = action.Action.ID;
-                        var spinputdata = action.GetInputData() as StartProcessActionInputModel;
-                        result.Num = 1;
-                        result.Parameter = new StartProcessActionParamsModel()
-                        {
-                            Path = spinputdata.Path,
-                            Args = spinputdata.Args
-                        };
-                        break;
-                }
+                result = action.Builder.GetCoreActionModel();
+                //switch (action.Action.ActionType)
+                //{
+                //    case UI.Types.ActionType.WriteFile:
+                //        result = new Core.Action.Models.ActionModel();
+                //        var inputdata = action.GetInputData() as WriteFileActionInputModel;
+                //        result.Action = Core.Action.Types.ActionType.WriteFile;
+                //        result.ID = action.Action.ID;
+                //        result.Parameter = new WriteFileActionParameterModel()
+                //        {
+                //            FilePath = inputdata.FilePath,
+                //            Content = inputdata.Content
+                //        };
+                //        result.Num = 1;
+                //        break;
+                //    case UI.Types.ActionType.HttpRequest:
+                //        result = new Core.Action.Models.ActionModel();
+                //        var httprequestInputdata = action.GetInputData() as HttpRequestActionInputModel;
+                //        result.Action = Core.Action.Types.ActionType.HttpRequest;
+                //        result.ID = action.Action.ID;
+                //        result.Parameter = new HttpRequestActionParameterModel()
+                //        {
+                //            Url = httprequestInputdata.Url,
+                //            QueryParams = httprequestInputdata.QueryParams,
+                //            Method = httprequestInputdata.Method == null ? Core.Net.Types.MethodType.GET : (MethodType)httprequestInputdata.Method.ID,
+
+                //            ParamsType = httprequestInputdata.PamramsType == null ? Core.Net.Types.ParamsType.Json : (ParamsType)httprequestInputdata.PamramsType.ID,
+                //            Files = httprequestInputdata.Files,
+                //            Headers = httprequestInputdata.Headers
+                //        };
+                //        result.Num = 1;
+                //        break;
+                //    case UI.Types.ActionType.Shutdown:
+                //        result = new Core.Action.Models.ActionModel();
+                //        result.Action = Core.Action.Types.ActionType.Shutdown;
+                //        result.ID = action.Action.ID;
+                //        result.Num = 1;
+                //        break;
+                //    case UI.Types.ActionType.StartProcess:
+                //        result = new Core.Action.Models.ActionModel();
+                //        result.Action = Core.Action.Types.ActionType.StartProcess;
+                //        result.ID = action.Action.ID;
+                //        var spinputdata = action.GetInputData() as StartProcessActionInputModel;
+                //        result.Num = 1;
+                //        result.Parameter = new StartProcessActionParamsModel()
+                //        {
+                //            Path = spinputdata.Path,
+                //            Args = spinputdata.Args
+                //        };
+                //        break;
+                //}
             }
             return result;
         }
@@ -885,7 +853,7 @@ namespace ProjectEvent.UI.Controls.Action
         private Core.Action.Models.ActionModel GenerateIFAction(ActionItem action)
         {
             //action input
-            var inputdata = action.GetInputData() as IFActionInputModel;
+            var inputdata = action.Builder.GetInputModelData() as IFActionInputModel;
 
             //else item
             var elseActionItem = ActionItems.Where(m => m.Action.ParentID == action.Action.ID && m.Action.ActionType == UI.Types.ActionType.IFElse).FirstOrDefault();
@@ -935,6 +903,7 @@ namespace ProjectEvent.UI.Controls.Action
                 GetMaxID(action);
             }
             //导入容器
+            var mx = seedID;
             foreach (var action in actions)
             {
                 ImportAction(action);
@@ -952,13 +921,10 @@ namespace ProjectEvent.UI.Controls.Action
         }
         private void GetMaxID(Core.Action.Models.ActionModel action)
         {
+            seedID = action.ID > seedID ? action.ID : seedID;
             if (action.Action == Core.Action.Types.ActionType.IF)
             {
                 GetIFChildrenMaxID(action);
-            }
-            else
-            {
-                seedID = action.ID > seedID ? action.ID : seedID;
             }
         }
 
@@ -969,62 +935,62 @@ namespace ProjectEvent.UI.Controls.Action
                 ImportIFAction(action);
                 return;
             }
-            ActionItemModel actionModel = null;
-            object inputdata = null;
-            //switch Core Type，和UI Type并不一致，这里需要转换
-            switch (action.Action)
+
+            //switch (action.Action)
+            //{
+            //    case Core.Action.Types.ActionType.WriteFile:
+            //        actionModel = ActionData.GetCreateActionItemModel(UI.Types.ActionType.WriteFile);
+            //        var writefileParameter = ObjectConvert.Get<WriteFileActionParameterModel>(action.Parameter);
+            //        if (writefileParameter != null)
+            //        {
+            //            inputdata = new WriteFileActionInputModel()
+            //            {
+            //                FilePath = writefileParameter.FilePath,
+            //                Content = writefileParameter.Content
+            //            };
+            //        }
+            //        break;
+            //    case Core.Action.Types.ActionType.HttpRequest:
+            //        actionModel = ActionData.GetCreateActionItemModel(UI.Types.ActionType.HttpRequest);
+            //        var httpRequestParameter = ObjectConvert.Get<HttpRequestActionParameterModel>(action.Parameter);
+            //        if (httpRequestParameter != null)
+            //        {
+            //            inputdata = new HttpRequestActionInputModel()
+            //            {
+            //                Url = httpRequestParameter.Url,
+            //                Method = HttpRequestActionData.GetMethodType((int)httpRequestParameter.Method),
+            //                PamramsType = HttpRequestActionData.GetPamramsType((int)httpRequestParameter.ParamsType),
+            //                QueryParams = httpRequestParameter.QueryParams,
+            //                Files = httpRequestParameter.Files,
+            //                Headers = httpRequestParameter.Headers
+            //            };
+            //        }
+            //        break;
+            //    case Core.Action.Types.ActionType.Shutdown:
+            //        actionModel = ActionData.GetCreateActionItemModel(UI.Types.ActionType.Shutdown);
+            //        break;
+            //    case Core.Action.Types.ActionType.StartProcess:
+            //        actionModel = ActionData.GetCreateActionItemModel(UI.Types.ActionType.StartProcess);
+            //        var spparams = ObjectConvert.Get<StartProcessActionParamsModel>(action.Parameter);
+            //        if (spparams != null)
+            //        {
+            //            inputdata = new StartProcessActionInputModel()
+            //            {
+            //                Path = spparams.Path,
+            //                Args = spparams.Args
+            //            };
+            //        }
+            //        break;
+            //}
+
+
+            var builder = ActionBuilder.BuilderByAction(action);
+            var actionItem = builder.GetActionItemModel();
+            actionItem.ParentID = parentID;
+            if (builder != null)
             {
-                case Core.Action.Types.ActionType.WriteFile:
-                    actionModel = ActionItemsData.Get(UI.Types.ActionType.WriteFile);
-                    var writefileParameter = ObjectConvert.Get<WriteFileActionParameterModel>(action.Parameter);
-                    if (writefileParameter != null)
-                    {
-                        inputdata = new WriteFileActionInputModel()
-                        {
-                            FilePath = writefileParameter.FilePath,
-                            Content = writefileParameter.Content
-                        };
-                    }
-                    break;
-                case Core.Action.Types.ActionType.HttpRequest:
-                    actionModel = ActionItemsData.Get(UI.Types.ActionType.HttpRequest);
-                    var httpRequestParameter = ObjectConvert.Get<HttpRequestActionParameterModel>(action.Parameter);
-                    if (httpRequestParameter != null)
-                    {
-                        inputdata = new HttpRequestActionInputModel()
-                        {
-                            Url = httpRequestParameter.Url,
-                            Method = HttpRequestActionData.GetMethodType((int)httpRequestParameter.Method),
-                            PamramsType = HttpRequestActionData.GetPamramsType((int)httpRequestParameter.ParamsType),
-                            QueryParams = httpRequestParameter.QueryParams,
-                            Files = httpRequestParameter.Files,
-                            Headers = httpRequestParameter.Headers
-                        };
-                    }
-                    break;
-                case Core.Action.Types.ActionType.Shutdown:
-                    actionModel = ActionItemsData.Get(UI.Types.ActionType.Shutdown);
-                    break;
-                case Core.Action.Types.ActionType.StartProcess:
-                    actionModel = ActionItemsData.Get(UI.Types.ActionType.StartProcess);
-                    var spparams = ObjectConvert.Get<StartProcessActionParamsModel>(action.Parameter);
-                    if (spparams != null)
-                    {
-                        inputdata = new StartProcessActionInputModel()
-                        {
-                            Path = spparams.Path,
-                            Args = spparams.Args
-                        };
-                    }
-                    break;
+                AddItem(actionItem, builder);
             }
-            if (actionModel == null)
-            {
-                return;
-            }
-            actionModel.ID = action.ID;
-            actionModel.ParentID = parentID;
-            AddItem(actionModel, inputdata);
         }
         private void ImportIFAction(Core.Action.Models.ActionModel action)
         {
@@ -1033,15 +999,18 @@ namespace ProjectEvent.UI.Controls.Action
                 return;
             }
             //创建if action
+            var builder = ActionBuilder.BuilderByAction(action);
+            var ifActionModel = builder.GetActionItemModel();
             var ifParameter = ObjectConvert.Get<IFActionParameterModel>(action.Parameter);
+            //var ifParameter = ObjectConvert.Get<IFActionParameterModel>(action.Parameter);
 
-            var ifActionModel = ActionItemsData.Get(UI.Types.ActionType.IF);
-            ifActionModel.ID = action.ID;
-            var ifActionInputData = new IFActionInputModel();
-            ifActionInputData.Left = ifParameter.LeftInput;
-            ifActionInputData.Right = ifParameter.RightInput;
-            ifActionInputData.Condition = IFActionConditionData.GetCombox((int)ifParameter.Condition);
-            AddItem(ifActionModel, ifActionInputData);
+            //var ifActionModel = ActionData.GetCreateActionItemModel(UI.Types.ActionType.IF);
+            //ifActionModel.ID = action.ID;
+            //var ifActionInputData = new IFActionInputModel();
+            //ifActionInputData.Left = ifParameter.LeftInput;
+            //ifActionInputData.Right = ifParameter.RightInput;
+            //ifActionInputData.Condition = IFActionConditionData.GetCombox((int)ifParameter.Condition);
+            AddItem(ifActionModel, builder);
             //创建pass子级
             if (ifParameter.PassActions.Count > 0)
             {
@@ -1051,7 +1020,7 @@ namespace ProjectEvent.UI.Controls.Action
                 }
             }
             //创建else action
-            var elseActionModel = ActionItemsData.Get(UI.Types.ActionType.IFElse);
+            var elseActionModel = ActionData.GetCreateActionItemModel(UI.Types.ActionType.IFElse);
             elseActionModel.ID = GetCreateActionID();
             elseActionModel.ParentID = ifActionModel.ID;
             AddItem(elseActionModel);
@@ -1064,7 +1033,7 @@ namespace ProjectEvent.UI.Controls.Action
                 }
             }
             //创建end action
-            var endActionModel = ActionItemsData.Get(UI.Types.ActionType.IFEnd);
+            var endActionModel = ActionData.GetCreateActionItemModel(UI.Types.ActionType.IFEnd);
             endActionModel.ID = GetCreateActionID();
             endActionModel.ParentID = ifActionModel.ID;
             AddItem(endActionModel);

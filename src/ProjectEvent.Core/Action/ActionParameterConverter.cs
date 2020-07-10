@@ -12,6 +12,10 @@ namespace ProjectEvent.Core.Action
     {
         public static string ConvertToString(int taskID, string parameter)
         {
+            if (parameter == null)
+            {
+                return string.Empty;
+            }
             //事件变量
             parameter = EventTemporaryObject.ConvertToContent(taskID, parameter);
             //action result value

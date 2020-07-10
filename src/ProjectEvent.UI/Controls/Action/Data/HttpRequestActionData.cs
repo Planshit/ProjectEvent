@@ -49,24 +49,24 @@ namespace ProjectEvent.UI.Controls.Action.Data
             return MethodTypes.Where(m => m.ID == id).FirstOrDefault();
         }
 
-        public static List<ComBoxModel> ActionResults = new List<ComBoxModel>()
-        {
-            new ComBoxModel()
-            {
-                ID = (int)HttpResultType.IsSuccess,
-                DisplayName = "是否成功（true，false）"
-            },
-            new ComBoxModel()
-            {
-                ID = (int)HttpResultType.StatusCode,
-                DisplayName = "状态码"
-            },
-            new ComBoxModel()
-            {
-                ID = (int)HttpResultType.Content,
-                DisplayName = "响应内容"
-            },
+        //public static List<ComBoxModel> ActionResults = new List<ComBoxModel>()
+        //{
+        //    new ComBoxModel()
+        //    {
+        //        ID = (int)HttpResultType.IsSuccess,
+        //        DisplayName = "是否成功（true，false）"
+        //    },
+        //    new ComBoxModel()
+        //    {
+        //        ID = (int)HttpResultType.StatusCode,
+        //        DisplayName = "状态码"
+        //    },
+        //    new ComBoxModel()
+        //    {
+        //        ID = (int)HttpResultType.Content,
+        //        DisplayName = "响应内容"
+        //    },
 
-        };
+        //};
     }
 }

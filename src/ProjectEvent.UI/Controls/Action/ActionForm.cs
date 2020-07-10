@@ -642,7 +642,7 @@ namespace ProjectEvent.UI.Controls.Action
                     VariableActionItems.Add(new ComBoxModel()
                     {
                         ID = action.ID,
-                        DisplayName = $"[{action.ID}] {ActionNameData.Names[action.ActionType]}"
+                        DisplayName = $"[{action.ID}] {ActionData.Names[action.ActionType]}"
                     });
                 }
                 VariableActionComboBox.SelectedIndex = 0;
@@ -660,20 +660,7 @@ namespace ProjectEvent.UI.Controls.Action
                 var action = ActionContainer.ActionItems.Where(m => m.Action.ID == selectionItem.ID).FirstOrDefault();
                 if (action != null)
                 {
-                    List<ComBoxModel> data = null;
-                    switch (action.Action.ActionType)
-                    {
-                        case UI.Types.ActionType.HttpRequest:
-                            data = HttpRequestActionData.ActionResults;
-                            break;
-                        case UI.Types.ActionType.WriteFile:
-                            data = WriteFileActionData.ActionResults;
-                            break;
-                        case UI.Types.ActionType.StartProcess:
-                            data = StartProcessActionData.ActionResults;
-                            break;
-                    }
-                    SetActionResults(data);
+                    SetActionResults(ActionData.GetActionResults(action.Action.ActionType));
                 }
             }
         }
@@ -775,14 +762,16 @@ namespace ProjectEvent.UI.Controls.Action
                 var id = int.Parse(match.Groups["id"].Value);
                 var key = int.Parse(match.Groups["key"].Value);
                 //判断action是否存在
-                if (!VariableActionItems.Where(m => m.ID == id).Any())
+                var action = ActionContainer.ActionItems.Where(m => m.Action.ID == id && m.Action.Index < Action.Index).FirstOrDefault();
+                if (action == null)
                 {
                     inputTextBox.BorderBrush = Colors.GetColor(ColorTypes.Red);
                     break;
                 }
 
                 //判断action是否支持该变量
-                if (!HttpRequestActionData.ActionResults.Where(m => m.ID == key).Any())
+                var results = ActionData.GetActionResults(action.Action.ActionType);
+                if (!results.Where(m => m.ID == key).Any())
                 {
                     inputTextBox.BorderBrush = Colors.GetColor(ColorTypes.Red);
                     break;

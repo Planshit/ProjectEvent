@@ -306,7 +306,7 @@ namespace ProjectEvent.UI.ViewModels
                     ComBoxActions.Add(new ComBoxActionModel()
                     {
                         ID = (int)type,
-                        Name = ActionNameData.Names[type]
+                        Name = ActionData.Names[type]
                     });
                 }
             }
@@ -381,23 +381,23 @@ namespace ProjectEvent.UI.ViewModels
                 //特殊action 单独处理
                 case Types.ActionType.IF:
                     int id = container.GetCreateActionID();
-                    var ifmodel = ActionItemsData.Get((Types.ActionType)ComBoxSelectedAction.ID);
+                    var ifmodel = ActionData.GetCreateActionItemModel((Types.ActionType)ComBoxSelectedAction.ID);
                     ifmodel.ID = id;
                     container.AddItem(ifmodel);
 
-                    var elsemodel = ActionItemsData.Get(Types.ActionType.IFElse);
+                    var elsemodel = ActionData.GetCreateActionItemModel(Types.ActionType.IFElse);
                     elsemodel.ID = container.GetCreateActionID();
                     elsemodel.ParentID = id;
                     container.AddItem(elsemodel);
 
-                    var endmodel = ActionItemsData.Get(Types.ActionType.IFEnd);
+                    var endmodel = ActionData.GetCreateActionItemModel(Types.ActionType.IFEnd);
                     endmodel.ID = container.GetCreateActionID();
                     endmodel.ParentID = id;
                     container.AddItem(endmodel);
                     break;
                 default:
                     //非特殊action
-                    var model = ActionItemsData.Get((Types.ActionType)ComBoxSelectedAction.ID);
+                    var model = ActionData.GetCreateActionItemModel((Types.ActionType)ComBoxSelectedAction.ID);
                     model.ID = container.GetCreateActionID();
                     container.AddItem(model);
                     break;

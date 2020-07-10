@@ -7,8 +7,6 @@
         <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/PageContainer.xaml" />
         <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Action/ActionContainer.xaml" />
         <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Action/ActionItem.xaml"/>
-        <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Action/ActionInput.xaml"/>
-        <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Action/Action.xaml"/>
         <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Action/ActionForm.xaml"/>
         <ResourceDictionary Source="/ProjectEvent.UI;component/Themes/Action/ActionCustomKVForm.xaml"/>
 
