@@ -36,6 +36,10 @@ namespace ProjectEvent.UI.Types
         /// <summary>
         /// 启动进程
         /// </summary>
-        StartProcess = 7
+        StartProcess = 7,
+        /// <summary>
+        /// 使用浏览器打开网页
+        /// </summary>
+        OpenURL=8
     }
 }

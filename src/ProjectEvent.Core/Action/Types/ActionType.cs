@@ -30,5 +30,9 @@ namespace ProjectEvent.Core.Action.Types
         /// 启动一个进程
         /// </summary>
         StartProcess = 6,
+        /// <summary>
+        /// 打开一个网页链接
+        /// </summary>
+        OpenURL = 7
     }
 }

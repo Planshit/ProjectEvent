@@ -40,6 +40,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
                 case ActionType.StartProcess:
                     action.Icon = Base.IconTypes.ProcessingRun;
                     break;
+                case ActionType.OpenURL:
+                    action.Icon = Base.IconTypes.WebEnvironment;
+                    break;
             }
 
             return action;
@@ -69,6 +72,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
             },
             {
                 ActionType.StartProcess,"启动进程"
+            },
+            {
+                ActionType.OpenURL,"浏览器打开网页"
             },
         };
         #endregion
@@ -138,6 +144,17 @@ namespace ProjectEvent.UI.Controls.Action.Data
             },
 
         };
+                    break;
+                case ActionType.OpenURL:
+                    //http请求
+                    data = new List<ComBoxModel>()
+        {
+            new ComBoxModel()
+            {
+                ID = (int)CommonResultKeyType.IsSuccess,
+                DisplayName = "是否成功（true，false）"
+            },
+                    };
                     break;
             }
             return data;

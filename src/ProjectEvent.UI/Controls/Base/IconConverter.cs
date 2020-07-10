@@ -50,6 +50,7 @@ namespace ProjectEvent.UI.Controls.Base
             {IconTypes.OpenWithMirrored,"\xEA5C"},
             {IconTypes.FileCode,"\xF30E"},
             {IconTypes.BuildIssue,"\xF319"},
+            {IconTypes.WebEnvironment,"\xE3DB"},
 
             {IconTypes.ChevronUp,"\xE70E"}
 

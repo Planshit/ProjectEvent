@@ -131,6 +131,9 @@ namespace ProjectEvent.Core.Action
                 case ActionType.StartProcess:
                     actionInstance = new StartProcessAction();
                     break;
+                case ActionType.OpenURL:
+                    actionInstance = new OpenURLAction();
+                    break;
             }
             if (actionInstance != null)
             {

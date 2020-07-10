@@ -29,6 +29,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 case ActionType.Shutdown:
                     builder = new ShutdownActionBuilder();
                     break;
+                case ActionType.OpenURL:
+                    builder = new OpenURLActionBuilder();
+                    break;
             }
             if (builder != null)
             {
@@ -55,6 +58,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                     break;
                 case Core.Action.Types.ActionType.Shutdown:
                     builder = new ShutdownActionBuilder();
+                    break;
+                case Core.Action.Types.ActionType.OpenURL:
+                    builder = new OpenURLActionBuilder();
                     break;
             }
             if (builder != null)
