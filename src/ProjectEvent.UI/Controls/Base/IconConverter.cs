@@ -51,6 +51,7 @@ namespace ProjectEvent.UI.Controls.Base
             {IconTypes.FileCode,"\xF30E"},
             {IconTypes.BuildIssue,"\xF319"},
             {IconTypes.WebEnvironment,"\xE3DB"},
+            {IconTypes.DesktopScreenshot,"\xF5D9"},
 
             {IconTypes.ChevronUp,"\xE70E"}
 

@@ -33,6 +33,10 @@ namespace ProjectEvent.Core.Action.Types
         /// <summary>
         /// 打开一个网页链接
         /// </summary>
-        OpenURL = 7
+        OpenURL = 7,
+        /// <summary>
+        /// 截取当前屏幕
+        /// </summary>
+        Snipping
     }
 }

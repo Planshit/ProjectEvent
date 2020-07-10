@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29519.87
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectEvent.UI", "ProjectEvent.UI\ProjectEvent.UI.csproj", "{470E46C8-8938-406A-9CFC-6C354686F368}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectEvent.Core", "ProjectEvent.Core\ProjectEvent.Core.csproj", "{7C801201-B5A4-40CF-AE83-C52AF156670A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectEvent.Core", "ProjectEvent.Core\ProjectEvent.Core.csproj", "{7C801201-B5A4-40CF-AE83-C52AF156670A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -75,7 +75,8 @@ namespace ProjectEvent.UI.Controls.Base
         OpenWithMirrored,
         FileCode,
         BuildIssue,
-        WebEnvironment
+        WebEnvironment,
+        DesktopScreenshot
 
     }
 }

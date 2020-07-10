@@ -32,6 +32,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 case ActionType.OpenURL:
                     builder = new OpenURLActionBuilder();
                     break;
+                case ActionType.Snipping:
+                    builder = new SnippingActionBuilder();
+                    break;
             }
             if (builder != null)
             {
@@ -61,6 +64,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                     break;
                 case Core.Action.Types.ActionType.OpenURL:
                     builder = new OpenURLActionBuilder();
+                    break;
+                case Core.Action.Types.ActionType.Snipping:
+                    builder = new SnippingActionBuilder();
                     break;
             }
             if (builder != null)

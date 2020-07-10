@@ -40,6 +40,10 @@ namespace ProjectEvent.UI.Types
         /// <summary>
         /// 使用浏览器打开网页
         /// </summary>
-        OpenURL=8
+        OpenURL = 8,
+        /// <summary>
+        /// 截屏
+        /// </summary>
+        Snipping = 9
     }
 }

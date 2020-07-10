@@ -134,6 +134,9 @@ namespace ProjectEvent.Core.Action
                 case ActionType.OpenURL:
                     actionInstance = new OpenURLAction();
                     break;
+                case ActionType.Snipping:
+                    actionInstance = new SnippingAction();
+                    break;
             }
             if (actionInstance != null)
             {

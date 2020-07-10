@@ -43,6 +43,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
                 case ActionType.OpenURL:
                     action.Icon = Base.IconTypes.WebEnvironment;
                     break;
+                case ActionType.Snipping:
+                    action.Icon = Base.IconTypes.DesktopScreenshot;
+                    break;
             }
 
             return action;
@@ -75,6 +78,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
             },
             {
                 ActionType.OpenURL,"浏览器打开网页"
+            },
+            {
+                ActionType.Snipping,"获取屏幕截图"
             },
         };
         #endregion
@@ -154,6 +160,21 @@ namespace ProjectEvent.UI.Controls.Action.Data
                 ID = (int)CommonResultKeyType.IsSuccess,
                 DisplayName = "是否成功（true，false）"
             },
+                    };
+                    break;
+                case ActionType.Snipping:
+                    data = new List<ComBoxModel>()
+                    {
+                        new ComBoxModel()
+                        {
+                            ID=(int)SnippingResultType.IsSuccess,
+                            DisplayName = "是否成功（true，false）"
+                        },
+                        new ComBoxModel()
+                        {
+                            ID=(int)SnippingResultType.SavePath,
+                            DisplayName = "保存路径"
+                        }
                     };
                     break;
             }
