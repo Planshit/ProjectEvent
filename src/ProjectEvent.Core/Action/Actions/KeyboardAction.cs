@@ -27,7 +27,28 @@ namespace ProjectEvent.Core.Action.Actions
                 p.Keys = ActionParameterConverter.ConvertToString(taskID, p.Keys);
                 try
                 {
-
+                    if (p.Keys.Contains("+"))
+                    {
+                        //组合键
+                        var keysgroup = p.Keys.Split('+');
+                        foreach (var item in keysgroup)
+                        {
+                            string key = item.Substring(0, 1).ToUpper() + item.Substring(1);
+                            KeyboardWin32API.Press(key);
+                        }
+                        foreach (var item in keysgroup)
+                        {
+                            string key = item.Substring(0, 1).ToUpper() + item.Substring(1);
+                            KeyboardWin32API.Up(key);
+                        }
+                    }
+                    else
+                    {
+                        //单键
+                        p.Keys = p.Keys.Substring(0, 1).ToUpper() + p.Keys.Substring(1);
+                        KeyboardWin32API.Press(p.Keys);
+                        KeyboardWin32API.Up(p.Keys);
+                    }
                 }
                 catch (Exception e)
                 {

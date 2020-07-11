@@ -12,7 +12,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Event\Services\" />
+    <Compile Remove="Event\Services\**" />
+    <EmbeddedResource Remove="Event\Services\**" />
+    <None Remove="Event\Services\**" />
   </ItemGroup>
 
   <ItemGroup>

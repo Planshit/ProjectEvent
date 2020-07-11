@@ -15,243 +15,243 @@ namespace ProjectEvent.Core.Win32
             
         // 鼠标左键
 
-{"LButton ",  0x1},    
+{"LButton",  0x1},    
         // 鼠标右键
 
-{"RButton ",  0x2},    
+{"RButton",  0x2},    
         // CANCEL 键
 
-{"Cancel ",  0x3},     
+{"Cancel",  0x3},     
         // 鼠标中键
 
-{"MButton ",  0x4},    
+{"MButton",  0x4},    
         // BACKSPACE 键
 
-{"Back ",  0x8},       
+{"Back",  0x8},       
         // TAB 键
 
-{"Tab ",  0x9},        
+{"Tab",  0x9},        
         // CLEAR 键
 
-{"Clear ",  0xC},      
+{"Clear",  0xC},      
         // ENTER 键
 
-{"Return ",  0xD},     
+{"Return",  0xD},     
         // SHIFT 键
 
-{"Shift ",  0x10},     
+{"Shift",  0x10},     
         // CTRL 键
 
-{"Control ",  0x11},   
+{"Ctrl",  0x11},   
         // Alt 键  (键码18)
 
-{"Alt ",  18},         
+{"Alt",  18},         
         // MENU 键
 
-{"Menu ",  0x12},      
+{"Menu",  0x12},      
         // PAUSE 键
 
-{"Pause ",  0x13},     
+{"Pause",  0x13},     
         // CAPS LOCK 键
 
-{"Capital ",  0x14},   
+{"Capital",  0x14},   
         // ESC 键
 
-{"Escape ",  0x1B},    
+{"Escape",  0x1B},    
         // SPACEBAR 键
 
-{"Space ",  0x20},     
+{"Space",  0x20},     
         // PAGE UP 键
 
-{"PageUp ",  0x21},    
+{"PageUp",  0x21},    
         // End 键
 
-{"End ",  0x23},       
+{"End",  0x23},       
         // HOME 键
 
-{"Home ",  0x24},      
+{"Home",  0x24},      
         // LEFT ARROW 键
 
-{"Left ",  0x25},      
+{"Left",  0x25},      
         // UP ARROW 键
 
-{"Up ",  0x26},        
+{"Up",  0x26},        
         // RIGHT ARROW 键
 
-{"Right ",  0x27},     
+{"Right",  0x27},     
         // DOWN ARROW 键
 
-{"Down ",  0x28},      
+{"Down",  0x28},      
         // Select 键
 
-{"Select ",  0x29},    
+{"Select",  0x29},    
         // PRINT SCREEN 键
 
-{"Print ",  0x2A},     
+{"Print",  0x2A},     
         // EXECUTE 键
 
-{"Execute ",  0x2B},   
+{"Execute",  0x2B},   
         // SNAPSHOT 键
 
-{"Snapshot ",  0x2C},  
+{"Snapshot",  0x2C},  
         // Delete 键
 
-{"Delete ",  0x2E},    
+{"Delete",  0x2E},    
         // HELP 键
 
-{"Help ",  0x2F},      
+{"Help",  0x2F},      
         // NUM LOCK 键
 
-{"Numlock ",  0x90},   
+{"Numlock",  0x90},   
 
         //常用键 字母键A到Z
-        {"A ",  65},
-        {"B ",  66},
-        {"C ",  67},
-        {"D ",  68},
-        {"E ",  69},
-        {"F ",  70},
-        {"G ",  71},
-        {"H ",  72},
-        {"I ",  73},
-        {"J ",  74},
-        {"K ",  75},
-        {"L ",  76},
-        {"M ",  77},
-        {"N ",  78},
-        {"O ",  79 },
-        {"P ",  80 },
-        {"Q ",  81 },
-        {"R ",  82 },
-        {"S ",  83 },
-        {"T ",  84 },
-        {"U ",  85 },
-        {"V ",  86 },
-        {"W ",  87 },
-        {"X ",  88 },
-        {"Y ",  89 },
-        {"Z ",  90 },
+        {"A",  65},
+        {"B",  66},
+        {"C",  67},
+        {"D",  68},
+        {"E",  69},
+        {"F",  70},
+        {"G",  71},
+        {"H",  72},
+        {"I",  73},
+        {"J",  74},
+        {"K",  75},
+        {"L",  76},
+        {"M",  77},
+        {"N",  78},
+        {"O",  79 },
+        {"P",  80 },
+        {"Q",  81 },
+        {"R",  82 },
+        {"S",  83 },
+        {"T",  84 },
+        {"U",  85 },
+        {"V",  86 },
+        {"W",  87 },
+        {"X",  88 },
+        {"Y",  89 },
+        {"Z",  90 },
 
         //数字键盘0到9
         // 0 键
 
-{"0 ",  48 },    
+{"0",  48 },    
         // 1 键
 
-{"1 ",  49 },    
+{"1",  49 },    
         // 2 键
 
-{"2 ",  50 },    
+{"2",  50 },    
         // 3 键
 
-{"3 ",  51 },    
+{"3",  51 },    
         // 4 键
 
-{"4 ",  52 },    
+{"4",  52 },    
         // 5 键
 
-{"5 ",  53 },    
+{"5",  53 },    
         // 6 键
 
-{"6 ",  54 },    
+{"6",  54 },    
         // 7 键
 
-{"7 ",  55 },    
+{"7",  55 },    
         // 8 键
 
-{"8 ",  56 },    
+{"8",  56 },    
         // 9 键
 
-{"9 ",  57 },    
+{"9",  57 },    
 
 
         //0 键
 
-{"Numpad0 ",  0x60 },    
+{"Numpad0",  0x60 },    
         //1 键
 
-{"Numpad1 ",  0x61 },    
+{"Numpad1",  0x61 },    
         //2 键
 
-{"Numpad2 ",  0x62 },    
+{"Numpad2",  0x62 },    
         //3 键
 
-{"Numpad3 ",  0x63 },    
+{"Numpad3",  0x63 },    
         //4 键
 
-{"Numpad4 ",  0x64 },    
+{"Numpad4",  0x64 },    
         //5 键
 
-{"Numpad5 ",  0x65 },    
+{"Numpad5",  0x65 },    
         //6 键
 
-{"Numpad6 ",  0x66 },    
+{"Numpad6",  0x66 },    
         //7 键
 
-{"Numpad7 ",  0x67 },    
+{"Numpad7",  0x67 },    
         //8 键
 
-{"Numpad8 ",  0x68 },    
+{"Numpad8",  0x68 },    
         //9 键
 
-{"Numpad9 ",  0x69 },    
+{"Numpad9",  0x69 },    
         // MULTIPLICATIONSIGN(*)键
 
-{"Multiply ",  0x6A },   
+{"Multiply",  0x6A },   
         // PLUS SIGN(+) 键
 
-{"Add ",  0x6B },        
+{"Add",  0x6B },        
         // ENTER 键
 
-{"Separator ",  0x6C },  
+{"Separator",  0x6C },  
         // MINUS SIGN(-) 键
 
-{"Subtract ",  0x6D },   
+{"Subtract",  0x6D },   
         // DECIMAL POINT(.) 键
 
-{"Decimal ",  0x6E },    
+{"Decimal",  0x6E },    
         // DIVISION SIGN(/) 键
 
-{"Divide ",  0x6F },     
+{"Divide",  0x6F },     
 
 
         //F1到F12按键
         //F1 键
 
-{"F1 ",  0x70 },   
+{"F1",  0x70 },   
         //F2 键
 
-{"F2 ",  0x71 },   
+{"F2",  0x71 },   
         //F3 键
 
-{"F3 ",  0x72 },   
+{"F3",  0x72 },   
         //F4 键
 
-{"F4 ",  0x73 },   
+{"F4",  0x73 },   
         //F5 键
 
-{"F5 ",  0x74 },   
+{"F5",  0x74 },   
         //F6 键
 
-{"F6 ",  0x75 },   
+{"F6",  0x75 },   
         //F7 键
 
-{"F7 ",  0x76 },   
+{"F7",  0x76 },   
         //F8 键
 
-{"F8 ",  0x77 },   
+{"F8",  0x77 },   
         //F9 键
 
-{"F9 ",  0x78 },   
+{"F9",  0x78 },   
         //F10 键
 
-{"F10 ",  0x79 },  
+{"F10",  0x79 },  
         //F11 键
 
-{"F11 ",  0x7A },  
+{"F11",  0x7A },  
         //F12 键
 
-{"F12 ",  0x7B },  
+{"F12",  0x7B },  
 
         #endregion
         };

@@ -146,6 +146,9 @@ namespace ProjectEvent.Core.Action
                 case ActionType.GetIPAddress:
                     actionInstance = new GetIPAddressAction();
                     break;
+                case ActionType.Keyboard:
+                    actionInstance = new KeyboardAction();
+                    break;
             }
             if (actionInstance != null)
             {
