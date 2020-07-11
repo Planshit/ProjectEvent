@@ -137,6 +137,9 @@ namespace ProjectEvent.Core.Action
                 case ActionType.Snipping:
                     actionInstance = new SnippingAction();
                     break;
+                case ActionType.DeleteFile:
+                    actionInstance = new DeleteFileAction();
+                    break;
             }
             if (actionInstance != null)
             {

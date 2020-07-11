@@ -46,6 +46,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
                 case ActionType.Snipping:
                     action.Icon = Base.IconTypes.DesktopScreenshot;
                     break;
+                case ActionType.DeleteFile:
+                    action.Icon = Base.IconTypes.Delete;
+                    break;
             }
 
             return action;
@@ -81,6 +84,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
             },
             {
                 ActionType.Snipping,"获取屏幕截图"
+            },
+            {
+                ActionType.DeleteFile,"删除本地文件"
             },
         };
         #endregion
@@ -163,6 +169,7 @@ namespace ProjectEvent.UI.Controls.Action.Data
                     };
                     break;
                 case ActionType.Snipping:
+                    //截屏
                     data = new List<ComBoxModel>()
                     {
                         new ComBoxModel()
@@ -174,6 +181,21 @@ namespace ProjectEvent.UI.Controls.Action.Data
                         {
                             ID=(int)SnippingResultType.SavePath,
                             DisplayName = "保存路径"
+                        }
+                    };
+                    break;
+                case ActionType.DeleteFile:
+                    data = new List<ComBoxModel>()
+                    {
+                        new ComBoxModel()
+                        {
+                            ID=(int)DeleteFileResultType.IsSuccess,
+                            DisplayName = "是否成功（true，false）"
+                        },
+                        new ComBoxModel()
+                        {
+                            ID=(int)DeleteFileResultType.Path,
+                            DisplayName = "被删除文件路径"
                         }
                     };
                     break;

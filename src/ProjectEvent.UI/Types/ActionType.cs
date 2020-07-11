@@ -44,6 +44,10 @@ namespace ProjectEvent.UI.Types
         /// <summary>
         /// 截屏
         /// </summary>
-        Snipping = 9
+        Snipping = 9,
+        /// <summary>
+        /// 删除文件
+        /// </summary>
+        DeleteFile = 10
     }
 }

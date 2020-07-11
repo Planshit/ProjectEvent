@@ -35,6 +35,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 case ActionType.Snipping:
                     builder = new SnippingActionBuilder();
                     break;
+                case ActionType.DeleteFile:
+                    builder = new DeleteFileActionBuilder();
+                    break;
             }
             if (builder != null)
             {
@@ -67,6 +70,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                     break;
                 case Core.Action.Types.ActionType.Snipping:
                     builder = new SnippingActionBuilder();
+                    break;
+                case Core.Action.Types.ActionType.DeleteFile:
+                    builder = new DeleteFileActionBuilder();
                     break;
             }
             if (builder != null)
