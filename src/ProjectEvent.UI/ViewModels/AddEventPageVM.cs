@@ -305,7 +305,7 @@ namespace ProjectEvent.UI.ViewModels
         private void InitConditions()
         {
             EventType type = (EventType)SelectedEventID;
-            ConditionData = ConditionDataConverter.GetCreateConditionData(type);
+            ConditionData = Event.EventManager.GetCreateConditionData(type);
             Conditions = EventData.InputModels.ContainsKey(type) ? EventData.InputModels[type] : null;
         }
         #endregion
@@ -380,7 +380,7 @@ namespace ProjectEvent.UI.ViewModels
                     {
                         ProjectName = project.ProjectName;
                         SelectedEventID = project.EventID;
-                        ConditionData = ConditionDataConverter.GetObj(project);
+                        ConditionData = Event.EventManager.GetObj(project);
                         ProjectDescription = project.ProjectDescription;
                     }
 

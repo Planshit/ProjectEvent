@@ -6,6 +6,7 @@ using ProjectEvent.Core.Helper;
 using ProjectEvent.Core.Services;
 using ProjectEvent.Core.Services.TimerTask;
 using ProjectEvent.UI.Controls.Action.Models;
+using ProjectEvent.UI.Event;
 using ProjectEvent.UI.Models.ConditionModels;
 using ProjectEvent.UI.Models.DataModels;
 using System;
@@ -16,7 +17,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Windows;
 
 namespace ProjectEvent.UI.Services
 {
@@ -77,55 +77,15 @@ namespace ProjectEvent.UI.Services
                 }
             }
         }
-
-        private Core.Event.Models.EventModel CreateEventModel(ProjectModel project)
-        {
-            ICondition condition = null;
-            switch ((EventType)project.EventID)
-            {
-                case EventType.OnDeviceStartup:
-                    condition = new OnDeviceStartupCondition();
-                    break;
-                case EventType.OnIntervalTimer:
-                    var ttimerconditionData = ObjectConvert.Get<IntervalTimerConditionModel>(project.ConditionData);
-                    if (ttimerconditionData != null)
-                    {
-                        condition = new OnIntervalTimerCondition()
-                        {
-                            Num = int.Parse(ttimerconditionData.Num),
-                            Seconds = int.Parse(ttimerconditionData.Second)
-                        };
-                    }
-                    break;
-                case EventType.OnProcessCreated:
-                    var pcconditionData = ObjectConvert.Get<ProcessCreatedConditionModel>(project.ConditionData);
-                    condition = new OnProcessCreatedCondition()
-                    {
-                        ProcessName = pcconditionData.ProcessName,
-                        Caseinsensitive = pcconditionData.Caseinsensitive,
-                        FuzzyMatch = pcconditionData.FuzzyMatch
-                    };
-                    break;
-            }
-            return new Core.Event.Models.EventModel()
-            {
-                ID = project.ID,
-                EventType = (EventType)project.EventID,
-                Condition = condition,
-                Actions = project.Actions
-            };
-        }
-
         public void Add(ProjectModel project)
         {
-            eventService.Add(CreateEventModel(project));
+            eventService.Add(EventManager.CreateEventModel(project));
         }
 
         public void Update(ProjectModel project)
         {
-            eventService.Update(CreateEventModel(project));
+            eventService.Update(EventManager.CreateEventModel(project));
         }
-
         public void Remove(int id)
         {
             eventService.Remove(id);
