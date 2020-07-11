@@ -41,6 +41,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 case ActionType.SoundPlay:
                     builder = new SoundPlayActionBuilder();
                     break;
+                case ActionType.GetIPAddress:
+                    builder = new GetIPAddressActionBuilder();
+                    break;
             }
             if (builder != null)
             {
@@ -79,6 +82,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                     break;
                 case Core.Action.Types.ActionType.SoundPlay:
                     builder = new SoundPlayActionBuilder();
+                    break;
+                case Core.Action.Types.ActionType.GetIPAddress:
+                    builder = new GetIPAddressActionBuilder();
                     break;
             }
             if (builder != null)

@@ -41,6 +41,10 @@ namespace ProjectEvent.Core.Action.Types
         /// <summary>
         /// 播放音频
         /// </summary>
-        SoundPlay = 9
+        SoundPlay = 9,
+        /// <summary>
+        /// 获取IP地址
+        /// </summary>
+        GetIPAddress = 10
     }
 }

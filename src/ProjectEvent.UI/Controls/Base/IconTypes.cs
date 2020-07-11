@@ -77,7 +77,8 @@ namespace ProjectEvent.UI.Controls.Base
         BuildIssue,
         WebEnvironment,
         DesktopScreenshot,
-        MusicInCollectionFill
+        MusicInCollectionFill,
+        NetworkTower
 
     }
 }

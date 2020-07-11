@@ -52,6 +52,10 @@ namespace ProjectEvent.UI.Types
         /// <summary>
         /// 播放声音
         /// </summary>
-        SoundPlay = 11
+        SoundPlay = 11,
+        /// <summary>
+        /// 获取ip地址
+        /// </summary>
+        GetIPAddress = 12
     }
 }

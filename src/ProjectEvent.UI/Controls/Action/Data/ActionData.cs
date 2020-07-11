@@ -52,6 +52,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
                 case ActionType.SoundPlay:
                     action.Icon = Base.IconTypes.MusicInCollectionFill;
                     break;
+                case ActionType.GetIPAddress:
+                    action.Icon = Base.IconTypes.NetworkTower;
+                    break;
             }
 
             return action;
@@ -93,6 +96,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
             },
             {
                 ActionType.SoundPlay,"播放本地音频"
+            },
+            {
+                ActionType.GetIPAddress,"获取IP"
             },
         };
         #endregion
@@ -214,6 +220,22 @@ namespace ProjectEvent.UI.Controls.Action.Data
                         {
                             ID=(int)CommonResultKeyType.IsSuccess,
                             DisplayName = "是否成功（true，false）"
+                        },
+                    };
+                    break;
+                case ActionType.GetIPAddress:
+                    //获取ip
+                    data = new List<ComBoxModel>()
+                    {
+                        new ComBoxModel()
+                        {
+                            ID=(int)GetIPAddressResultType.IsSuccess,
+                            DisplayName = "是否成功（true，false）"
+                        },
+                        new ComBoxModel()
+                        {
+                            ID=(int)GetIPAddressResultType.IP,
+                            DisplayName = "IP"
                         },
                     };
                     break;

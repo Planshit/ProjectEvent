@@ -143,6 +143,9 @@ namespace ProjectEvent.Core.Action
                 case ActionType.SoundPlay:
                     actionInstance = new SoundPlayAction();
                     break;
+                case ActionType.GetIPAddress:
+                    actionInstance = new GetIPAddressAction();
+                    break;
             }
             if (actionInstance != null)
             {

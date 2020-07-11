@@ -53,6 +53,7 @@ namespace ProjectEvent.UI.Controls.Base
             {IconTypes.WebEnvironment,"\xE3DB"},
             {IconTypes.DesktopScreenshot,"\xF5D9"},
             {IconTypes.MusicInCollectionFill,"\xEA36"},
+            {IconTypes.NetworkTower,"\xEC05"},
 
             {IconTypes.ChevronUp,"\xE70E"}
 
