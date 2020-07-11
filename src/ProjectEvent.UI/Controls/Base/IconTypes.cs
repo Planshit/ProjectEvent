@@ -76,7 +76,8 @@ namespace ProjectEvent.UI.Controls.Base
         FileCode,
         BuildIssue,
         WebEnvironment,
-        DesktopScreenshot
+        DesktopScreenshot,
+        MusicInCollectionFill
 
     }
 }

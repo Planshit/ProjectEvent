@@ -48,6 +48,10 @@ namespace ProjectEvent.UI.Types
         /// <summary>
         /// 删除文件
         /// </summary>
-        DeleteFile = 10
+        DeleteFile = 10,
+        /// <summary>
+        /// 播放声音
+        /// </summary>
+        SoundPlay = 11
     }
 }

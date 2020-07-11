@@ -38,6 +38,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 case ActionType.DeleteFile:
                     builder = new DeleteFileActionBuilder();
                     break;
+                case ActionType.SoundPlay:
+                    builder = new SoundPlayActionBuilder();
+                    break;
             }
             if (builder != null)
             {
@@ -73,6 +76,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                     break;
                 case Core.Action.Types.ActionType.DeleteFile:
                     builder = new DeleteFileActionBuilder();
+                    break;
+                case Core.Action.Types.ActionType.SoundPlay:
+                    builder = new SoundPlayActionBuilder();
                     break;
             }
             if (builder != null)

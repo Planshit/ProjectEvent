@@ -49,6 +49,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
                 case ActionType.DeleteFile:
                     action.Icon = Base.IconTypes.Delete;
                     break;
+                case ActionType.SoundPlay:
+                    action.Icon = Base.IconTypes.MusicInCollectionFill;
+                    break;
             }
 
             return action;
@@ -87,6 +90,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
             },
             {
                 ActionType.DeleteFile,"删除本地文件"
+            },
+            {
+                ActionType.SoundPlay,"播放本地音频"
             },
         };
         #endregion
@@ -185,6 +191,7 @@ namespace ProjectEvent.UI.Controls.Action.Data
                     };
                     break;
                 case ActionType.DeleteFile:
+                    //删除文件
                     data = new List<ComBoxModel>()
                     {
                         new ComBoxModel()
@@ -197,6 +204,17 @@ namespace ProjectEvent.UI.Controls.Action.Data
                             ID=(int)DeleteFileResultType.Path,
                             DisplayName = "被删除文件路径"
                         }
+                    };
+                    break;
+                case ActionType.SoundPlay:
+                    //播放音频
+                    data = new List<ComBoxModel>()
+                    {
+                        new ComBoxModel()
+                        {
+                            ID=(int)CommonResultKeyType.IsSuccess,
+                            DisplayName = "是否成功（true，false）"
+                        },
                     };
                     break;
             }

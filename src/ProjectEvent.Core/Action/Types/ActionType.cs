@@ -37,6 +37,10 @@ namespace ProjectEvent.Core.Action.Types
         /// <summary>
         /// 截取当前屏幕
         /// </summary>
-        Snipping
+        Snipping = 8,
+        /// <summary>
+        /// 播放音频
+        /// </summary>
+        SoundPlay = 9
     }
 }

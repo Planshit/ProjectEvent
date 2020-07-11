@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjectEvent.Core.Helper;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -11,6 +12,7 @@ namespace ProjectEvent.Core.Win32
     /// </summary>
     public class CommonWin32API
     {
+        #region 获取屏幕分辨率
         public const int SM_CXSCREEN = 0;
         public const int SM_CYSCREEN = 1;
         [DllImport("user32.dll", EntryPoint = "GetSystemMetrics")]
@@ -24,8 +26,9 @@ namespace ProjectEvent.Core.Win32
         {
             var res = new Rectangle();
             res.Width = GetSystemMetrics(SM_CXSCREEN);
-            res.Height= GetSystemMetrics(SM_CYSCREEN);
+            res.Height = GetSystemMetrics(SM_CYSCREEN);
             return res;
         }
+        #endregion
     }
 }

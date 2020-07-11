@@ -140,6 +140,9 @@ namespace ProjectEvent.Core.Action
                 case ActionType.DeleteFile:
                     actionInstance = new DeleteFileAction();
                     break;
+                case ActionType.SoundPlay:
+                    actionInstance = new SoundPlayAction();
+                    break;
             }
             if (actionInstance != null)
             {
