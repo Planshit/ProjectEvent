@@ -7,6 +7,7 @@ using ProjectEvent.UI.Controls.Action;
 using ProjectEvent.UI.Controls.Action.Data;
 using ProjectEvent.UI.Controls.InputGroup.Models;
 using ProjectEvent.UI.Controls.Toggle;
+using ProjectEvent.UI.Event;
 using ProjectEvent.UI.Models;
 using ProjectEvent.UI.Models.ConditionModels;
 using ProjectEvent.UI.Models.DataModels;
@@ -270,28 +271,10 @@ namespace ProjectEvent.UI.ViewModels
         #region 初始化事件
         private void InitEvents()
         {
-            Events.Add(new Controls.ItemSelect.Models.ItemModel()
+            foreach (var e in EventData.Events)
             {
-                ID = (int)EventType.OnIntervalTimer,
-                Title = "计时器",
-                Icon = Controls.Base.IconTypes.Timer,
-                Description = "每隔多少秒触发"
-            });
-            Events.Add(new Controls.ItemSelect.Models.ItemModel()
-            {
-                ID = (int)EventType.OnDeviceStartup,
-                Title = "设备启动",
-                Description = "电脑首次开机或注销后重新登录时触发",
-                Icon = Controls.Base.IconTypes.DeviceRun
-            });
-            Events.Add(new Controls.ItemSelect.Models.ItemModel()
-            {
-                ID = (int)EventType.OnProcessCreated,
-                Title = "进程创建",
-                Description = "当有新的程序首次运行时触发",
-                Icon = Controls.Base.IconTypes.ProcessingRun
-
-            });
+                Events.Add(e);
+            }
         }
         #endregion
 
@@ -301,7 +284,7 @@ namespace ProjectEvent.UI.ViewModels
             foreach (var item in Enum.GetValues(typeof(Types.ActionType)))
             {
                 var type = (Types.ActionType)item;
-                if(type!= Types.ActionType.IFElse && type!= Types.ActionType.IFEnd)
+                if (type != Types.ActionType.IFElse && type != Types.ActionType.IFEnd)
                 {
                     ComBoxActions.Add(new ComBoxActionModel()
                     {
@@ -310,7 +293,7 @@ namespace ProjectEvent.UI.ViewModels
                     });
                 }
             }
-            
+
             ComBoxSelectedAction = ComBoxActions[0];
         }
         #endregion
@@ -321,56 +304,9 @@ namespace ProjectEvent.UI.ViewModels
         /// </summary>
         private void InitConditions()
         {
-            var cds = new List<InputModel>();
-            switch ((EventType)SelectedEventID)
-            {
-
-                case EventType.OnIntervalTimer:
-                    //循环计时
-                    ConditionData = new IntervalTimerConditionModel();
-                    cds.Add(new InputModel()
-                    {
-                        Type = Controls.InputGroup.InputType.Number,
-                        BindingName = "Second",
-                        BindingProperty = TextBox.TextProperty,
-                        Title = "间隔秒数"
-                    });
-                    cds.Add(new InputModel()
-                    {
-                        Type = Controls.InputGroup.InputType.Number,
-                        BindingName = "Num",
-                        BindingProperty = TextBox.TextProperty,
-                        Title = "循环次数（0时永远）"
-                    });
-                    break;
-                case EventType.OnProcessCreated:
-                    //进程创建
-                    ConditionData = new ProcessCreatedConditionModel();
-                    cds.Add(new InputModel()
-                    {
-                        Type = Controls.InputGroup.InputType.Text,
-                        BindingName = "ProcessName",
-                        BindingProperty = TextBox.TextProperty,
-                        Title = "进程名"
-                    });
-                    cds.Add(new InputModel()
-                    {
-                        Type = Controls.InputGroup.InputType.Bool,
-                        BindingName = "Caseinsensitive",
-                        BindingProperty = Toggle.IsCheckedProperty,
-                        Title = "忽略大小写"
-                    });
-                    cds.Add(new InputModel()
-                    {
-                        Type = Controls.InputGroup.InputType.Bool,
-                        BindingName = "FuzzyMatch",
-                        BindingProperty = Toggle.IsCheckedProperty,
-                        Title = "模糊匹配"
-                    });
-                    break;
-            }
-
-            Conditions = cds;
+            EventType type = (EventType)SelectedEventID;
+            ConditionData = ConditionDataConverter.GetCreateConditionData(type);
+            Conditions = EventData.InputModels.ContainsKey(type) ? EventData.InputModels[type] : null;
         }
         #endregion
         private void OnAddActionCommand(object obj)
@@ -439,24 +375,12 @@ namespace ProjectEvent.UI.ViewModels
                 {
                     mainVM.Title = $"编辑方案 - {project.ProjectName}";
                     ButtonSaveName = "保 存";
-                    object cdata = null;
-                    switch ((EventType)project.EventID)
-                    {
-                        case EventType.OnProcessCreated:
-                            cdata = ObjectConvert.Get<ProcessCreatedConditionModel>(project.ConditionData);
-                            break;
-                        case EventType.OnIntervalTimer:
-                            cdata = ObjectConvert.Get<IntervalTimerConditionModel>(project.ConditionData);
-                            break;
-                        default:
-                            cdata = project.ConditionData;
-                            break;
-                    }
+
                     if (project != null)
                     {
                         ProjectName = project.ProjectName;
                         SelectedEventID = project.EventID;
-                        ConditionData = cdata;
+                        ConditionData = ConditionDataConverter.GetObj(project);
                         ProjectDescription = project.ProjectDescription;
                     }
 

@@ -51,11 +51,15 @@ namespace ProjectEvent.UI.Controls.InputGroup
 
         private void Render()
         {
-            if (Groups == null || container == null)
+            if (container == null)
             {
                 return;
             }
             container.Children.Clear();
+            if (Groups == null)
+            {
+                return;
+            }
             bool isAddLabelName = true;
             foreach (var input in Groups)
             {
