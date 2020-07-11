@@ -55,6 +55,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
                 case ActionType.GetIPAddress:
                     action.Icon = Base.IconTypes.NetworkTower;
                     break;
+                case ActionType.Keyboard:
+                    action.Icon = Base.IconTypes.KeyboardClassic;
+                    break;
             }
 
             return action;
@@ -99,6 +102,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
             },
             {
                 ActionType.GetIPAddress,"获取IP"
+            },
+            {
+                ActionType.Keyboard,"模拟键盘操作"
             },
         };
         #endregion

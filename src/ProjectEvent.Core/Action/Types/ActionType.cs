@@ -45,6 +45,10 @@ namespace ProjectEvent.Core.Action.Types
         /// <summary>
         /// 获取IP地址
         /// </summary>
-        GetIPAddress = 10
+        GetIPAddress = 10,
+        /// <summary>
+        /// 键盘操作
+        /// </summary>
+        Keyboard = 11
     }
 }

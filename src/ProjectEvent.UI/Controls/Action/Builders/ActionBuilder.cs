@@ -44,6 +44,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 case ActionType.GetIPAddress:
                     builder = new GetIPAddressActionBuilder();
                     break;
+                case ActionType.Keyboard:
+                    builder = new KeyboardActionBuilder();
+                    break;
             }
             if (builder != null)
             {
@@ -85,6 +88,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                     break;
                 case Core.Action.Types.ActionType.GetIPAddress:
                     builder = new GetIPAddressActionBuilder();
+                    break;
+                case Core.Action.Types.ActionType.Keyboard:
+                    builder = new KeyboardActionBuilder();
                     break;
             }
             if (builder != null)

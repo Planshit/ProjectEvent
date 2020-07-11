@@ -54,6 +54,7 @@ namespace ProjectEvent.UI.Controls.Base
             {IconTypes.DesktopScreenshot,"\xF5D9"},
             {IconTypes.MusicInCollectionFill,"\xEA36"},
             {IconTypes.NetworkTower,"\xEC05"},
+            {IconTypes.KeyboardClassic,"\xE765"},
 
             {IconTypes.ChevronUp,"\xE70E"}
 

@@ -78,7 +78,8 @@ namespace ProjectEvent.UI.Controls.Base
         WebEnvironment,
         DesktopScreenshot,
         MusicInCollectionFill,
-        NetworkTower
+        NetworkTower,
+        KeyboardClassic
 
     }
 }

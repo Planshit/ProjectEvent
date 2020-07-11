@@ -56,6 +56,10 @@ namespace ProjectEvent.UI.Types
         /// <summary>
         /// 获取ip地址
         /// </summary>
-        GetIPAddress = 12
+        GetIPAddress = 12,
+        /// <summary>
+        /// 键盘操作
+        /// </summary>
+        Keyboard
     }
 }
