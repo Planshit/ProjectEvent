@@ -79,7 +79,8 @@ namespace ProjectEvent.UI.Controls.Base
         DesktopScreenshot,
         MusicInCollectionFill,
         NetworkTower,
-        KeyboardClassic
+        KeyboardClassic,
+        FabricSyncFolder
 
     }
 }

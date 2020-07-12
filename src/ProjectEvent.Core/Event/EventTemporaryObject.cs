@@ -7,6 +7,8 @@ using System.Management;
 using System.Text;
 using System.Text.RegularExpressions;
 using ProjectEvent.Core.Extensions;
+using ProjectEvent.Core.Condition.Models;
+
 namespace ProjectEvent.Core.Event
 {
     /// <summary>
@@ -45,6 +47,12 @@ namespace ProjectEvent.Core.Event
                     result.Add(nameof(ProcessCreatedEventVariableType.ExecutablePath), p.TryGetProperty("ExecutablePath"));
                     result.Add(nameof(ProcessCreatedEventVariableType.Handle), p.TryGetProperty("Handle"));
                     result.Add(nameof(ProcessCreatedEventVariableType.CommandLine), p.TryGetProperty("CommandLine"));
+                    break;
+                case EventType.OnFileChanged:
+                    var fcdata = data as FileChangedDataModel;
+                    result.Add(nameof(FileChangedEventVariableType.Type), fcdata.FileSystemEventArgs.ChangeType.ToString());
+                    result.Add(nameof(FileChangedEventVariableType.Path), fcdata.FileSystemEventArgs.FullPath.ToString());
+
                     break;
             }
 

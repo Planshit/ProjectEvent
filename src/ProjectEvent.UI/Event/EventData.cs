@@ -1,6 +1,7 @@
 ﻿using ProjectEvent.Core.Event.Types;
 using ProjectEvent.UI.Controls.InputGroup.Models;
 using ProjectEvent.UI.Controls.Toggle;
+using ProjectEvent.UI.Models.ConditionModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -58,7 +59,24 @@ namespace ProjectEvent.UI.Event
                         Title = "模糊匹配"
                     }
             }},
-
+             //文件更改事件
+            {EventType.OnFileChanged,new List<InputModel>()
+            {
+                new InputModel()
+                    {
+                        Type = Controls.InputGroup.InputType.Text,
+                        BindingName = nameof(FileChangedConditionModel.WatchPath),
+                        BindingProperty = TextBox.TextProperty,
+                        Title = "监听文件夹路径",
+                    },
+                new InputModel()
+                    {
+                        Type = Controls.InputGroup.InputType.Text,
+                        BindingName = nameof(FileChangedConditionModel.Extname),
+                        BindingProperty = TextBox.TextProperty,
+                        Title = "过滤文件扩展名",
+                    },
+            }}
         };
 
         public static List<Controls.ItemSelect.Models.ItemModel> Events = new List<Controls.ItemSelect.Models.ItemModel>()
@@ -83,6 +101,14 @@ namespace ProjectEvent.UI.Event
                 Title = "进程创建",
                 Description = "当有新的程序首次运行时触发",
                 Icon = Controls.Base.IconTypes.ProcessingRun
+
+            },
+            new Controls.ItemSelect.Models.ItemModel()
+            {
+                ID = (int)EventType.OnFileChanged,
+                Title = "文件/目录变化",
+                Description = "当目录中发生文件/目录创建、修改、删除时触发",
+                Icon = Controls.Base.IconTypes.FabricSyncFolder
 
             }
         };

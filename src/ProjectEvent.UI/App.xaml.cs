@@ -43,6 +43,7 @@ namespace ProjectEvent
             services.AddSingleton<IMainService, MainService>();
             services.AddSingleton<IDeviceTaskService, DeviceTaskService>();
             services.AddSingleton<IProcessTaskService, ProcessTaskService>();
+            services.AddSingleton<IFileTaskService, FileTaskService>();
 
             //ui services
             services.AddSingleton<ITrayService, TrayService>();

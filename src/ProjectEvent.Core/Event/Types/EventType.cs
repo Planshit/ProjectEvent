@@ -48,5 +48,9 @@ namespace ProjectEvent.Core.Event.Types
         /// 计时器
         /// </summary>
         OnIntervalTimer = 8,
+        /// <summary>
+        /// 文件发生更改（添加，删除，重命名）
+        /// </summary>
+        OnFileChanged = 9
     }
 }

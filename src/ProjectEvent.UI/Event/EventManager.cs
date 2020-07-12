@@ -43,6 +43,14 @@ namespace ProjectEvent.UI.Event
                         FuzzyMatch = pcconditionData.FuzzyMatch
                     };
                     break;
+                case EventType.OnFileChanged:
+                    var fcconditionData = ObjectConvert.Get<FileChangedConditionModel>(project.ConditionData);
+                    condition = new OnFileChangedCondition()
+                    {
+                        WatchPath = fcconditionData.WatchPath,
+                        Extname = fcconditionData.Extname
+                    };
+                    break;
             }
             return new Core.Event.Models.EventModel()
             {
@@ -66,6 +74,10 @@ namespace ProjectEvent.UI.Event
                     //进程创建
                     res = new ProcessCreatedConditionModel();
                     break;
+                case EventType.OnFileChanged:
+                    //进程创建
+                    res = new FileChangedConditionModel();
+                    break;
             }
             return res;
         }
@@ -80,6 +92,9 @@ namespace ProjectEvent.UI.Event
                     break;
                 case EventType.OnIntervalTimer:
                     res = ObjectConvert.Get<IntervalTimerConditionModel>(project.ConditionData);
+                    break;
+                case EventType.OnFileChanged:
+                    res = ObjectConvert.Get<FileChangedConditionModel>(project.ConditionData);
                     break;
             }
             return res;

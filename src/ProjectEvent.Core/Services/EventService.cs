@@ -3,6 +3,7 @@ using ProjectEvent.Core.Event;
 using ProjectEvent.Core.Event.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,6 +33,12 @@ namespace ProjectEvent.Core.Services
             //检查重复ID
             if (_events.ContainsKey(ev.ID))
             {
+                return false;
+            }
+            //检查条件输入是否无误
+            if (ev.Condition != null && !ev.Condition.Check().IsValid)
+            {
+                Debug.WriteLine("条件输入验证不通过");
                 return false;
             }
             _events.Add(ev.ID, ev);
@@ -95,6 +102,10 @@ namespace ProjectEvent.Core.Services
 
                 OnUpdateEvent?.Invoke(oldEV, ev);
 
+            }
+            else
+            {
+                Add(ev);
             }
         }
 

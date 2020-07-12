@@ -1,6 +1,7 @@
 ﻿using ProjectEvent.Core.Event.Types;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace ProjectEvent.Core.Event.Data
@@ -18,6 +19,12 @@ namespace ProjectEvent.Core.Event.Data
                 { nameof(ProcessCreatedEventVariableType.ExecutablePath),"可执行文件路径" },
                 { nameof(ProcessCreatedEventVariableType.Handle),"句柄" },
                 { nameof(ProcessCreatedEventVariableType.CommandLine),"命令行参数" },
+
+            } },
+            { EventType.OnFileChanged,new Dictionary<string, string>()
+            {
+                { nameof(FileChangedEventVariableType.Type),$"变化类型（{nameof(WatcherChangeTypes.Created)}:创建，{nameof(WatcherChangeTypes.Deleted)}:删除，{nameof(WatcherChangeTypes.Renamed)}:重命名）" },
+                { nameof(FileChangedEventVariableType.Path),"文件路径" },
 
             } }
 

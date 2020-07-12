@@ -11,14 +11,17 @@ namespace ProjectEvent.Core.Services
         private readonly IDeviceTaskService deviceTaskService;
         private readonly ITimerTaskService timerTaskService;
         private readonly IProcessTaskService processTaskService;
+        private readonly IFileTaskService fileTaskService;
 
         public MainService(IDeviceTaskService deviceTaskService,
              ITimerTaskService timerTaskService,
-             IProcessTaskService processTaskService)
+             IProcessTaskService processTaskService,
+             IFileTaskService fileTaskService)
         {
             this.deviceTaskService = deviceTaskService;
             this.timerTaskService = timerTaskService;
             this.processTaskService = processTaskService;
+            this.fileTaskService = fileTaskService;
 
         }
         public void Run()
@@ -27,6 +30,7 @@ namespace ProjectEvent.Core.Services
             deviceTaskService.Run();
             timerTaskService.Run();
             processTaskService.Run();
+            fileTaskService.Run();
         }
     }
 }
