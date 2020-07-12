@@ -34,26 +34,6 @@ namespace ProjectEvent.Core.Services
             {
                 return false;
             }
-
-            //检查条件是否输入正确
-
-            //if (!ev.Condition.Check().IsValid)
-            //{
-            //    return false;
-            //}
-
-            ////检查action是否输入正确
-            //if (ev.Actions != null)
-            //{
-            //    foreach (var action in ev.Actions)
-            //    {
-            //        var actionCheck = new ActionBuilder(action.Action, action.Parameter).Check();
-            //        if (!actionCheck)
-            //        {
-            //            return false;
-            //        }
-            //    }
-            //}
             _events.Add(ev.ID, ev);
 
             OnAddEvent?.Invoke(ev);

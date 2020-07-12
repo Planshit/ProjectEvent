@@ -1,4 +1,5 @@
-﻿using ProjectEvent.Core.Action;
+﻿using Microsoft.Win32;
+using ProjectEvent.Core.Action;
 using ProjectEvent.Core.Event.Models;
 using System;
 using System.Collections.Generic;
@@ -15,15 +16,14 @@ namespace ProjectEvent.Core.Services.Tasks
         public DeviceTaskService(IEventService eventContainerService)
         {
             eventService = eventContainerService;
-
-            //_eventContainerService.OnAddEvent += _eventContainerService_OnAddEvent;
         }
+
+
         public void Run()
         {
             var events = eventService.
                 GetEvents().
-                Where(m => m.EventType == Event.Types.EventType.OnDeviceStartup ||
-                m.EventType == Event.Types.EventType.OnDeviceShutdown
+                Where(m => m.EventType == Event.Types.EventType.OnDeviceStartup
                 ).
                 ToList();
 
@@ -33,14 +33,10 @@ namespace ProjectEvent.Core.Services.Tasks
             }
         }
 
+
         private void Handle(EventModel ev)
         {
-            switch (ev.EventType)
-            {
-                case Event.Types.EventType.OnDeviceStartup:
-                    eventService.Invoke(ev, null);
-                    break;
-            }
+            eventService.Invoke(ev, null);
         }
     }
 }

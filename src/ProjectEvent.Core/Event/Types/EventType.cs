@@ -19,10 +19,10 @@ namespace ProjectEvent.Core.Event.Types
         /// </summary>
         OnDeviceStartup = 2,
 
-        /// <summary>
-        /// 设备关闭
-        /// </summary>
-        OnDeviceShutdown = 3,
+        ///// <summary>
+        ///// 设备关闭
+        ///// </summary>
+        //OnDeviceShutdown = 3,
 
         /// <summary>
         /// 网络断开
