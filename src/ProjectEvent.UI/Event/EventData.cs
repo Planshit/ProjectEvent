@@ -1,4 +1,5 @@
-﻿using ProjectEvent.Core.Event.Types;
+﻿using ProjectEvent.Core.Condition.Types;
+using ProjectEvent.Core.Event.Types;
 using ProjectEvent.UI.Controls.InputGroup.Models;
 using ProjectEvent.UI.Controls.Toggle;
 using ProjectEvent.UI.Models.ConditionModels;
@@ -76,11 +77,37 @@ namespace ProjectEvent.UI.Event
                         BindingProperty = TextBox.TextProperty,
                         Title = "过滤文件扩展名",
                     },
+            }},
+             //周期事件
+            {EventType.OnTimeChanged,new List<InputModel>()
+            {
+                new InputModel()
+                    {
+                        Type = Controls.InputGroup.InputType.DateTime,
+                        BindingName = nameof(TimeChangedConditionModel.Time),
+                        BindingProperty = TextBox.TextProperty,
+                        Title = "选择时间",
+                    },
+                new InputModel()
+                    {
+                        Type = Controls.InputGroup.InputType.Select,
+                        BindingName = nameof(TimeChangedConditionModel.RepetitionType),
+                        BindingProperty = ComboBox.SelectedValueProperty,
+                        Title = "重复行为",
+                        SelectItems=TimeChangedData.RepetitionTypes
+                    },
             }}
         };
 
         public static List<Controls.ItemSelect.Models.ItemModel> Events = new List<Controls.ItemSelect.Models.ItemModel>()
         {
+            new Controls.ItemSelect.Models.ItemModel()
+            {
+                ID = (int)EventType.OnTimeChanged,
+                Title = "周期事件",
+                Icon = Controls.Base.IconTypes.DateTime,
+                Description = "指定日期或每天/每周触发"
+            },
             new Controls.ItemSelect.Models.ItemModel()
             {
                 ID = (int)EventType.OnIntervalTimer,

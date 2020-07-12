@@ -1,4 +1,5 @@
 ﻿using ProjectEvent.Core.Condition;
+using ProjectEvent.Core.Condition.Types;
 using ProjectEvent.Core.Event.Types;
 using ProjectEvent.Core.Helper;
 using ProjectEvent.UI.Models.ConditionModels;
@@ -51,6 +52,14 @@ namespace ProjectEvent.UI.Event
                         Extname = fcconditionData.Extname
                     };
                     break;
+                case EventType.OnTimeChanged:
+                    var tcconditionData = ObjectConvert.Get<TimeChangedConditionModel>(project.ConditionData);
+                    condition = new OnTimeChangedCondition()
+                    {
+                        Time = tcconditionData.Time,
+                        RepetitionType = (TimeChangedRepetitionType)tcconditionData.RepetitionType.ID
+                    };
+                    break;
             }
             return new Core.Event.Models.EventModel()
             {
@@ -75,8 +84,12 @@ namespace ProjectEvent.UI.Event
                     res = new ProcessCreatedConditionModel();
                     break;
                 case EventType.OnFileChanged:
-                    //进程创建
+                    //文件变化
                     res = new FileChangedConditionModel();
+                    break;
+                case EventType.OnTimeChanged:
+                    //进程创建
+                    res = new TimeChangedConditionModel();
                     break;
             }
             return res;
@@ -95,6 +108,9 @@ namespace ProjectEvent.UI.Event
                     break;
                 case EventType.OnFileChanged:
                     res = ObjectConvert.Get<FileChangedConditionModel>(project.ConditionData);
+                    break;
+                case EventType.OnTimeChanged:
+                    res = ObjectConvert.Get<TimeChangedConditionModel>(project.ConditionData);
                     break;
             }
             return res;

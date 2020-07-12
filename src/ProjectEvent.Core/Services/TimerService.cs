@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjectEvent.Core.Condition.Types;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -16,20 +17,36 @@ namespace ProjectEvent.Core.Services
             _timerRunCount = new Dictionary<int, int>();
         }
 
-        public void StartNew(int id, System.Action action, DateTime dateTime, bool autoReset = false)
+        public void StartNew(int id, System.Action action, DateTime dateTime, TimeChangedRepetitionType repetitionType)
         {
             //转换时间
             var trueTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, 0);
 
-            if (autoReset)
+            if (repetitionType == TimeChangedRepetitionType.Day)
             {
                 //每天
                 trueTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, dateTime.Hour, dateTime.Minute, 0);
                 StartNew(id, action, trueTime.Subtract(DateTime.Now).TotalSeconds, 1, () =>
                    {
                        //进行下一个周期
-                       StartNew(id, action, dateTime, autoReset);
+                       StartNew(id, action, dateTime, repetitionType);
                    });
+            }
+            else if (repetitionType == TimeChangedRepetitionType.Week)
+            {
+                //每周
+
+                //今天星期数字
+                int dayWeekNum = (int)DateTime.Now.DayOfWeek;
+                //目标星期数字
+                int inWeekNum = (int)dateTime.DayOfWeek;
+                var time = DateTime.Now.AddDays(dayWeekNum == 0 ? dayWeekNum + inWeekNum : dayWeekNum + 7);
+                trueTime = new DateTime(time.Year, time.Month, time.Day, dateTime.Hour, dateTime.Minute, 0);
+                StartNew(id, action, trueTime.Subtract(DateTime.Now).TotalSeconds, 1, () =>
+                {
+                    //进行下一个周期
+                    StartNew(id, action, dateTime, repetitionType);
+                });
             }
             else
             {

@@ -10,9 +10,9 @@ namespace ProjectEvent.Core.Event.Types
     public enum EventType
     {
         /// <summary>
-        /// 时钟发生变化
+        /// 周期事件
         /// </summary>
-        OnTimerChanged = 1,
+        OnTimeChanged = 1,
 
         /// <summary>
         /// 设备启动

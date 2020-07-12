@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjectEvent.Core.Condition.Types;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,12 +8,12 @@ namespace ProjectEvent.Core.Services
     public interface ITimerService
     {
         /// <summary>
-        /// 启动一个定时器任务
+        /// 启动一个周期任务
         /// </summary>
         /// <param name="action">执行方法</param>
         /// <param name="dateTime">指定时间</param>
-        /// <param name="autoReset">是否重复执行（当true时表示每天的dateTime时分执行）</param>
-        void StartNew(int id, System.Action action, DateTime dateTime, bool autoReset = false);
+        /// <param name="repetitionType">重复方式</param>
+        void StartNew(int id, System.Action action, DateTime dateTime, TimeChangedRepetitionType repetitionType);
         /// <summary>
         /// 启动一个定时器任务
         /// </summary>

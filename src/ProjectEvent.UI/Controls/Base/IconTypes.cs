@@ -80,7 +80,9 @@ namespace ProjectEvent.UI.Controls.Base
         MusicInCollectionFill,
         NetworkTower,
         KeyboardClassic,
-        FabricSyncFolder
+        FabricSyncFolder,
+        DateTime12,
+        DateTime
 
     }
 }

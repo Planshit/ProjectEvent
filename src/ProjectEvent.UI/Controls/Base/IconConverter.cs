@@ -56,6 +56,8 @@ namespace ProjectEvent.UI.Controls.Base
             {IconTypes.NetworkTower,"\xEC05"},
             {IconTypes.KeyboardClassic,"\xE765"},
             {IconTypes.FabricSyncFolder,"\xF0A7"},
+            {IconTypes.DateTime12,"\xF38F"},
+            {IconTypes.DateTime,"\xEC92"},
 
             {IconTypes.ChevronUp,"\xE70E"}
 

@@ -30,9 +30,9 @@ namespace ProjectEvent.Core.Services.TimerTask
         private void EventService_OnUpdateEvent(EventModel oldValue, EventModel newValue)
         {
             //旧值是否是时间事件
-            bool oldIsTimeEvent = oldValue.EventType == Event.Types.EventType.OnIntervalTimer || oldValue.EventType == Event.Types.EventType.OnTimerChanged;
+            bool oldIsTimeEvent = oldValue.EventType == Event.Types.EventType.OnIntervalTimer || oldValue.EventType == Event.Types.EventType.OnTimeChanged;
             //新值是否是时间事件
-            bool newIsTimeEvent = newValue.EventType == Event.Types.EventType.OnIntervalTimer || newValue.EventType == Event.Types.EventType.OnTimerChanged;
+            bool newIsTimeEvent = newValue.EventType == Event.Types.EventType.OnIntervalTimer || newValue.EventType == Event.Types.EventType.OnTimeChanged;
             if (oldIsTimeEvent && !newIsTimeEvent)
             {
                 //旧值是,新值不是时卸载timer
@@ -60,7 +60,7 @@ namespace ProjectEvent.Core.Services.TimerTask
 
         private void EventService_OnRemoveEvent(EventModel ev)
         {
-            if (ev.EventType == Event.Types.EventType.OnTimerChanged || ev.EventType == Event.Types.EventType.OnIntervalTimer)
+            if (ev.EventType == Event.Types.EventType.OnTimeChanged || ev.EventType == Event.Types.EventType.OnIntervalTimer)
             {
                 _timerService.Close(ev.ID);
             }
@@ -82,14 +82,13 @@ namespace ProjectEvent.Core.Services.TimerTask
         private void Handle(EventModel ev)
         {
             //指定日期的事件
-            if (ev.EventType == Event.Types.EventType.OnTimerChanged)
+            if (ev.EventType == Event.Types.EventType.OnTimeChanged)
             {
-
-                var condition = ev.Condition as OnTimerChangedCondition;
+                var condition = ev.Condition as OnTimeChangedCondition;
                 _timerService.StartNew(ev.ID, () =>
                  {
                      eventService.Invoke(ev, null);
-                 }, condition.AtDateTime, condition.IsRepetition);
+                 }, condition.Time, condition.RepetitionType);
 
             }
 
