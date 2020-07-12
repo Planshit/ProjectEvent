@@ -11,6 +11,7 @@ namespace ProjectEvent.UI.Controls.InputGroup
         Date,
         Time,
         DateTime,
-        Bool
+        Bool,
+        Select
     }
 }

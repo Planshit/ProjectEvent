@@ -17,5 +17,9 @@ namespace ProjectEvent.UI.Controls.Input
         /// 数字
         /// </summary>
         Number,
+        /// <summary>
+        /// 日期时间
+        /// </summary>
+        DateTime
     }
 }

@@ -68,6 +68,9 @@
     <Page Update="Themes\Action\ActionItem.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Themes\Base\DateTimePicker.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Themes\InputGroup\InputGroup.xaml">
       <SubType>Designer</SubType>
     </Page>

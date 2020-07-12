@@ -7,6 +7,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 
 namespace ProjectEvent.UI.Controls.Input
 {
@@ -87,13 +89,34 @@ namespace ProjectEvent.UI.Controls.Input
             DependencyProperty.Register("Maxnum",
                 typeof(double),
                 typeof(InputBox), new PropertyMetadata(double.MaxValue));
+        private Popup DateTimePopup;
+        private ScrollViewer PART_ContentHost;
         public InputBox()
         {
             DefaultStyleKey = typeof(InputBox);
             LostFocus += InputBox_LostFocus;
             MouseWheel += InputBox_MouseWheel;
         }
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            DateTimePopup = GetTemplateChild("DateTimePopup") as Popup;
+            //PART_ContentHost = GetTemplateChild("PART_ContentHost") as ScrollViewer;
+            //PART_ContentHost.vis = false;
+            //PART_ContentHost.MouseDown += MouseLeftButtonUp;
+        }
 
+        private void MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            DateTimePopup.IsOpen = true;
+        }
+
+        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonUp(e);
+            DateTimePopup.IsOpen = true;
+        }
+        
         private void InputBox_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
             e.Handled = true;

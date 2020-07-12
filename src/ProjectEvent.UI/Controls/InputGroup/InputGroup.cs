@@ -1,4 +1,5 @@
-﻿using ProjectEvent.UI.Controls.Input;
+﻿using ProjectEvent.UI.Controls.Action.Models;
+using ProjectEvent.UI.Controls.Input;
 using ProjectEvent.UI.Controls.InputGroup.Models;
 using System;
 using System.Collections.Generic;
@@ -67,28 +68,51 @@ namespace ProjectEvent.UI.Controls.InputGroup
                 switch (input.Type)
                 {
                     case InputType.Text:
-                        control = new InputBox();
+                        control = new InputBox()
+                        {
+                            Placeholder = input.Placeholder
+                        };
                         break;
                     case InputType.Number:
                         control = new InputBox()
                         {
-                            InputType = InputTypes.Number
+                            InputType = InputTypes.Number,
+                            Placeholder = input.Placeholder
                         };
                         break;
                     case InputType.Bool:
                         control = new Toggle.Toggle();
                         break;
+                    case InputType.Select:
+                        control = new ComboBox()
+                        {
+                            ItemsSource = input.SelectItems,
+                            SelectedValuePath = nameof(ComBoxModel.ID),
+                            DisplayMemberPath = nameof(ComBoxModel.DisplayName),
+                        };
+                        //绑定数据
+                        BindingOperations.SetBinding(control, ComboBox.SelectedValueProperty, new Binding()
+                        {
+                            Source = DataSource,
+                            Path = new PropertyPath($"{input.BindingName}.{nameof(ComBoxModel.ID)}"),
+                            Mode = BindingMode.TwoWay,
+
+                        });
+                        BindingOperations.SetBinding(control, ComboBox.SelectedItemProperty, new Binding()
+                        {
+                            Source = DataSource,
+                            Path = new PropertyPath(input.BindingName),
+                            Mode = BindingMode.TwoWay,
+
+                        });
+                        break;
+                    case InputType.DateTime:
+                        control = new InputBox()
+                        {
+                            InputType = InputTypes.DateTime,
+                        };
+                        break;
                 }
-
-
-                //binding input
-                BindingOperations.SetBinding(control, input.BindingProperty, new Binding()
-                {
-                    Source = DataSource,
-                    Path = new PropertyPath(input.BindingName),
-                    Mode = BindingMode.TwoWay,
-                });
-
 
                 if (isAddLabelName)
                 {
@@ -97,7 +121,21 @@ namespace ProjectEvent.UI.Controls.InputGroup
                     label.Text = input.Title;
                     container.Children.Add(label);
                 }
-                container.Children.Add(control);
+
+                if (control != null)
+                {
+                    if (input.Type != InputType.Select)
+                    {
+                        //binding input
+                        BindingOperations.SetBinding(control, input.BindingProperty, new Binding()
+                        {
+                            Source = DataSource,
+                            Path = new PropertyPath(input.BindingName),
+                            Mode = BindingMode.TwoWay,
+                        });
+                    }
+                    container.Children.Add(control);
+                }
             }
         }
     }

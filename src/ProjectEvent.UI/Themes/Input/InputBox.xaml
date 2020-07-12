@@ -11,12 +11,15 @@
         <Setter Property="Padding" Value="8,0"/>
         <Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Background" Value="Transparent"/>
+
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Foreground" Value="{DynamicResource StandardTextBrush}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:InputBox}">
                     <Border Background="{TemplateBinding Background}">
+
                         <Grid>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -24,6 +27,7 @@
                                     <ColumnDefinition x:Name="IconWidth" Width="26"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid>
+                                    <TextBlock x:Name="SelectedTimeText" Text=""/>
                                     <ScrollViewer x:Name="PART_ContentHost" Panel.ZIndex="2"/>
                                     <!--<TextBox x:Name="TextBox" OverridesDefaultStyle="True" Text="{TemplateBinding Content}" VerticalContentAlignment="Center" Panel.ZIndex="999" Foreground="{TemplateBinding Foreground}"/>-->
                                     <TextBlock x:Name="Placeholder" Text="{TemplateBinding Placeholder}" Foreground="{DynamicResource PlaceholderBrush}" Visibility="Collapsed" Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
@@ -34,10 +38,26 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                                     CornerRadius="2"
                                     Panel.ZIndex="1"/>
+                            <!--日期选择-->
+                            <Popup x:Name="DateTimePopup" AllowsTransparency="True" Width="572" Height="252" StaysOpen="False">
+                                <Border Margin="10" Background="White" CornerRadius="2">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="10" Opacity=".2"  ShadowDepth="0"/>
+                                    </Border.Effect>
+                                    <base:DateTimePicker/>
+                                </Border>
+                            </Popup>
                         </Grid>
 
                     </Border>
                     <ControlTemplate.Triggers>
+                        <Trigger Property="InputType" Value="DateTime">
+                            <Setter Property="IsReadOnly" Value="True"/>
+                            <Setter TargetName="Icon" Property="IconType" Value="DateTime"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Setter TargetName="PART_ContentHost" Property="Visibility" Value="Collapsed"/>
+
+                        </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="Text" Value="" />
