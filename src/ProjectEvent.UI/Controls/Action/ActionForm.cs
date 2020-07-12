@@ -701,7 +701,11 @@ namespace ProjectEvent.UI.Controls.Action
         {
             var btn = new Button();
             btn.Style = FindResource("Icon") as Style;
-            btn.Content = name;
+            btn.Content = new TextBlock()
+            {
+                Text = name,
+                TextWrapping = TextWrapping.WrapWithOverflow,
+            };
             btn.Padding = new Thickness(5, 0, 5, 0);
             btn.Click += (e, c) =>
             {
