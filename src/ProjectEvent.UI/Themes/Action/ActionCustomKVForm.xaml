@@ -26,7 +26,7 @@
                                 
                             </StackPanel>
                             <Border Grid.Row="1">
-                                <Button Height="28" Style="{DynamicResource Icon}" Padding="0" x:Name="AddBtn" VerticalAlignment="Center">
+                                <Button Width="auto" Height="28" Style="{DynamicResource Icon}" Padding="0" x:Name="AddBtn" VerticalAlignment="Center">
                                     <Grid>
                                         <TextBlock Text="添加一个键值" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 

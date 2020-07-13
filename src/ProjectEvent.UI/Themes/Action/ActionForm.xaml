@@ -32,7 +32,7 @@
                                     <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
                                 <Border>
-                                    <Button  Style="{DynamicResource Icon}" Padding="0" x:Name="ExpandBtn">
+                                    <Button Width="auto" Style="{DynamicResource Icon}" Padding="0" x:Name="ExpandBtn">
                                         <Grid  Width="{Binding ElementName=ExpandBtn,Path=ActualWidth}">
                                             <TextBlock Text="更多选项" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
