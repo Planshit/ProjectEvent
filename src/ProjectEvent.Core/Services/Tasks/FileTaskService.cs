@@ -41,12 +41,18 @@ namespace ProjectEvent.Core.Services.Tasks
 
         private void EventService_OnRemoveEvent(EventModel ev)
         {
-            Remove(ev);
+            if(ev.EventType== Event.Types.EventType.OnFileChanged)
+            {
+                Remove(ev);
+            }
         }
 
         private void EventService_OnAddEvent(EventModel ev)
         {
-            CreateWatch(ev);
+            if (ev.EventType == Event.Types.EventType.OnFileChanged)
+            {
+                CreateWatch(ev);
+            }
         }
 
         public void Run()
