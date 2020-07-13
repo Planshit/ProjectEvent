@@ -108,15 +108,21 @@ namespace ProjectEvent.UI.Controls.Input
 
         private void MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            DateTimePopup.IsOpen = true;
+            if (InputType == InputTypes.DateTime)
+            {
+                DateTimePopup.IsOpen = true;
+            }
         }
 
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonUp(e);
-            DateTimePopup.IsOpen = true;
+            if (InputType == InputTypes.DateTime)
+            {
+                DateTimePopup.IsOpen = true;
+            }
         }
-        
+
         private void InputBox_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
             e.Handled = true;

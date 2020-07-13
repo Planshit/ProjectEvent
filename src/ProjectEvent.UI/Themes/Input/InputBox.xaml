@@ -27,7 +27,7 @@
                                     <ColumnDefinition x:Name="IconWidth" Width="26"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid>
-                                    <TextBlock x:Name="SelectedTimeText" Text=""/>
+                                    <TextBlock x:Name="SelectedTimeText" Text="{Binding ElementName=DateTimePicker,Path=SelectedDateTimeStr}" VerticalAlignment="Center" Padding="{TemplateBinding Padding}" Visibility="Collapsed"/>
                                     <ScrollViewer x:Name="PART_ContentHost" Panel.ZIndex="2"/>
                                     <!--<TextBox x:Name="TextBox" OverridesDefaultStyle="True" Text="{TemplateBinding Content}" VerticalContentAlignment="Center" Panel.ZIndex="999" Foreground="{TemplateBinding Foreground}"/>-->
                                     <TextBlock x:Name="Placeholder" Text="{TemplateBinding Placeholder}" Foreground="{DynamicResource PlaceholderBrush}" Visibility="Collapsed" Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
@@ -39,12 +39,12 @@
                                     CornerRadius="2"
                                     Panel.ZIndex="1"/>
                             <!--日期选择-->
-                            <Popup x:Name="DateTimePopup" AllowsTransparency="True" Width="572" Height="252" StaysOpen="False">
+                            <Popup x:Name="DateTimePopup" AllowsTransparency="True" Width="570" Height="270" StaysOpen="False" Visibility="Collapsed">
                                 <Border Margin="10" Background="White" CornerRadius="2">
                                     <Border.Effect>
                                         <DropShadowEffect BlurRadius="10" Opacity=".2"  ShadowDepth="0"/>
                                     </Border.Effect>
-                                    <base:DateTimePicker/>
+                                    <base:DateTimePicker x:Name="DateTimePicker"/>
                                 </Border>
                             </Popup>
                         </Grid>
@@ -56,7 +56,8 @@
                             <Setter TargetName="Icon" Property="IconType" Value="DateTime"/>
                             <Setter Property="Cursor" Value="Hand"/>
                             <Setter TargetName="PART_ContentHost" Property="Visibility" Value="Collapsed"/>
-
+                            <Setter TargetName="SelectedTimeText" Property="Visibility" Value="Visible"/>
+                            <Setter TargetName="DateTimePopup" Property="Visibility" Value="Visible"/>
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
