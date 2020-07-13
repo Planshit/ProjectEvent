@@ -44,7 +44,7 @@
                                     <Border.Effect>
                                         <DropShadowEffect BlurRadius="10" Opacity=".2"  ShadowDepth="0"/>
                                     </Border.Effect>
-                                    <base:DateTimePicker x:Name="DateTimePicker"/>
+                                    <base:DateTimePicker x:Name="DateTimePicker" />
                                 </Border>
                             </Popup>
                         </Grid>

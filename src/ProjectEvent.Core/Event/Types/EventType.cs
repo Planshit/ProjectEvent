@@ -12,7 +12,7 @@ namespace ProjectEvent.Core.Event.Types
         /// <summary>
         /// 周期事件
         /// </summary>
-        OnTimeChanged = 1,
+        OnTimeChanged = 11,
 
         /// <summary>
         /// 设备启动

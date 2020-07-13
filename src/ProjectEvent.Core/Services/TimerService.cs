@@ -71,7 +71,7 @@ namespace ProjectEvent.Core.Services
         public void StartNew(int id, System.Action action, double seconds, int num = 0, System.Action timerClosedAction = null)
         {
 
-            if (_timers.ContainsKey(id))
+            if (_timers.ContainsKey(id) || seconds <= 0)
             {
                 return;
             }

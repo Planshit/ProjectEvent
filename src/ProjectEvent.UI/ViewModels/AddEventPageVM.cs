@@ -306,7 +306,7 @@ namespace ProjectEvent.UI.ViewModels
         {
             EventType type = (EventType)SelectedEventID;
             ConditionData = Event.EventManager.GetCreateConditionData(type);
-            Conditions = EventData.InputModels.ContainsKey(type) ? EventData.InputModels[type] : null;
+            Conditions = EventData.GetInputModels(type);
         }
         #endregion
         private void OnAddActionCommand(object obj)

@@ -87,6 +87,10 @@ namespace ProjectEvent.Core.Services.Tasks
             //创建监听
             var watcher = new FileSystemWatcher();
             var ct = ev.Condition as OnFileChangedCondition;
+            if (string.IsNullOrEmpty(ct.WatchPath))
+            {
+                return;
+            }
             watcher.Path = ct.WatchPath;
             watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
             | NotifyFilters.FileName | NotifyFilters.DirectoryName;

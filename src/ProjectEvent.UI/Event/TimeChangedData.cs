@@ -2,6 +2,7 @@
 using ProjectEvent.UI.Controls.Action.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ProjectEvent.UI.Event
@@ -26,5 +27,10 @@ namespace ProjectEvent.UI.Event
                              DisplayName="每周"
                          }
                         };
+
+        public static ComBoxModel GetTypeComboxModel(int id)
+        {
+            return RepetitionTypes.Where(m => m.ID == id).FirstOrDefault();
+        }
     }
 }

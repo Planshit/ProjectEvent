@@ -8,12 +8,31 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace ProjectEvent.UI.Controls.Input
 {
     public class InputBox : TextBox
     {
+        /// <summary>
+        /// 当前选中时间（仅输入类型为datetime时有效）
+        /// </summary>
+        public DateTime SelectedDateTime
+        {
+            get { return (DateTime)GetValue(SelectedDateTimeProperty); }
+            set { SetValue(SelectedDateTimeProperty, value); }
+        }
+        public static readonly DependencyProperty SelectedDateTimeProperty =
+            DependencyProperty.Register("SelectedDateTime",
+                typeof(DateTime),
+                typeof(InputBox), new PropertyMetadata(new PropertyChangedCallback(onasf)));
+
+        private static void onasf(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Debug.WriteLine((d as InputBox).SelectedDateTime.ToString());
+        }
+
         /// <summary>
         /// 图标
         /// </summary>
@@ -90,7 +109,8 @@ namespace ProjectEvent.UI.Controls.Input
                 typeof(double),
                 typeof(InputBox), new PropertyMetadata(double.MaxValue));
         private Popup DateTimePopup;
-        private ScrollViewer PART_ContentHost;
+        private DateTimePicker DateTimePicker;
+
         public InputBox()
         {
             DefaultStyleKey = typeof(InputBox);
@@ -101,9 +121,13 @@ namespace ProjectEvent.UI.Controls.Input
         {
             base.OnApplyTemplate();
             DateTimePopup = GetTemplateChild("DateTimePopup") as Popup;
-            //PART_ContentHost = GetTemplateChild("PART_ContentHost") as ScrollViewer;
-            //PART_ContentHost.vis = false;
-            //PART_ContentHost.MouseDown += MouseLeftButtonUp;
+            DateTimePicker = GetTemplateChild("DateTimePicker") as DateTimePicker;
+            BindingOperations.SetBinding(DateTimePicker, DateTimePicker.SelectedDateTimeProperty, new Binding()
+            {
+                Source = this,
+                Path = new PropertyPath(nameof(SelectedDateTime)),
+                Mode = BindingMode.TwoWay,
+            });
         }
 
         private void MouseLeftButtonUp(object sender, MouseButtonEventArgs e)

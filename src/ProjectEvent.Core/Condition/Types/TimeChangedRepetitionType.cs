@@ -12,14 +12,14 @@ namespace ProjectEvent.Core.Condition.Types
         /// <summary>
         /// 不重复
         /// </summary>
-        None,
+        None = 1,
         /// <summary>
         /// 每天
         /// </summary>
-        Day,
+        Day = 2,
         /// <summary>
         /// 每周
         /// </summary>
-        Week
+        Week = 3
     }
 }

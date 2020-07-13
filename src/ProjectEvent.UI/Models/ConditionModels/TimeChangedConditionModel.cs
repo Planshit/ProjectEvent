@@ -16,7 +16,7 @@ namespace ProjectEvent.UI.Models.ConditionModels
             set { Time_ = value; OnPropertyChanged(); }
         }
 
-        private ComBoxModel RepetitionType_ = TimeChangedData.RepetitionTypes[0];
+        private ComBoxModel RepetitionType_ = TimeChangedData.GetTypeComboxModel((int)TimeChangedRepetitionType.None);
         public ComBoxModel RepetitionType
         {
             get { return RepetitionType_; }
