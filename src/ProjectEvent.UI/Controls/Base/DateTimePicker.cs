@@ -120,18 +120,29 @@ namespace ProjectEvent.UI.Controls.Base
         public static readonly DependencyProperty SelectedHourProperty =
             DependencyProperty.Register("SelectedHour",
                 typeof(string),
-                typeof(DateTimePicker), new PropertyMetadata($"{DateTime.Now.ToString("HH")}", new PropertyChangedCallback(OnSelectedTimeChanged)));
+                typeof(DateTimePicker), new PropertyMetadata(new PropertyChangedCallback(OnSelectedTimeChanged)));
 
         private static void OnSelectedTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = d as DateTimePicker;
             if (e.NewValue != e.OldValue)
             {
+                int hour = control.SelectedDateTime.Hour;
+                int minute = control.SelectedDateTime.Minute;
+                if (e.Property == SelectedHourProperty && !string.IsNullOrEmpty(control.SelectedHour))
+                {
+                    hour = int.Parse(control.SelectedHour);
+                }
+                if (e.Property == SelectedMinutesProperty && !string.IsNullOrEmpty(control.SelectedMinutes))
+                {
+                    minute = int.Parse(control.SelectedMinutes);
+                }
+
                 control.SelectedDateTime = new DateTime(control.SelectedDateTime.Year,
                     control.SelectedDateTime.Month,
                     control.SelectedDateTime.Day,
-                    int.Parse(control.SelectedHour),
-                    int.Parse(control.SelectedMinutes),
+                    hour,
+                    minute,
                     0);
             }
         }
@@ -146,7 +157,7 @@ namespace ProjectEvent.UI.Controls.Base
         public static readonly DependencyProperty SelectedMinutesProperty =
             DependencyProperty.Register("SelectedMinutes",
                 typeof(string),
-                typeof(DateTimePicker), new PropertyMetadata($"{DateTime.Now.ToString("mm")}", new PropertyChangedCallback(OnSelectedTimeChanged)));
+                typeof(DateTimePicker), new PropertyMetadata(new PropertyChangedCallback(OnSelectedTimeChanged)));
 
         #endregion
 
@@ -266,6 +277,7 @@ namespace ProjectEvent.UI.Controls.Base
             SelectedDateTimeStr = SelectedDateTime.ToString($"yyyy年MM月dd日 星期{ToCNWeekString()} HH:mm");
             YearNum = SelectedDateTime.Year;
             MonthNum = SelectedDateTime.Month;
+
             //SelectedTime = SelectedDateTime.ToString("HH:mm");
         }
         //渲染日期选择
@@ -336,7 +348,7 @@ namespace ProjectEvent.UI.Controls.Base
                     }
                     //设置选中日期
                     SelectedDateTime = new DateTime(year, month, day, int.Parse(SelectedHour), int.Parse(SelectedMinutes), 0);
-                   
+
                     MarkSelectedBtn();
                 };
                 if (!isthismonth)

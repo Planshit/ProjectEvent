@@ -1,5 +1,6 @@
 ﻿using ProjectEvent.Core.Condition.Types;
 using ProjectEvent.Core.Event.Types;
+using ProjectEvent.UI.Controls.Action.Models;
 using ProjectEvent.UI.Controls.Input;
 using ProjectEvent.UI.Controls.InputGroup.Models;
 using ProjectEvent.UI.Controls.Toggle;
@@ -170,8 +171,25 @@ namespace ProjectEvent.UI.Event
                         BindingName = nameof(TimeChangedConditionModel.RepetitionType),
                         BindingProperty = ComboBox.SelectedValueProperty,
                         Title = "重复行为",
-                        SelectItems=TimeChangedData.RepetitionTypes
-                    },
+                        SelectItems= new List<ComBoxModel>()
+                        {
+                         new ComBoxModel()
+                         {
+                             ID=(int)TimeChangedRepetitionType.None,
+                             DisplayName="不重复"
+                         },
+                          new ComBoxModel()
+                         {
+                             ID=(int)TimeChangedRepetitionType.Day,
+                             DisplayName="每天"
+                         },
+                           new ComBoxModel()
+                         {
+                             ID=(int)TimeChangedRepetitionType.Week,
+                             DisplayName="每周"
+                         }
+                        }
+            },
             };
                     break;
             }

@@ -3,6 +3,7 @@ using ProjectEvent.UI.Controls.Base;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -10,6 +11,8 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Effects;
 
 namespace ProjectEvent.UI.Controls.Input
 {
@@ -26,12 +29,7 @@ namespace ProjectEvent.UI.Controls.Input
         public static readonly DependencyProperty SelectedDateTimeProperty =
             DependencyProperty.Register("SelectedDateTime",
                 typeof(DateTime),
-                typeof(InputBox), new PropertyMetadata(new PropertyChangedCallback(onasf)));
-
-        private static void onasf(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            Debug.WriteLine((d as InputBox).SelectedDateTime.ToString());
-        }
+                typeof(InputBox));
 
         /// <summary>
         /// 图标
@@ -110,7 +108,8 @@ namespace ProjectEvent.UI.Controls.Input
                 typeof(InputBox), new PropertyMetadata(double.MaxValue));
         private Popup DateTimePopup;
         private DateTimePicker DateTimePicker;
-
+        private Grid Grid;
+        private TextBlock SelectedTimeText;
         public InputBox()
         {
             DefaultStyleKey = typeof(InputBox);
@@ -120,14 +119,46 @@ namespace ProjectEvent.UI.Controls.Input
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            DateTimePopup = GetTemplateChild("DateTimePopup") as Popup;
-            DateTimePicker = GetTemplateChild("DateTimePicker") as DateTimePicker;
-            BindingOperations.SetBinding(DateTimePicker, DateTimePicker.SelectedDateTimeProperty, new Binding()
+            if (InputType == InputTypes.DateTime)
             {
-                Source = this,
-                Path = new PropertyPath(nameof(SelectedDateTime)),
-                Mode = BindingMode.TwoWay,
-            });
+                DateTimePopup = new Popup();
+                DateTimePopup.AllowsTransparency = true;
+                DateTimePopup.Width = 570;
+                DateTimePopup.Height = 270;
+                DateTimePopup.StaysOpen = false;
+
+                DateTimePicker = new DateTimePicker();
+
+                var border = new Border();
+                border.Margin = new Thickness(10);
+                border.Background = System.Windows.Media.Brushes.White;
+                border.CornerRadius = new CornerRadius(2);
+                border.Effect = new DropShadowEffect()
+                {
+                    BlurRadius = 10,
+                    Opacity = .2,
+                    ShadowDepth = 0
+                };
+                border.Child = DateTimePicker;
+                DateTimePopup.Child = border;
+                Grid = GetTemplateChild("Grid") as Grid;
+                SelectedTimeText = GetTemplateChild("SelectedTimeText") as TextBlock;
+                Grid.Children.Add(DateTimePopup);
+
+                BindingOperations.SetBinding(DateTimePicker, DateTimePicker.SelectedDateTimeProperty, new Binding()
+                {
+                    Source = this,
+                    Path = new PropertyPath(nameof(SelectedDateTime)),
+                    Mode = BindingMode.TwoWay,
+                });
+                BindingOperations.SetBinding(SelectedTimeText, TextBlock.TextProperty, new Binding()
+                {
+                    Source = DateTimePicker,
+                    Path = new PropertyPath(nameof(DateTimePicker.SelectedDateTimeStr)),
+                    Mode = BindingMode.Default,
+                });
+            }
+
         }
 
         private void MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
