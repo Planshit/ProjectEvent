@@ -26,6 +26,11 @@ namespace ProjectEvent.Core.Services
             {
                 //每天
                 trueTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, dateTime.Hour, dateTime.Minute, 0);
+                if (trueTime < DateTime.Now)
+                {
+                    //当前已超过时间，调整为明天
+                    trueTime = trueTime.AddDays(1);
+                }
                 StartNew(id, action, trueTime.Subtract(DateTime.Now).TotalSeconds, 1, () =>
                    {
                        //进行下一个周期
