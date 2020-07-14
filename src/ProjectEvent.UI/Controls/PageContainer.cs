@@ -104,12 +104,15 @@ namespace ProjectEvent.UI.Controls
         private readonly string ProjectName;
         private List<string> Historys;
         private int Index = -1, OldIndex = -1;
+        private Frame Frame;
         public PageContainer()
         {
             DefaultStyleKey = typeof(PageContainer);
             ProjectName = App.Current.GetType().Assembly.GetName().Name;
             Historys = new List<string>();
             BackCommand = new Command(new Action<object>(OnBackCommand));
+            NavigationCommands.BrowseBack.InputGestures.Clear();
+            NavigationCommands.BrowseForward.InputGestures.Clear();
         }
 
         private void OnBackCommand(object obj)
