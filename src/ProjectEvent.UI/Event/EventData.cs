@@ -217,14 +217,14 @@ namespace ProjectEvent.UI.Event
             {
                 ID = (int)EventType.OnDeviceStartup,
                 Title = "设备启动",
-                Description = "电脑首次开机或注销后重新登录时触发",
+                Description = "开机或注销后重新登录时触发",
                 Icon = Controls.Base.IconTypes.DeviceRun
             },
             new Controls.ItemSelect.Models.ItemModel()
             {
                 ID = (int)EventType.OnProcessCreated,
                 Title = "进程创建",
-                Description = "当有新的程序首次运行时触发",
+                Description = "当有新的进程运行时触发",
                 Icon = Controls.Base.IconTypes.ProcessingRun
 
             },
@@ -232,7 +232,7 @@ namespace ProjectEvent.UI.Event
             {
                 ID = (int)EventType.OnFileChanged,
                 Title = "文件/目录变化",
-                Description = "当目录中发生文件/目录创建、修改、删除时触发",
+                Description = "当目录中文件/目录发生创建、修改、删除时触发",
                 Icon = Controls.Base.IconTypes.FabricSyncFolder
 
             },
