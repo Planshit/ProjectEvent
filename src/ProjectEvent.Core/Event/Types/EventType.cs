@@ -51,6 +51,10 @@ namespace ProjectEvent.Core.Event.Types
         /// <summary>
         /// 文件发生更改（添加，删除，重命名）
         /// </summary>
-        OnFileChanged = 9
+        OnFileChanged = 9,
+        /// <summary>
+        /// 键盘事件
+        /// </summary>
+        KeyboardEvent=10
     }
 }

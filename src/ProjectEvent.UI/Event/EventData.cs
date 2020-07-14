@@ -235,6 +235,14 @@ namespace ProjectEvent.UI.Event
                 Description = "当目录中发生文件/目录创建、修改、删除时触发",
                 Icon = Controls.Base.IconTypes.FabricSyncFolder
 
+            },
+            new Controls.ItemSelect.Models.ItemModel()
+            {
+                ID = (int)EventType.KeyboardEvent,
+                Title = "键盘事件",
+                Description = "当键盘按键按下或松开时触发",
+                Icon = Controls.Base.IconTypes.KeyboardClassic
+
             }
         };
     }

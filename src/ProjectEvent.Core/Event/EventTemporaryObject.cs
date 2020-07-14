@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using ProjectEvent.Core.Extensions;
 using ProjectEvent.Core.Condition.Models;
+using ProjectEvent.Core.Event.Structs;
 
 namespace ProjectEvent.Core.Event
 {
@@ -53,6 +54,12 @@ namespace ProjectEvent.Core.Event
                     result.Add(nameof(FileChangedEventVariableType.Type), fcdata.FileSystemEventArgs.ChangeType.ToString());
                     result.Add(nameof(FileChangedEventVariableType.Path), fcdata.FileSystemEventArgs.FullPath.ToString());
 
+                    break;
+                case EventType.KeyboardEvent:
+                    var kedata = (KeyboardEventDataStruct)data;
+                    result.Add(nameof(KeyboardEventVariableType.Action), kedata.Action);
+                    result.Add(nameof(KeyboardEventVariableType.KeyName), kedata.KeyName);
+                    result.Add(nameof(KeyboardEventVariableType.KeyCode), kedata.KeyCode.ToString());
                     break;
             }
 

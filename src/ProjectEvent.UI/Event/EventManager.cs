@@ -60,6 +60,9 @@ namespace ProjectEvent.UI.Event
                         RepetitionType = (TimeChangedRepetitionType)tcconditionData.RepetitionType.ID
                     };
                     break;
+                case EventType.KeyboardEvent:
+                    condition = new KeyboardEventCondition();
+                    break;
             }
             return new Core.Event.Models.EventModel()
             {

@@ -44,6 +44,7 @@ namespace ProjectEvent
             services.AddSingleton<IDeviceTaskService, DeviceTaskService>();
             services.AddSingleton<IProcessTaskService, ProcessTaskService>();
             services.AddSingleton<IFileTaskService, FileTaskService>();
+            services.AddSingleton<IKeyboardTaskService, KeyboardTaskService>();
 
             //ui services
             services.AddSingleton<ITrayService, TrayService>();

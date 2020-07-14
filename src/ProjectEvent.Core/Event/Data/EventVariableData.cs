@@ -23,9 +23,15 @@ namespace ProjectEvent.Core.Event.Data
             } },
             { EventType.OnFileChanged,new Dictionary<string, string>()
             {
-                { nameof(FileChangedEventVariableType.Type),$"变化类型（{nameof(WatcherChangeTypes.Created)}:创建，{nameof(WatcherChangeTypes.Deleted)}:删除，{nameof(WatcherChangeTypes.Renamed)}:重命名）" },
+                { nameof(FileChangedEventVariableType.Type),$"变化类型（{nameof(WatcherChangeTypes.Created)}：创建，{nameof(WatcherChangeTypes.Deleted)}：删除，{nameof(WatcherChangeTypes.Renamed)}：重命名）" },
                 { nameof(FileChangedEventVariableType.Path),"文件路径" },
 
+            } },
+            { EventType.KeyboardEvent,new Dictionary<string, string>()
+            {
+                { nameof(KeyboardEventVariableType.Action),"动作（down按下，up抬起）" },
+                { nameof(KeyboardEventVariableType.KeyName),"按键名称" },
+                { nameof(KeyboardEventVariableType.KeyCode),"按键键码" },
             } }
 
         };
