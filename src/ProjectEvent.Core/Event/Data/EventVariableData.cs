@@ -32,6 +32,10 @@ namespace ProjectEvent.Core.Event.Data
                 { nameof(KeyboardEventVariableType.Action),"动作（down按下，up抬起）" },
                 { nameof(KeyboardEventVariableType.KeyName),"按键名称" },
                 { nameof(KeyboardEventVariableType.KeyCode),"按键键码" },
+            } },
+            { EventType.NetworkStatusEvent,new Dictionary<string, string>()
+            {
+                { nameof(NetworkStatusEventVariableType.IsConnected),"网络是否连接（True连接，False未连接）" },
             } }
 
         };

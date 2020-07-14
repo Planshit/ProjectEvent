@@ -61,6 +61,10 @@ namespace ProjectEvent.Core.Event
                     result.Add(nameof(KeyboardEventVariableType.KeyName), kedata.KeyName);
                     result.Add(nameof(KeyboardEventVariableType.KeyCode), kedata.KeyCode.ToString());
                     break;
+                case EventType.NetworkStatusEvent:
+                    var nsedata = (NetworkStatusDataStruct)data;
+                    result.Add(nameof(NetworkStatusEventVariableType.IsConnected), nsedata.IsConnected.ToString());
+                    break;
             }
 
             return result;

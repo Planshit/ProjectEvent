@@ -58,6 +58,7 @@ namespace ProjectEvent.UI.Controls.Base
             {IconTypes.FabricSyncFolder,"\xF0A7"},
             {IconTypes.DateTime12,"\xF38F"},
             {IconTypes.DateTime,"\xEC92"},
+            {IconTypes.MyNetwork,"\xEC27"},
 
             {IconTypes.ChevronUp,"\xE70E"}
 

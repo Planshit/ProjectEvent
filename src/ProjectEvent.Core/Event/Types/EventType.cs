@@ -25,9 +25,9 @@ namespace ProjectEvent.Core.Event.Types
         //OnDeviceShutdown = 3,
 
         /// <summary>
-        /// 网络断开
+        /// 网络状态变化事件
         /// </summary>
-        OnNetworkDisconnection = 4,
+        NetworkStatusEvent = 4,
 
         /// <summary>
         /// 进程创建
@@ -55,6 +55,6 @@ namespace ProjectEvent.Core.Event.Types
         /// <summary>
         /// 键盘事件
         /// </summary>
-        KeyboardEvent=10
+        KeyboardEvent = 10
     }
 }

@@ -13,18 +13,21 @@ namespace ProjectEvent.Core.Services
         private readonly IProcessTaskService processTaskService;
         private readonly IFileTaskService fileTaskService;
         private readonly IKeyboardTaskService keyboardTaskService;
+        private readonly INetworkStatusTaskService networkStatusTaskService;
 
         public MainService(IDeviceTaskService deviceTaskService,
              ITimerTaskService timerTaskService,
              IProcessTaskService processTaskService,
              IFileTaskService fileTaskService,
-             IKeyboardTaskService keyboardTaskService)
+             IKeyboardTaskService keyboardTaskService,
+             INetworkStatusTaskService networkStatusTaskService)
         {
             this.deviceTaskService = deviceTaskService;
             this.timerTaskService = timerTaskService;
             this.processTaskService = processTaskService;
             this.fileTaskService = fileTaskService;
             this.keyboardTaskService = keyboardTaskService;
+            this.networkStatusTaskService = networkStatusTaskService;
 
         }
         public void Run()
@@ -35,6 +38,7 @@ namespace ProjectEvent.Core.Services
             processTaskService.Run();
             fileTaskService.Run();
             keyboardTaskService.Run();
+            networkStatusTaskService.Run();
         }
     }
 }

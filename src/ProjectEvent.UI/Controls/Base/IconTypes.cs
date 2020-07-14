@@ -82,7 +82,8 @@ namespace ProjectEvent.UI.Controls.Base
         KeyboardClassic,
         FabricSyncFolder,
         DateTime12,
-        DateTime
+        DateTime,
+        MyNetwork
 
     }
 }

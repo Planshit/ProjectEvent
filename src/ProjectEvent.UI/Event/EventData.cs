@@ -137,7 +137,7 @@ namespace ProjectEvent.UI.Event
             };
                     break;
                 case EventType.OnFileChanged:
-                    new List<InputModel>()
+                    res = new List<InputModel>()
             {
                 new InputModel()
                     {
@@ -242,6 +242,14 @@ namespace ProjectEvent.UI.Event
                 Title = "键盘事件",
                 Description = "当键盘按键按下或松开时触发",
                 Icon = Controls.Base.IconTypes.KeyboardClassic
+
+            },
+            new Controls.ItemSelect.Models.ItemModel()
+            {
+                ID = (int)EventType.NetworkStatusEvent,
+                Title = "网络状态事件",
+                Description = "当网络断开或连接时触发",
+                Icon = Controls.Base.IconTypes.MyNetwork
 
             }
         };

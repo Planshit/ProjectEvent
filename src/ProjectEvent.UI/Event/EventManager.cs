@@ -63,6 +63,9 @@ namespace ProjectEvent.UI.Event
                 case EventType.KeyboardEvent:
                     condition = new KeyboardEventCondition();
                     break;
+                case EventType.NetworkStatusEvent:
+                    condition = new NetworkStatusEventCondition();
+                    break;
             }
             return new Core.Event.Models.EventModel()
             {
