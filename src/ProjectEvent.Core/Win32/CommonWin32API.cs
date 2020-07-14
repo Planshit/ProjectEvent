@@ -30,5 +30,12 @@ namespace ProjectEvent.Core.Win32
             return res;
         }
         #endregion
+
+        #region 获取网络状态
+        [DllImport("wininet.dll")]
+        public static extern bool InternetGetConnectedState(out long lpdwFlags, long dwReserved);
+
+
+        #endregion
     }
 }
