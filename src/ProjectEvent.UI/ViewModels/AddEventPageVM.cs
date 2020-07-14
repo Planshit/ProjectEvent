@@ -382,6 +382,7 @@ namespace ProjectEvent.UI.ViewModels
                         SelectedEventID = project.EventID;
                         ConditionData = Event.EventManager.GetObj(project);
                         ProjectDescription = project.ProjectDescription;
+                        ProjectIcon = project.Icon;
                     }
 
                 }
