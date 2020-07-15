@@ -30,7 +30,7 @@ namespace ProjectEvent
     {
         private readonly ServiceProvider _serviceProvider;
         private TaskbarIcon notifyIcon;
-
+        private Window lifeWindow;
         public App()
         {
             var serviceCollection = new ServiceCollection();
@@ -81,6 +81,17 @@ namespace ProjectEvent
 
         private void OnStartup(object sender, StartupEventArgs e)
         {
+            lifeWindow = new Window();
+            lifeWindow = new Window();
+            lifeWindow.Width = 0;
+            lifeWindow.Height = 0;
+            lifeWindow.Visibility = Visibility.Hidden;
+            lifeWindow.AllowsTransparency = true;
+            lifeWindow.ShowInTaskbar = false;
+            lifeWindow.Opacity = 0;
+            lifeWindow.WindowStyle = WindowStyle.None;
+            lifeWindow.WindowState = WindowState.Minimized;
+            lifeWindow.Show();
             DispatcherUnhandledException += App_DispatcherUnhandledException;
             var app = _serviceProvider.GetService<IApp>();
             app.Run();
