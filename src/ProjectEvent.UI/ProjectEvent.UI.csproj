@@ -48,7 +48,9 @@
     <Resource Include="Assets\Fonts\SegMDL2.ttf" />
     <Resource Include="Assets\Icons\icon_max.ico" />
     <Resource Include="Assets\Icons\icon_max.png" />
-    <Resource Include="Assets\Icons\tray.ico" />
+    <Resource Include="Assets\Icons\tray.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
@@ -58,6 +60,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\WPF.NotifyIcon.NetCore3\NotifyIconWpf\NotifyIconWpf.csproj" />
     <ProjectReference Include="..\ProjectEvent.Core\ProjectEvent.Core.csproj" />
   </ItemGroup>
 

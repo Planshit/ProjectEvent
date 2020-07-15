@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Hardcodet.Wpf.TaskbarNotification;
+using Microsoft.Extensions.DependencyInjection;
 using ProjectEvent.Core.Action.Types;
 using ProjectEvent.Core.Helper;
 using ProjectEvent.Core.Services;
@@ -28,6 +29,8 @@ namespace ProjectEvent
     public partial class App : Application
     {
         private readonly ServiceProvider _serviceProvider;
+        private TaskbarIcon notifyIcon;
+
         public App()
         {
             var serviceCollection = new ServiceCollection();
@@ -48,7 +51,6 @@ namespace ProjectEvent
             services.AddSingleton<INetworkStatusTaskService, NetworkStatusTaskService>();
 
             //ui services
-            services.AddSingleton<ITrayService, TrayService>();
             services.AddSingleton<IApp, ProjectEvent.UI.Services.App>();
             services.AddSingleton<IProjects, Projects>();
             services.AddSingleton<IGroup, Group>();
@@ -70,6 +72,8 @@ namespace ProjectEvent
             //事件日志页
             services.AddTransient<EventLogPage>();
             services.AddTransient<EventLogPageVM>();
+            //托盘图标
+            services.AddSingleton<NotifyIconVM>();
 
             services.AddSingleton<IServiceProvider>(services.BuildServiceProvider());
         }
@@ -80,10 +84,18 @@ namespace ProjectEvent
             DispatcherUnhandledException += App_DispatcherUnhandledException;
             var app = _serviceProvider.GetService<IApp>();
             app.Run();
+            var notifyIconVM = _serviceProvider.GetService<NotifyIconVM>();
+
+            notifyIcon = (TaskbarIcon)FindResource("NotifyIcon");
+            if (notifyIcon != null)
+            {
+                notifyIcon.DataContext = notifyIconVM;
+            }
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
+            notifyIcon.Dispose();
             base.OnExit(e);
             //保存事件日志
             var evlog = _serviceProvider.GetService<IEventLog>();

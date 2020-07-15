@@ -22,7 +22,6 @@ namespace ProjectEvent.UI.Services
 {
     public class App : IApp
     {
-        private readonly ITrayService trayService;
         private readonly IEventService eventService;
         private readonly IMainService mainService;
         private readonly IProjects projects;
@@ -30,7 +29,6 @@ namespace ProjectEvent.UI.Services
         private readonly IEventLog eventLog;
         private readonly ISettingsService settingsService;
         public App(
-            ITrayService trayService,
             IEventService eventContainerService,
             IMainService mainService,
             IProjects projects,
@@ -39,7 +37,6 @@ namespace ProjectEvent.UI.Services
             ISettingsService settingsService
             )
         {
-            this.trayService = trayService;
             this.eventService = eventContainerService;
             this.mainService = mainService;
             this.projects = projects;
@@ -59,10 +56,6 @@ namespace ProjectEvent.UI.Services
             mainService.Run();
             //加载分组数据
             group.Load();
-
-
-            //初始化托盘功能（必须在主要服务初始化后进行）
-            trayService.Init();
         }
         private void LoadProject()
         {
