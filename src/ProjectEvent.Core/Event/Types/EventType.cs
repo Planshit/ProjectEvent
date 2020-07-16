@@ -59,6 +59,10 @@ namespace ProjectEvent.Core.Event.Types
         /// <summary>
         /// wifi连接事件（仅在支持无线网络的设备上有效）
         /// </summary>
-        WIFIConnectedEvent = 12
+        WIFIConnectedEvent = 12,
+        /// <summary>
+        /// 蓝牙事件
+        /// </summary>
+        BluetoothEvent = 13
     }
 }

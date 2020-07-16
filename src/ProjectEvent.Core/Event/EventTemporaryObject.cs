@@ -68,6 +68,11 @@ namespace ProjectEvent.Core.Event
                 case EventType.WIFIConnectedEvent:
                     result.Add(nameof(WIFIConnectedEventVariableType.SSID), data != null ? data.ToString() : string.Empty);
                     break;
+                case EventType.BluetoothEvent:
+                    var bedata = (BluetoothEventDataStruct)data;
+                    result.Add(nameof(BluetoothEventVariableType.DeviceName), bedata.DeviceName);
+                    result.Add(nameof(BluetoothEventVariableType.IsConnected), bedata.IsConnected.ToString());
+                    break;
             }
 
             return result;

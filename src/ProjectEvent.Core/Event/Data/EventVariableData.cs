@@ -40,6 +40,12 @@ namespace ProjectEvent.Core.Event.Data
             { EventType.WIFIConnectedEvent,new Dictionary<string, string>()
             {
                 { nameof(WIFIConnectedEventVariableType.SSID),"网络名称（SSID）" },
+            } },
+            { EventType.BluetoothEvent,new Dictionary<string, string>()
+            {
+                { nameof(BluetoothEventVariableType.DeviceName),"设备名称" },
+                { nameof(BluetoothEventVariableType.IsConnected),"是否连接（True连接，False未连接）" },
+
             } }
 
         };
