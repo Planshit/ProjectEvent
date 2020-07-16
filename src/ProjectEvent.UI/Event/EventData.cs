@@ -106,7 +106,8 @@ namespace ProjectEvent.UI.Event
                         Type = Controls.InputGroup.InputType.Number,
                         BindingName = "Num",
                         BindingProperty = TextBox.TextProperty,
-                        Title = "循环次数（0时永远）"
+                        Title = "循环次数",
+                        Placeholder="为0时永远"
                     }
             };
                     break;
@@ -118,7 +119,8 @@ namespace ProjectEvent.UI.Event
                         Type = Controls.InputGroup.InputType.Text,
                         BindingName = "ProcessName",
                         BindingProperty = TextBox.TextProperty,
-                        Title = "进程名"
+                        Title = "进程名",
+                        Placeholder="可留空"
                     },
                 new InputModel()
                     {
@@ -145,6 +147,7 @@ namespace ProjectEvent.UI.Event
                         BindingName = nameof(FileChangedConditionModel.WatchPath),
                         BindingProperty = TextBox.TextProperty,
                         Title = "监听文件夹路径",
+                        Placeholder="必须指定文件夹路径"
                     },
                 new InputModel()
                     {
@@ -152,6 +155,7 @@ namespace ProjectEvent.UI.Event
                         BindingName = nameof(FileChangedConditionModel.Extname),
                         BindingProperty = TextBox.TextProperty,
                         Title = "过滤文件扩展名",
+                        Placeholder="*.*表示不过滤"
                     },
             };
                     break;
@@ -201,6 +205,7 @@ namespace ProjectEvent.UI.Event
                         BindingName = nameof(WIFIConnectedEventConditionModel.SSID),
                         BindingProperty = InputBox.TextProperty,
                         Title = "网络名称",
+                        Placeholder="可留空"
                     },
                     };
                     break;
