@@ -55,6 +55,10 @@ namespace ProjectEvent.Core.Event.Types
         /// <summary>
         /// 键盘事件
         /// </summary>
-        KeyboardEvent = 10
+        KeyboardEvent = 10,
+        /// <summary>
+        /// wifi连接事件（仅在支持无线网络的设备上有效）
+        /// </summary>
+        WIFIConnectedEvent = 12
     }
 }

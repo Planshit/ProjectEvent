@@ -83,7 +83,8 @@ namespace ProjectEvent.UI.Controls.Base
         FabricSyncFolder,
         DateTime12,
         DateTime,
-        MyNetwork
+        MyNetwork,
+        WifiEthernet
 
     }
 }

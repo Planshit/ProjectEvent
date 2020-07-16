@@ -192,6 +192,18 @@ namespace ProjectEvent.UI.Event
             },
             };
                     break;
+                case EventType.WIFIConnectedEvent:
+                    res = new List<InputModel>()
+            {
+                new InputModel()
+                    {
+                        Type = Controls.InputGroup.InputType.Text,
+                        BindingName = nameof(WIFIConnectedEventConditionModel.SSID),
+                        BindingProperty = InputBox.TextProperty,
+                        Title = "网络名称",
+                    },
+                    };
+                    break;
             }
 
 
@@ -250,6 +262,15 @@ namespace ProjectEvent.UI.Event
                 Title = "网络状态事件",
                 Description = "当网络断开或连接时触发",
                 Icon = Controls.Base.IconTypes.MyNetwork
+
+            },
+            new Controls.ItemSelect.Models.ItemModel()
+            {
+                ID = (int)EventType.WIFIConnectedEvent,
+                Title = "无线网络事件",
+                Description = "当设备连接到无线网络时触发",
+                Icon = Controls.Base.IconTypes.WifiEthernet,
+                Tag="特殊"
 
             }
         };

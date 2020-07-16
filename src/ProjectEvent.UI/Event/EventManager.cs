@@ -66,6 +66,13 @@ namespace ProjectEvent.UI.Event
                 case EventType.NetworkStatusEvent:
                     condition = new NetworkStatusEventCondition();
                     break;
+                case EventType.WIFIConnectedEvent:
+                    var wceconditionData = ObjectConvert.Get<WIFIConnectedEventConditionModel>(project.ConditionData);
+                    condition = new WIFIConnectedEventCondition()
+                    {
+                        SSID = wceconditionData.SSID
+                    };
+                    break;
             }
             return new Core.Event.Models.EventModel()
             {
@@ -97,6 +104,9 @@ namespace ProjectEvent.UI.Event
                     //进程创建
                     res = new TimeChangedConditionModel();
                     break;
+                case EventType.WIFIConnectedEvent:
+                    res = new WIFIConnectedEventConditionModel();
+                    break;
             }
             return res;
         }
@@ -117,6 +127,9 @@ namespace ProjectEvent.UI.Event
                     break;
                 case EventType.OnTimeChanged:
                     res = ObjectConvert.Get<TimeChangedConditionModel>(project.ConditionData);
+                    break;
+                case EventType.WIFIConnectedEvent:
+                    res = ObjectConvert.Get<WIFIConnectedEventConditionModel>(project.ConditionData);
                     break;
             }
             return res;

@@ -36,6 +36,10 @@ namespace ProjectEvent.Core.Event.Data
             { EventType.NetworkStatusEvent,new Dictionary<string, string>()
             {
                 { nameof(NetworkStatusEventVariableType.IsConnected),"网络是否连接（True连接，False未连接）" },
+            } },
+            { EventType.WIFIConnectedEvent,new Dictionary<string, string>()
+            {
+                { nameof(WIFIConnectedEventVariableType.SSID),"网络名称（SSID）" },
             } }
 
         };

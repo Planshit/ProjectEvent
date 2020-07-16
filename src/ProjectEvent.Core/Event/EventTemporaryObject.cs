@@ -65,6 +65,9 @@ namespace ProjectEvent.Core.Event
                     var nsedata = (NetworkStatusDataStruct)data;
                     result.Add(nameof(NetworkStatusEventVariableType.IsConnected), nsedata.IsConnected.ToString());
                     break;
+                case EventType.WIFIConnectedEvent:
+                    result.Add(nameof(WIFIConnectedEventVariableType.SSID), data != null ? data.ToString() : string.Empty);
+                    break;
             }
 
             return result;

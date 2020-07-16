@@ -1,9 +1,11 @@
 ﻿using ProjectEvent.Core.Event.Models;
 using ProjectEvent.Core.Event.Structs;
+using ProjectEvent.Core.Helper;
 using ProjectEvent.Core.Net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 
 namespace ProjectEvent.Core.Services.Tasks
@@ -31,7 +33,7 @@ namespace ProjectEvent.Core.Services.Tasks
             {
                 IsConnected = false
             };
-            Handle(data);
+            HandleNetworkStatusEvent(data);
         }
 
         private void NetworkWatcher_NetworkConnected(object sender, EventArgs e)
@@ -40,14 +42,43 @@ namespace ProjectEvent.Core.Services.Tasks
             {
                 IsConnected = true
             };
-            Handle(data);
+            HandleNetworkStatusEvent(data);
+            //处理wifi连接事件
+            var networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
+            NetworkInterface networkInterface = null;
+            foreach (var item in networkInterfaces)
+            {
+                if (item.OperationalStatus == OperationalStatus.Up &&
+                    item.Speed > 0 &&
+                    item.NetworkInterfaceType == NetworkInterfaceType.Wireless80211)
+                {
+                    networkInterface = item;
+                }
+            }
+            if (networkInterface != null)
+            {
+                HandleWIFIConnectedEvent(SystemHelper.GetCurrentWIFISSID());
+            }
         }
 
-        private void Handle(NetworkStatusDataStruct data)
+        private void HandleNetworkStatusEvent(NetworkStatusDataStruct data)
         {
             var evs = eventService.
                 GetEvents().
                 Where(m => m.EventType == Event.Types.EventType.NetworkStatusEvent).
+                ToList();
+
+            foreach (var ev in evs)
+            {
+                eventService.Invoke(ev, data);
+            }
+        }
+
+        private void HandleWIFIConnectedEvent(string data)
+        {
+            var evs = eventService.
+                GetEvents().
+                Where(m => m.EventType == Event.Types.EventType.WIFIConnectedEvent).
                 ToList();
 
             foreach (var ev in evs)
@@ -76,7 +107,9 @@ namespace ProjectEvent.Core.Services.Tasks
         {
             if (eventService.
                GetEvents().
-               Where(m => m.EventType == Event.Types.EventType.NetworkStatusEvent
+               Where(
+                m => m.EventType == Event.Types.EventType.NetworkStatusEvent ||
+                m.EventType == Event.Types.EventType.WIFIConnectedEvent
                ).Any())
             {
                 if (!iswatching)
