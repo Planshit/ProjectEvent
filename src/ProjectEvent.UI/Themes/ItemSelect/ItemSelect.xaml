@@ -14,7 +14,9 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Margin="5"
                             Padding="10">
-                        <WrapPanel x:Name="Container"/>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <WrapPanel x:Name="Container"/>
+                        </ScrollViewer>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
