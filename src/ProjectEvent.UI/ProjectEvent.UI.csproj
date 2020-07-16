@@ -60,7 +60,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\WPF.NotifyIcon.NetCore3\NotifyIconWpf\NotifyIconWpf.csproj" />
+    <ProjectReference Include="..\NotifyIconWpf\NotifyIconWpf.csproj" />
     <ProjectReference Include="..\ProjectEvent.Core\ProjectEvent.Core.csproj" />
   </ItemGroup>
 
