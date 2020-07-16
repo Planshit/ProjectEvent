@@ -11,7 +11,8 @@ namespace ProjectEvent.Core.Extensions
             string retval;
             try
             {
-                retval = wmiObj.GetPropertyValue(propertyName).ToString();
+                var p = wmiObj.GetPropertyValue(propertyName);
+                retval = p != null ? p.ToString() : string.Empty;
             }
             catch (System.Management.ManagementException)
             {

@@ -25,14 +25,9 @@ namespace ProjectEvent.Core.Condition
 
         public ConditionCheckResultModel Check()
         {
+            //特殊事件，直接通过
             var result = new ConditionCheckResultModel();
             result.IsValid = true;
-
-            if (string.IsNullOrEmpty(ProcessName))
-            {
-                result.IsValid = false;
-                result.Msg = "进程名不能为空";
-            }
             return result;
         }
 
@@ -48,6 +43,11 @@ namespace ProjectEvent.Core.Condition
             if (string.IsNullOrEmpty(Name))
             {
                 return false;
+            }
+            //事件条件为空时直接通过
+            if (string.IsNullOrEmpty(ProcessName))
+            {
+                return true;
             }
             if (Caseinsensitive)
             {
