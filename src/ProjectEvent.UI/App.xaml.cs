@@ -31,11 +31,13 @@ namespace ProjectEvent
         private readonly ServiceProvider _serviceProvider;
         private TaskbarIcon notifyIcon;
         private Window lifeWindow;
+        private System.Threading.Mutex mutex;
         public App()
         {
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
             _serviceProvider = serviceCollection.BuildServiceProvider();
+
         }
         private void ConfigureServices(IServiceCollection services)
         {
@@ -82,26 +84,37 @@ namespace ProjectEvent
 
         private void OnStartup(object sender, StartupEventArgs e)
         {
-            lifeWindow = new Window();
-            lifeWindow = new Window();
-            lifeWindow.Width = 0;
-            lifeWindow.Height = 0;
-            lifeWindow.Visibility = Visibility.Hidden;
-            lifeWindow.AllowsTransparency = true;
-            lifeWindow.ShowInTaskbar = false;
-            lifeWindow.Opacity = 0;
-            lifeWindow.WindowStyle = WindowStyle.None;
-            lifeWindow.WindowState = WindowState.Minimized;
-            lifeWindow.Show();
-            DispatcherUnhandledException += App_DispatcherUnhandledException;
-            var app = _serviceProvider.GetService<IApp>();
-            app.Run();
-            var notifyIconVM = _serviceProvider.GetService<NotifyIconVM>();
-
-            notifyIcon = (TaskbarIcon)FindResource("NotifyIcon");
-            if (notifyIcon != null)
+            if (IsRuning())
             {
-                notifyIcon.DataContext = notifyIconVM;
+                MessageBox.Show("程序已在运行中");
+                Current.Shutdown();
+            }
+            else
+            {
+                lifeWindow = new Window();
+                lifeWindow = new Window();
+                lifeWindow.Width = 0;
+                lifeWindow.Height = 0;
+                lifeWindow.Visibility = Visibility.Hidden;
+                lifeWindow.AllowsTransparency = true;
+                lifeWindow.ShowInTaskbar = false;
+                lifeWindow.Opacity = 0;
+                lifeWindow.WindowStyle = WindowStyle.None;
+                lifeWindow.WindowState = WindowState.Minimized;
+                lifeWindow.Show();
+                DispatcherUnhandledException += App_DispatcherUnhandledException;
+                var app = _serviceProvider.GetService<IApp>();
+                app.Run();
+                var notifyIconVM = _serviceProvider.GetService<NotifyIconVM>();
+
+                notifyIcon = (TaskbarIcon)FindResource("NotifyIcon");
+                if (notifyIcon != null)
+                {
+#if DEBUG
+                    notifyIconVM.ToolTipText = "[Debug] Project Event";
+#endif
+                    notifyIcon.DataContext = notifyIconVM;
+                }
             }
         }
 
@@ -121,6 +134,17 @@ namespace ProjectEvent
             e.Handled = true;
             var evlog = _serviceProvider.GetService<IEventLog>();
             evlog.Save();
+        }
+        private bool IsRuning()
+        {
+            //debug模式允许多开
+#if DEBUG
+            return false;
+
+#endif
+            bool ret;
+            mutex = new System.Threading.Mutex(true, System.AppDomain.CurrentDomain.FriendlyName, out ret);
+            return !ret;
         }
     }
 }
