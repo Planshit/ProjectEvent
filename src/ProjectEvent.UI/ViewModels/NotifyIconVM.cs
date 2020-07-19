@@ -13,7 +13,7 @@ namespace ProjectEvent.UI.ViewModels
         private readonly IServiceProvider serviceProvider;
         private bool isMainWindowShow = false;
         private DefaultWindow mainWindow;
-
+        public string ToolTipText { get; set; } = "Project Event";
         public Command OpenUriCommand { get; set; }
         public Command ExitCommand { get; set; }
 

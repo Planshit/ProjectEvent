@@ -16,8 +16,8 @@
 
     <!-- the application's NotifyIcon - started from App.xaml.cs. Declares its own view model. -->
     <tb:TaskbarIcon x:Key="NotifyIcon"
-                    IconSource="/Assets/Icons/icon_max.ico"
-                    ToolTipText="Project Event"
+                    IconSource="pack://application:,,,/Assets/Icons/icon_max.ico"
+                    ToolTipText="{Binding ToolTipText}"
                     DoubleClickCommand="{Binding OpenUriCommand}"
                     DoubleClickCommandParameter="IndexPage"
                     ContextMenu="{StaticResource SysTrayMenu}">
