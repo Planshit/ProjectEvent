@@ -118,10 +118,17 @@
 
                 </TabItem>
                 <TabItem Header="事件" IsSelected="{Binding IsEventTabItemSelected, Mode=TwoWay}">
-                    <ItemSelect:ItemSelect Items="{Binding Events, Mode=TwoWay}" SelectID="{Binding SelectedEventID, Mode=TwoWay}"/>
+                        <ItemSelect:ItemSelect Items="{Binding Events, Mode=TwoWay}" SelectID="{Binding SelectedEventID, Mode=TwoWay}"/>
                 </TabItem>
                 <TabItem Header="条件" IsSelected="{Binding IsConditionTabItemSelected, Mode=TwoWay}">
-                    <InputGroup:InputGroup Groups="{Binding Conditions}" DataSource="{Binding ConditionData}"/>
+                    <Grid>
+                        <InputGroup:InputGroup Groups="{Binding Conditions}" DataSource="{Binding ConditionData}"/>
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding NoConditionTipVisibility}">
+                            <Image Source="/Assets/Images/rocket_launch__monochromatic.png" Width="200"/>
+                            <TextBlock Text="该事件不需要设定条件" HorizontalAlignment="Center" FontSize="20" Margin="0,20"/>
+                        </StackPanel>
+                    </Grid>
+                    
                 </TabItem>
                 <TabItem Header="操作" IsSelected="{Binding IsActionsTabItemSelected, Mode=TwoWay}">
                     <Grid>

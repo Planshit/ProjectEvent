@@ -17,7 +17,12 @@ namespace ProjectEvent.UI.Models
         public List<InputModel> Conditions
         {
             get { return Conditions_; }
-            set { Conditions_ = value; OnPropertyChanged(); }
+            set
+            {
+                Conditions_ = value;
+                OnPropertyChanged();
+                NoConditionTipVisibility = value == null ? Visibility.Visible : Visibility.Collapsed;
+            }
         }
         //public ObservableCollection<ActionItemModel> Actions { get; set; }
         public ObservableCollection<ItemModel> Events { get; set; }
@@ -157,6 +162,13 @@ namespace ProjectEvent.UI.Models
         {
             get { return ContainerState_; }
             set { ContainerState_ = value; OnPropertyChanged(); }
+        }
+
+        private Visibility NoConditionTipVisibility_ = Visibility.Collapsed;
+        public Visibility NoConditionTipVisibility
+        {
+            get { return NoConditionTipVisibility_; }
+            set { NoConditionTipVisibility_ = value; OnPropertyChanged(); }
         }
     }
 }
