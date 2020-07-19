@@ -209,6 +209,33 @@ namespace ProjectEvent.UI.Event
                     },
                     };
                     break;
+                case EventType.BluetoothEvent:
+                    res = new List<InputModel>()
+            {
+                new InputModel()
+                    {
+                        Type = Controls.InputGroup.InputType.Text,
+                        BindingName = nameof(BluetoothEventConditionModel.DeviceName),
+                        BindingProperty = TextBox.TextProperty,
+                        Title = "设备名称",
+                        Placeholder="可留空"
+                    },
+                new InputModel()
+                    {
+                        Type = Controls.InputGroup.InputType.Bool,
+                        BindingName = nameof(BluetoothEventConditionModel.Caseinsensitive),
+                        BindingProperty = Toggle.IsCheckedProperty,
+                        Title = "忽略大小写"
+                    },
+                new InputModel()
+                    {
+                        Type = Controls.InputGroup.InputType.Bool,
+                        BindingName = nameof(BluetoothEventConditionModel.FuzzyMatch),
+                        BindingProperty = Toggle.IsCheckedProperty,
+                        Title = "模糊匹配"
+                    }
+                    };
+                    break;
             }
 
 
@@ -275,6 +302,15 @@ namespace ProjectEvent.UI.Event
                 Title = "无线网络事件",
                 Description = "当设备连接到无线网络时触发",
                 Icon = Controls.Base.IconTypes.WifiEthernet,
+                Tag="特殊"
+
+            },
+            new Controls.ItemSelect.Models.ItemModel()
+            {
+                ID = (int)EventType.BluetoothEvent,
+                Title = "蓝牙事件",
+                Description = "当设备连接或断开蓝牙设备时触发",
+                Icon = Controls.Base.IconTypes.NormalWeight,
                 Tag="特殊"
 
             }

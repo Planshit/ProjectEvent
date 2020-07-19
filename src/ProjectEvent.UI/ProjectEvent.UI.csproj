@@ -41,6 +41,7 @@
     <None Remove="Assets\Icons\icon_max.ico" />
     <None Remove="Assets\Icons\icon_max.png" />
     <None Remove="Assets\Icons\tray.ico" />
+    <None Remove="Assets\Images\rocket_launch__monochromatic.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,6 +52,7 @@
     <Resource Include="Assets\Icons\tray.ico">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Assets\Images\rocket_launch__monochromatic.png" />
   </ItemGroup>
 
   <ItemGroup>

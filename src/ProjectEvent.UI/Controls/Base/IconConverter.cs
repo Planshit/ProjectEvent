@@ -60,6 +60,7 @@ namespace ProjectEvent.UI.Controls.Base
             {IconTypes.DateTime,"\xEC92"},
             {IconTypes.MyNetwork,"\xEC27"},
             {IconTypes.WifiEthernet,"\xEE77"},
+            {IconTypes.NormalWeight,"\xF4EF"},
 
             {IconTypes.ChevronUp,"\xE70E"}
 

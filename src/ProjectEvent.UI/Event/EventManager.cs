@@ -73,6 +73,15 @@ namespace ProjectEvent.UI.Event
                         SSID = wceconditionData.SSID
                     };
                     break;
+                case EventType.BluetoothEvent:
+                    var beconditionData = ObjectConvert.Get<BluetoothEventConditionModel>(project.ConditionData);
+                    condition = new BluetoothEventCondition()
+                    {
+                        DeviceName = beconditionData.DeviceName,
+                        Caseinsensitive = beconditionData.Caseinsensitive,
+                        FuzzyMatch = beconditionData.FuzzyMatch
+                    };
+                    break;
             }
             return new Core.Event.Models.EventModel()
             {
@@ -107,6 +116,9 @@ namespace ProjectEvent.UI.Event
                 case EventType.WIFIConnectedEvent:
                     res = new WIFIConnectedEventConditionModel();
                     break;
+                case EventType.BluetoothEvent:
+                    res = new BluetoothEventConditionModel();
+                    break;
             }
             return res;
         }
@@ -130,6 +142,9 @@ namespace ProjectEvent.UI.Event
                     break;
                 case EventType.WIFIConnectedEvent:
                     res = ObjectConvert.Get<WIFIConnectedEventConditionModel>(project.ConditionData);
+                    break;
+                case EventType.BluetoothEvent:
+                    res = ObjectConvert.Get<BluetoothEventConditionModel>(project.ConditionData);
                     break;
             }
             return res;

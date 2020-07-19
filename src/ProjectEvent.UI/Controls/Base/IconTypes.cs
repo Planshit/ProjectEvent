@@ -84,7 +84,8 @@ namespace ProjectEvent.UI.Controls.Base
         DateTime12,
         DateTime,
         MyNetwork,
-        WifiEthernet
+        WifiEthernet,
+        NormalWeight
 
     }
 }

@@ -49,6 +49,7 @@ namespace ProjectEvent
             services.AddSingleton<IFileTaskService, FileTaskService>();
             services.AddSingleton<IKeyboardTaskService, KeyboardTaskService>();
             services.AddSingleton<INetworkStatusTaskService, NetworkStatusTaskService>();
+            services.AddSingleton<IBluetoothTaskService, BluetoothTaskService>();
 
             //ui services
             services.AddSingleton<IApp, ProjectEvent.UI.Services.App>();
