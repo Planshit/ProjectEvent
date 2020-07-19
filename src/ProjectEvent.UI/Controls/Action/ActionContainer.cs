@@ -789,7 +789,7 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 //switch ActionType是UI中使用的Type，与Core使用的ActionType并不一致，这里需要转换
 
-                result = action.Builder.GetCoreActionModel();
+                result = action.Builder?.GetCoreActionModel();
                 //switch (action.Action.ActionType)
                 //{
                 //    case UI.Types.ActionType.WriteFile:
