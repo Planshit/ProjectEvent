@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 
 namespace ProjectEvent.UI.Services
 {
@@ -93,13 +94,27 @@ namespace ProjectEvent.UI.Services
         /// </summary>
         private void HandleSettingsChanged()
         {
-            Task.Run(() =>
+            Task.Run(async () =>
             {
-                lock (hdsLock)
+                //开机启动
+                StartupTask startupTask = await StartupTask.GetAsync("ProjectEvent");
+                var s = startupTask.State;
+                if (s == StartupTaskState.Disabled && Settings.General.IsDeviceStartupRun)
                 {
-                    //开机启动
-                    SystemHelper.SetStartup(Settings.General.IsDeviceStartupRun);
+                    StartupTaskState newState = await startupTask.RequestEnableAsync();
+                    Settings.General.IsDeviceStartupRun = newState == StartupTaskState.EnabledByPolicy || newState == StartupTaskState.Enabled;
                 }
+
+                if (s == StartupTaskState.Enabled && !Settings.General.IsDeviceStartupRun)
+                {
+                    startupTask.Disable();
+                }
+                //lock (hdsLock)
+                //{
+
+
+                //    //SystemHelper.SetStartup(Settings.General.IsDeviceStartupRun);
+                //}
             });
 
         }
