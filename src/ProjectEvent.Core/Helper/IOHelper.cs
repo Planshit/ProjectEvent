@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -17,7 +18,10 @@ namespace ProjectEvent.Core.Helper
         public static string GetFullPath(string path, bool isinbasedir = true)
         {
             return isinbasedir ?
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, path) :
+                Path.Combine(
+                    Windows.Storage.ApplicationData.Current.LocalFolder.Path,
+                    //"Project Event",
+                    path) :
                 path;
 
         }
