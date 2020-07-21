@@ -19,7 +19,10 @@ namespace ProjectEvent.Core.Condition
 
         public bool IsPass(object data = null)
         {
-            return Environment.GetCommandLineArgs().Contains("-autorun");
+            Windows.ApplicationModel.Activation.IActivatedEventArgs args =
+            global::Windows.ApplicationModel.AppInstance.GetActivatedEventArgs();
+            return args.Kind == Windows.ApplicationModel.Activation.ActivationKind.StartupTask;
+            //return Environment.GetCommandLineArgs().Contains("-autorun");//注册表
         }
     }
 }
