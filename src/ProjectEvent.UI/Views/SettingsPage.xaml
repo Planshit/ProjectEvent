@@ -40,13 +40,13 @@
                             <TextBlock Foreground="{DynamicResource DisabledTextBrush}" Margin="5,0,0,10">
                                 <Run Text="核心程序集版本："/><Run Text="{Binding Settings.CoreVersion}"/>
                             </TextBlock>
-                            <Button Command="{Binding OpenUrlCommand}" CommandParameter="https://github.com/Planshit/ProjectEvent/releases" Style="{DynamicResource Icon}" HorizontalAlignment="Left" Foreground="{DynamicResource PrimaryColorBrush}" Padding="5,0">
+                            <!--<Button Command="{Binding OpenUrlCommand}" CommandParameter="https://github.com/Planshit/ProjectEvent/releases" Style="{DynamicResource Icon}" HorizontalAlignment="Left" Foreground="{DynamicResource PrimaryColorBrush}" Padding="5,0">
                                 <StackPanel Orientation="Horizontal">
                                     <base:Icon IconType="ProductVariant" Margin="0,0,5,0" VerticalAlignment="Center"/>
                                     <TextBlock Text="查看所有软件版本" VerticalAlignment="Center"/>
                                 </StackPanel>
 
-                            </Button>
+                            </Button>-->
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>
