@@ -60,6 +60,10 @@ namespace ProjectEvent.UI.Types
         /// <summary>
         /// 键盘操作
         /// </summary>
-        Keyboard
+        Keyboard = 13,
+        /// <summary>
+        /// 发送系统通知
+        /// </summary>
+        SystemNotification = 14
     }
 }

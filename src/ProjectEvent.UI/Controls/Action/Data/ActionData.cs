@@ -58,6 +58,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
                 case ActionType.Keyboard:
                     action.Icon = Base.IconTypes.KeyboardClassic;
                     break;
+                case ActionType.SystemNotification:
+                    action.Icon = Base.IconTypes.Message;
+                    break;
             }
 
             return action;
@@ -105,6 +108,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
             },
             {
                 ActionType.Keyboard,"模拟键盘操作"
+            },
+            {
+                ActionType.SystemNotification,"发送系统通知"
             },
         };
         #endregion

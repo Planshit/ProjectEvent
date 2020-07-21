@@ -47,6 +47,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 case ActionType.Keyboard:
                     builder = new KeyboardActionBuilder();
                     break;
+                case ActionType.SystemNotification:
+                    builder = new SystemNotificationActionBuilder();
+                    break;
             }
             if (builder != null)
             {
@@ -91,6 +94,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                     break;
                 case Core.Action.Types.ActionType.Keyboard:
                     builder = new KeyboardActionBuilder();
+                    break;
+                case Core.Action.Types.ActionType.SystemNotification:
+                    builder = new SystemNotificationActionBuilder();
                     break;
             }
             if (builder != null)

@@ -61,6 +61,7 @@ namespace ProjectEvent.UI.Controls.Base
             {IconTypes.MyNetwork,"\xEC27"},
             {IconTypes.WifiEthernet,"\xEE77"},
             {IconTypes.NormalWeight,"\xF4EF"},
+            {IconTypes.Message,"\xE8BD"},
 
             {IconTypes.ChevronUp,"\xE70E"}
 

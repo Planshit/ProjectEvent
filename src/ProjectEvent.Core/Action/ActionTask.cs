@@ -149,6 +149,9 @@ namespace ProjectEvent.Core.Action
                 case ActionType.Keyboard:
                     actionInstance = new KeyboardAction();
                     break;
+                case ActionType.SystemNotification:
+                    actionInstance = new SystemNotificationAction();
+                    break;
             }
             if (actionInstance != null)
             {

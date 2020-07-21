@@ -49,6 +49,10 @@ namespace ProjectEvent.Core.Action.Types
         /// <summary>
         /// 键盘操作
         /// </summary>
-        Keyboard = 11
+        Keyboard = 11,
+        /// <summary>
+        /// 发送系统通知
+        /// </summary>
+        SystemNotification = 12
     }
 }
