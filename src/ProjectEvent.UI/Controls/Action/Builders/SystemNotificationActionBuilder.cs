@@ -1,6 +1,7 @@
 ﻿using ProjectEvent.Core.Action.Models;
 using ProjectEvent.Core.Action.Types;
 using ProjectEvent.Core.Helper;
+using ProjectEvent.Core.Types;
 using ProjectEvent.UI.Controls.Action.Data;
 using ProjectEvent.UI.Controls.Action.Models;
 using ProjectEvent.UI.Models.DataModels;
@@ -23,7 +24,10 @@ namespace ProjectEvent.UI.Controls.Action.Builders
             actionItem = ActionData.GetCreateActionItemModel(UI.Types.ActionType.SystemNotification);
             action = new Core.Action.Models.ActionModel();
             action.Action = Core.Action.Types.ActionType.SystemNotification;
-            inputData = new SystemNotificationActionInputModel();
+            inputData = new SystemNotificationActionInputModel()
+            {
+                ToastScenarioType = SystemNotificationActionData.ToastScenarioTypes[0]
+            };
             inputModels = new List<ActionInputModel>();
             detailInputModels = new List<ActionInputModel>();
 
