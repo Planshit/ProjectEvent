@@ -50,6 +50,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 case ActionType.SystemNotification:
                     builder = new SystemNotificationActionBuilder();
                     break;
+                case ActionType.DownloadFile:
+                    builder = new DownloadFileActionBuilder();
+                    break;
             }
             if (builder != null)
             {
@@ -97,6 +100,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                     break;
                 case Core.Action.Types.ActionType.SystemNotification:
                     builder = new SystemNotificationActionBuilder();
+                    break;
+                case Core.Action.Types.ActionType.DownloadFile:
+                    builder = new DownloadFileActionBuilder();
                     break;
             }
             if (builder != null)

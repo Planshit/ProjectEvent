@@ -61,6 +61,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
                 case ActionType.SystemNotification:
                     action.Icon = Base.IconTypes.Message;
                     break;
+                case ActionType.DownloadFile:
+                    action.Icon = Base.IconTypes.Download;
+                    break;
             }
 
             return action;
@@ -111,6 +114,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
             },
             {
                 ActionType.SystemNotification,"发送系统通知"
+            },
+            {
+                ActionType.DownloadFile,"下载网络文件"
             },
         };
         #endregion
@@ -249,6 +255,22 @@ namespace ProjectEvent.UI.Controls.Action.Data
                             ID=(int)GetIPAddressResultType.IP,
                             DisplayName = "IP"
                         },
+                    };
+                    break;
+                case ActionType.DownloadFile:
+                    //删除文件
+                    data = new List<ComBoxModel>()
+                    {
+                        new ComBoxModel()
+                        {
+                            ID=(int)DownloadFileResultType.IsSuccess,
+                            DisplayName = "是否成功（True，False）"
+                        },
+                        new ComBoxModel()
+                        {
+                            ID=(int)DownloadFileResultType.SavePath,
+                            DisplayName = "文件保存路径"
+                        }
                     };
                     break;
             }

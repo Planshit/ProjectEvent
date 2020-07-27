@@ -64,6 +64,10 @@ namespace ProjectEvent.UI.Types
         /// <summary>
         /// 发送系统通知
         /// </summary>
-        SystemNotification = 14
+        SystemNotification = 14,
+        /// <summary>
+        /// 下载网络文件
+        /// </summary>
+        DownloadFile = 15
     }
 }

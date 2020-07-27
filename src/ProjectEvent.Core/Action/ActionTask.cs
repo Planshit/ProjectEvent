@@ -152,6 +152,9 @@ namespace ProjectEvent.Core.Action
                 case ActionType.SystemNotification:
                     actionInstance = new SystemNotificationAction();
                     break;
+                case ActionType.DownloadFile:
+                    actionInstance = new DownloadFileAction();
+                    break;
             }
             if (actionInstance != null)
             {

@@ -53,6 +53,10 @@ namespace ProjectEvent.Core.Action.Types
         /// <summary>
         /// 发送系统通知
         /// </summary>
-        SystemNotification = 12
+        SystemNotification = 12,
+        /// <summary>
+        /// 下载网络文件
+        /// </summary>
+        DownloadFile = 13
     }
 }
