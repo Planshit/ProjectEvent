@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -86,7 +88,13 @@ namespace ProjectEvent
         {
             if (IsRuning())
             {
-                MessageBox.Show("程序已在运行中");
+                //发送标记
+                var client = new NamedPipeClientStream(nameof(ProjectEvent));
+                client.Connect();
+                StreamWriter writer = new StreamWriter(client);
+                string input = "0";
+                writer.WriteLine(input);
+                writer.Flush();
                 Current.Shutdown();
             }
             else
@@ -115,16 +123,17 @@ namespace ProjectEvent
 #endif
                     notifyIcon.DataContext = notifyIconVM;
                 }
+                StartPipeServer();
             }
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
-            notifyIcon.Dispose();
+            notifyIcon?.Dispose();
             base.OnExit(e);
             //保存事件日志
             var evlog = _serviceProvider.GetService<IEventLog>();
-            evlog.Save();
+            evlog?.Save();
             //保存程序日志
             LogHelper.Save();
         }
@@ -146,5 +155,38 @@ namespace ProjectEvent
             mutex = new System.Threading.Mutex(true, System.AppDomain.CurrentDomain.FriendlyName, out ret);
             return !ret;
         }
+
+        #region pipes server
+        private void StartPipeServer()
+        {
+            //启动通讯服务，接收多次启动标记
+            var notifyIconVM = _serviceProvider.GetService<NotifyIconVM>();
+            Task.Factory.StartNew(() =>
+            {
+                var server = new NamedPipeServerStream(nameof(ProjectEvent));
+                server.WaitForConnection();
+                StreamReader reader = new StreamReader(server);
+                StreamWriter writer = new StreamWriter(server);
+                while (true)
+                {
+                    var line = reader.ReadLine();
+                    if (line == "0")
+                    {
+                        App.Current.Dispatcher.Invoke(() =>
+                        {
+                            notifyIconVM?.ShowPage(nameof(IndexPage));
+                        });
+                    }
+                    if (!server.IsConnected)
+                    {
+                        server.Close();
+                        reader.Close();
+                        StartPipeServer();
+                        break;
+                    }
+                }
+            });
+        }
+        #endregion
     }
 }

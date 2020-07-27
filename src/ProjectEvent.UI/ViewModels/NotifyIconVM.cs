@@ -35,7 +35,7 @@ namespace ProjectEvent.UI.ViewModels
             ShowPage(obj.ToString());
         }
 
-        private void ShowPage(string url)
+        public void ShowPage(string url)
         {
             if (isMainWindowShow && mainWindow != null)
             {
