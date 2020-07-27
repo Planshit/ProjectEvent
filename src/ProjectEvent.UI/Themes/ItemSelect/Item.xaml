@@ -27,12 +27,23 @@
                         <Border.RenderTransform>
                             <TranslateTransform Y="0"/>
                         </Border.RenderTransform>
+                        
                         <!--<Border.Effect>
                             
                         </Border.Effect>-->
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="MouseStates">
-                                <VisualState Name="MouseLeave" />
+                                <VisualState Name="MouseLeave">
+                                    <Storyboard>
+
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.RenderTransform).
+               (TranslateTransform.Y)"
+                                          Storyboard.TargetName="Border">
+                                            <EasingDoubleKeyFrame KeyTime="00:00:0.1"
+                                   Value="0"/>
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
                                 <VisualState Name="MouseEnter">
                                     <Storyboard>
 
