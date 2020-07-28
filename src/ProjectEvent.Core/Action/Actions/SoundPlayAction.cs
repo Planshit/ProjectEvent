@@ -2,6 +2,7 @@
 using ProjectEvent.Core.Action.Types;
 using ProjectEvent.Core.Action.Types.ResultTypes;
 using ProjectEvent.Core.Helper;
+using ProjectEvent.Core.Services;
 using ProjectEvent.Core.Win32;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,9 @@ namespace ProjectEvent.Core.Action.Actions
         private static extern long mciSendString(string strCommand, string strReturn, int iReturnLength, IntPtr hwndCallback);
         private string alias;
         private Thread thread;
+
+        public event ActionInvokeHandler OnEventStateChanged;
+
         private void Close()
         {
             mciSendString($"close {alias}", null, 0, IntPtr.Zero);
@@ -63,6 +67,7 @@ namespace ProjectEvent.Core.Action.Actions
         {
             return () =>
             {
+                OnEventStateChanged?.Invoke(taskID, action.ID, ActionInvokeStateType.Runing);
                 var p = ObjectConvert.Get<SoundPlayActionParamsModel>(action.Parameter);
                 var result = new ActionResultModel();
                 result.ID = action.ID;
@@ -80,6 +85,7 @@ namespace ProjectEvent.Core.Action.Actions
                 }
                 //返回数据
                 ActionTaskResulter.Add(taskID, result);
+                OnEventStateChanged?.Invoke(taskID, action.ID, ActionInvokeStateType.Done);
             };
         }
     }

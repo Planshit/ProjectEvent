@@ -2,6 +2,7 @@
 using ProjectEvent.Core.Action.Types;
 using ProjectEvent.Core.Action.Types.ResultTypes;
 using ProjectEvent.Core.Helper;
+using ProjectEvent.Core.Services;
 using ProjectEvent.Core.Win32;
 using System;
 using System.Collections.Generic;
@@ -15,10 +16,13 @@ namespace ProjectEvent.Core.Action.Actions
 {
     public class SnippingAction : IAction
     {
+        public event ActionInvokeHandler OnEventStateChanged;
+
         public System.Action GenerateAction(int taskID, ActionModel action)
         {
             return () =>
             {
+                OnEventStateChanged?.Invoke(taskID, action.ID, ActionInvokeStateType.Runing);
                 var p = ObjectConvert.Get<SnippingActionParamsModel>(action.Parameter);
                 var result = new ActionResultModel();
                 result.ID = action.ID;
@@ -45,6 +49,7 @@ namespace ProjectEvent.Core.Action.Actions
                 }
                 //返回数据
                 ActionTaskResulter.Add(taskID, result);
+                OnEventStateChanged?.Invoke(taskID, action.ID, ActionInvokeStateType.Done);
             };
         }
     }

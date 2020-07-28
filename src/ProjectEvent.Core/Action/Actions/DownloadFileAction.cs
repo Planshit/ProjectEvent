@@ -3,6 +3,7 @@ using ProjectEvent.Core.Action.Types;
 using ProjectEvent.Core.Action.Types.ResultTypes;
 using ProjectEvent.Core.Helper;
 using ProjectEvent.Core.Net;
+using ProjectEvent.Core.Services;
 using ProjectEvent.Core.Win32;
 using System;
 using System.Collections.Generic;
@@ -19,10 +20,13 @@ namespace ProjectEvent.Core.Action.Actions
 {
     public class DownloadFileAction : IAction
     {
+        public event ActionInvokeHandler OnEventStateChanged;
+
         public System.Action GenerateAction(int taskID, ActionModel action)
         {
             return () =>
             {
+                OnEventStateChanged?.Invoke(taskID, action.ID, ActionInvokeStateType.Runing);
                 var p = ObjectConvert.Get<DownloadFileParamsModel>(action.Parameter);
                 p.Url = ActionParameterConverter.ConvertToString(taskID, p.Url);
                 p.SavePath = ActionParameterConverter.ConvertToString(taskID, p.SavePath);
@@ -44,6 +48,7 @@ namespace ProjectEvent.Core.Action.Actions
                 }
                 //返回数据
                 ActionTaskResulter.Add(taskID, result);
+                OnEventStateChanged?.Invoke(taskID, action.ID, ActionInvokeStateType.Done);
             };
         }
     }

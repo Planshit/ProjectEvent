@@ -2,6 +2,7 @@
 using ProjectEvent.Core.Action.Types;
 using ProjectEvent.Core.Action.Types.ResultTypes;
 using ProjectEvent.Core.Helper;
+using ProjectEvent.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,10 +12,13 @@ namespace ProjectEvent.Core.Action.Actions
 {
     public class StartProcessAction : IAction
     {
+        public event ActionInvokeHandler OnEventStateChanged;
+
         public System.Action GenerateAction(int taskID, ActionModel action)
         {
             return () =>
             {
+                OnEventStateChanged?.Invoke(taskID, action.ID, ActionInvokeStateType.Runing);
                 var p = ObjectConvert.Get<StartProcessActionParamsModel>(action.Parameter);
                 var result = new ActionResultModel();
                 result.ID = action.ID;
@@ -43,6 +47,7 @@ namespace ProjectEvent.Core.Action.Actions
                 }
                 //返回数据
                 ActionTaskResulter.Add(taskID, result);
+                OnEventStateChanged?.Invoke(taskID, action.ID, ActionInvokeStateType.Done);
             };
         }
     }

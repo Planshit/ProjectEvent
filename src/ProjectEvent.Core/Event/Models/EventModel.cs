@@ -15,7 +15,7 @@ namespace ProjectEvent.Core.Event.Models
         public EventType EventType { get; set; }
         public ICondition Condition { get; set; }
 
-        public IEnumerable<ActionModel> Actions { get; set; }
+        public List<ActionModel> Actions { get; set; }
 
         public EventModel Copy()
         {

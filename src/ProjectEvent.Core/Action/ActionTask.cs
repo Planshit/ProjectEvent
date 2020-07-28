@@ -8,6 +8,7 @@ using ProjectEvent.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,15 +24,18 @@ namespace ProjectEvent.Core.Action
         /// <summary>
         /// 一组action状态发生改变时发生
         /// </summary>
-        public static event ActionsInvokeHandler OnActionsState;
+        public static event ActionsInvokeHandler OnActionGroupState;
         public static int TestTaskID;
         private static CancellationTokenSource testcts;
         public static void StopTestInvokeAction()
         {
-            OnActionsState?.Invoke(TestTaskID, ActionInvokeStateType.Busy);
-            testcts.Cancel();
+            OnActionGroupState?.Invoke(TestTaskID, ActionInvokeStateType.Busy);
+            if (testcts.IsCancellationRequested)
+            {
+                testcts?.Cancel();
+            }
         }
-        public static void RunTestInvokeAction(IEnumerable<ActionModel> actions)
+        public static void RunTestInvokeAction(List<ActionModel> actions)
         {
             testcts = new CancellationTokenSource();
             TestTaskID = new Random().Next(10000, 999999999);
@@ -42,7 +46,7 @@ namespace ProjectEvent.Core.Action
             });
 
         }
-        public static void Invoke(int taskID, IEnumerable<ActionModel> actions, bool isTest = false, bool isChildren = false)
+        public static void Invoke(int taskID, List<ActionModel> actions, bool isTest = false, bool isChildren = false)
         {
             if (actions == null)
             {
@@ -71,21 +75,21 @@ namespace ProjectEvent.Core.Action
                 {
                     try
                     {
-                        OnActionsState?.Invoke(taskID, ActionInvokeStateType.Runing);
+                        OnActionGroupState?.Invoke(taskID, ActionInvokeStateType.Runing);
                         InvokeActions(taskID, actions, ct);
                     }
                     catch (OperationCanceledException)
                     {
+                        OnActionGroupState?.Invoke(taskID, ActionInvokeStateType.Done);
                     }
                     catch (Exception e)
                     {
                         LogHelper.Error(e.ToString());
                     }
-                    finally
-                    {
-                        OnActionsState?.Invoke(taskID, ActionInvokeStateType.Done);
-                        cts.Dispose();
-                    }
+                    //finally
+                    //{
+                    //    cts.Dispose();
+                    //}
                 }, ct);
 
                 task.Start();
@@ -93,24 +97,68 @@ namespace ProjectEvent.Core.Action
 
         }
 
-        private static void InvokeActions(int taskID, IEnumerable<ActionModel> actions, CancellationToken ct)
+        //private static void InvokeActions(int taskID, List<ActionModel> actions, CancellationToken ct)
+        //{
+        //    if (actions == null)
+        //    {
+        //        return;
+        //    }
+        //    int count = actions.Count();
+        //    int runingIndex = 0;
+        //    if (count > 0)
+        //    {
+
+        //    }
+
+        //    ct.ThrowIfCancellationRequested();
+        //    foreach (var action in actions)
+        //    {
+        //        OnActionState?.Invoke(taskID, action.ID, Types.ActionInvokeStateType.Runing);
+        //        GetAction(taskID, action).Invoke();
+        //        if (ct.IsCancellationRequested)
+        //        {
+        //            OnActionState?.Invoke(taskID, action.ID, Types.ActionInvokeStateType.Done);
+        //            ct.ThrowIfCancellationRequested();
+        //        }
+        //        OnActionState?.Invoke(taskID, action.ID, Types.ActionInvokeStateType.Done);
+        //    }
+        //}
+        private static void InvokeActions(int taskID, List<ActionModel> actions, CancellationToken ct, int index = 0)
         {
-            //OnActionsState?.Invoke(taskID, ActionInvokeStateType.Runing);
-            ct.ThrowIfCancellationRequested();
-            foreach (var action in actions)
+            if (actions == null || actions.Count == 0)
             {
-                OnActionState?.Invoke(taskID, action.ID, Types.ActionInvokeStateType.Runing);
-                GetAction(taskID, action).Invoke();
+                return;
+            }
+            ct.ThrowIfCancellationRequested();
+            var actionModel = actions[index];
+            var action = GetAction(actionModel);
+            action.OnEventStateChanged += (taskID, actionID, state) =>
+            {
                 if (ct.IsCancellationRequested)
                 {
-                    OnActionState?.Invoke(taskID, action.ID, Types.ActionInvokeStateType.Done);
+                    OnActionState?.Invoke(taskID, actionID, Types.ActionInvokeStateType.Done);
                     ct.ThrowIfCancellationRequested();
                 }
-                OnActionState?.Invoke(taskID, action.ID, Types.ActionInvokeStateType.Done);
-            }
-            //OnActionsState?.Invoke(taskID, ActionInvokeStateType.Done);
+                if (state == ActionInvokeStateType.Done)
+                {
+                    OnActionState?.Invoke(taskID, actionID, Types.ActionInvokeStateType.Done);
+                    if (index + 1 < actions.Count)
+                    {
+                        InvokeActions(taskID, actions, ct, index + 1);
+                    }
+                    else
+                    {
+                        //全部运行完成
+                        Debug.WriteLine("全部运行完成");
+                        OnActionGroupState?.Invoke(taskID, ActionInvokeStateType.Done);
+                    }
+                }
+            };
+            OnActionState?.Invoke(taskID, actionModel.ID, Types.ActionInvokeStateType.Runing);
+            action.GenerateAction(taskID, actionModel)?.Invoke();
+
         }
-        private static System.Action GetAction(int taskID, ActionModel action)
+        private static IAction GetAction(ActionModel action)
         {
             IAction actionInstance = null;
 
@@ -155,10 +203,13 @@ namespace ProjectEvent.Core.Action
                 case ActionType.DownloadFile:
                     actionInstance = new DownloadFileAction();
                     break;
+                case ActionType.Dialog:
+                    actionInstance = new DialogAction();
+                    break;
             }
             if (actionInstance != null)
             {
-                return actionInstance.GenerateAction(taskID, action);
+                return actionInstance;
             }
             return null;
         }

@@ -16,10 +16,13 @@ namespace ProjectEvent.Core.Action.Actions
 {
     public class SystemNotificationAction : IAction
     {
+        public event ActionInvokeHandler OnEventStateChanged;
+
         public System.Action GenerateAction(int taskID, ActionModel action)
         {
             return () =>
             {
+                OnEventStateChanged?.Invoke(taskID, action.ID, ActionInvokeStateType.Runing);
                 var p = ObjectConvert.Get<SystemNotificationActionParamsModel>(action.Parameter);
                 p.Title = ActionParameterConverter.ConvertToString(taskID, p.Title);
                 p.Content = ActionParameterConverter.ConvertToString(taskID, p.Content);
@@ -35,6 +38,7 @@ namespace ProjectEvent.Core.Action.Actions
                 }
                 //返回数据
                 //ActionTaskResulter.Add(taskID, result);
+                OnEventStateChanged?.Invoke(taskID, action.ID, ActionInvokeStateType.Done);
             };
         }
     }
