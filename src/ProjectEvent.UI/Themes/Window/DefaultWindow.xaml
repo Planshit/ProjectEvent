@@ -123,7 +123,7 @@
                                                     Style="{StaticResource WindowSystemButton}"
                                                     Content="&#xE921;"
                                                     Command="{x:Static w:DefaultWindowCommands.MinimizeWindowCommand}"
-                                                    Visibility="{TemplateBinding CloseVisibility}"/>
+                                                    Visibility="{TemplateBinding MinimizeVisibility}"/>
 
                                                 <!--最大化-->
                                                 <Button
@@ -134,7 +134,7 @@
                                                     Style="{StaticResource WindowSystemButton}"
                                                     Content="&#xE922;"
                                                     Command="{x:Static w:DefaultWindowCommands.MaximizeWindowCommand}"
-                                                    Visibility="{TemplateBinding CloseVisibility}"/>
+                                                    Visibility="{TemplateBinding MaximizeVisibility}"/>
                                                 <!--还原-->
                                                 <Button
                                                     x:Name="RestoreButton"
@@ -144,7 +144,7 @@
                                                     Style="{StaticResource WindowSystemButton}"
                                                     Content="&#xE923;"
                                                     Command="{x:Static w:DefaultWindowCommands.RestoreWindowCommand}"
-                                                    Visibility="{TemplateBinding CloseVisibility}"/>
+                                                    Visibility="Collapsed"/>
                                                 <!--关闭-->
                                                 <Button
                                                     ToolTip="关闭"
