@@ -68,6 +68,10 @@ namespace ProjectEvent.UI.Types
         /// <summary>
         /// 下载网络文件
         /// </summary>
-        DownloadFile = 15
+        DownloadFile = 15,
+        /// <summary>
+        /// 对话框
+        /// </summary>
+        Dialog = 16
     }
 }

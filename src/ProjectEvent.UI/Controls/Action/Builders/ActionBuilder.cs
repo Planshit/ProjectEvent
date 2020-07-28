@@ -53,6 +53,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 case ActionType.DownloadFile:
                     builder = new DownloadFileActionBuilder();
                     break;
+                case ActionType.Dialog:
+                    builder = new DialogActionBuilder();
+                    break;
             }
             if (builder != null)
             {
@@ -103,6 +106,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                     break;
                 case Core.Action.Types.ActionType.DownloadFile:
                     builder = new DownloadFileActionBuilder();
+                    break;
+                case Core.Action.Types.ActionType.Dialog:
+                    builder = new DialogActionBuilder();
                     break;
             }
             if (builder != null)

@@ -57,6 +57,10 @@ namespace ProjectEvent.Core.Action.Types
         /// <summary>
         /// 下载网络文件
         /// </summary>
-        DownloadFile = 13
+        DownloadFile = 13,
+        /// <summary>
+        /// 对话框
+        /// </summary>
+        Dialog = 14
     }
 }

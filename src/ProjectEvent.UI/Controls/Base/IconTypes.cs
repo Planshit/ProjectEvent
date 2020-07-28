@@ -87,7 +87,8 @@ namespace ProjectEvent.UI.Controls.Base
         WifiEthernet,
         NormalWeight,
         Message,
-        Download
+        Download,
+        Storyboard
 
     }
 }

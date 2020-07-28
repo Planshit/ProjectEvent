@@ -64,6 +64,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
                 case ActionType.DownloadFile:
                     action.Icon = Base.IconTypes.Download;
                     break;
+                case ActionType.Dialog:
+                    action.Icon = Base.IconTypes.Storyboard;
+                    break;
             }
 
             return action;
@@ -117,6 +120,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
             },
             {
                 ActionType.DownloadFile,"下载网络文件"
+            },
+            {
+                ActionType.Dialog,"对话框"
             },
         };
         #endregion
@@ -270,6 +276,17 @@ namespace ProjectEvent.UI.Controls.Action.Data
                         {
                             ID=(int)DownloadFileResultType.SavePath,
                             DisplayName = "文件保存路径"
+                        }
+                    };
+                    break;
+                case ActionType.Dialog:
+                    //删除文件
+                    data = new List<ComBoxModel>()
+                    {
+                        new ComBoxModel()
+                        {
+                            ID=(int)DialogResultType.ClickButtonValue,
+                            DisplayName = "点击的按钮值"
                         }
                     };
                     break;
