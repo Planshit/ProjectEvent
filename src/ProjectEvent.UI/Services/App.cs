@@ -28,13 +28,16 @@ namespace ProjectEvent.UI.Services
         private readonly IGroup group;
         private readonly IEventLog eventLog;
         private readonly ISettingsService settingsService;
+        private readonly ICallFunctionPipes callFunctionPipes;
+
         public App(
             IEventService eventContainerService,
             IMainService mainService,
             IProjects projects,
             IGroup group,
             IEventLog eventLog,
-            ISettingsService settingsService
+            ISettingsService settingsService,
+            ICallFunctionPipes callFunctionPipes
             )
         {
             this.eventService = eventContainerService;
@@ -43,6 +46,7 @@ namespace ProjectEvent.UI.Services
             this.group = group;
             this.eventLog = eventLog;
             this.settingsService = settingsService;
+            this.callFunctionPipes = callFunctionPipes;
         }
         public void Run()
         {
@@ -56,6 +60,8 @@ namespace ProjectEvent.UI.Services
             mainService.Run();
             //加载分组数据
             group.Load();
+            //启动管道调用服务
+            callFunctionPipes.StartServer();
         }
         private void LoadProject()
         {

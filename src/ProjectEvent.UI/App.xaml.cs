@@ -7,6 +7,7 @@ using ProjectEvent.Core.Services.Tasks;
 using ProjectEvent.Core.Services.TimerTask;
 using ProjectEvent.UI;
 using ProjectEvent.UI.Controls;
+using ProjectEvent.UI.Controls.Window;
 using ProjectEvent.UI.Services;
 using ProjectEvent.UI.ViewModels;
 using ProjectEvent.UI.Views;
@@ -61,6 +62,7 @@ namespace ProjectEvent
             services.AddSingleton<IGroup, Group>();
             services.AddSingleton<IEventLog, UI.Services.EventLog>();
             services.AddSingleton<ISettingsService, UI.Services.SettingsService>();
+            services.AddSingleton<ICallFunctionPipes, UI.Services.CallFunctionPipes>();
 
             //services.AddTransient<PageContainer>();
             services.AddSingleton<MainViewModel>();
