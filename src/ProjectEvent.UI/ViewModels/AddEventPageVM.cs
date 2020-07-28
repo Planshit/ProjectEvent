@@ -100,7 +100,7 @@ namespace ProjectEvent.UI.ViewModels
                 mainVM.Toast("正在执行操作", Types.ToastType.Warning);
                 VisualStateManager.GoToElementState(page, "ActionsRuning", true);
                 ActionTask.OnActionState += ActionTask_OnActionInvoke;
-                ActionTask.OnActionsState += ActionTask_OnActionsState;
+                ActionTask.OnActionGroupState += ActionTask_OnActionsState;
                 ActionTask.RunTestInvokeAction(actions);
             }
         }
@@ -112,7 +112,7 @@ namespace ProjectEvent.UI.ViewModels
                 ContainerState = state;
                 if (state == Core.Action.Types.ActionInvokeStateType.Done)
                 {
-                    ActionTask.OnActionsState -= ActionTask_OnActionsState;
+                    ActionTask.OnActionGroupState -= ActionTask_OnActionsState;
                     ActionTask.OnActionState -= ActionTask_OnActionInvoke;
                     RunActionsButtonVisibility = Visibility.Visible;
                     StopActionsButtonVisibility = Visibility.Collapsed;
