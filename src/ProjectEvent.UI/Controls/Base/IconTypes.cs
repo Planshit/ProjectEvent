@@ -88,7 +88,8 @@ namespace ProjectEvent.UI.Controls.Base
         NormalWeight,
         Message,
         Download,
-        Storyboard
+        Storyboard,
+        HandsFree
 
     }
 }

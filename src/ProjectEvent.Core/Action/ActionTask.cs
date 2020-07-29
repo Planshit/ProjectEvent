@@ -206,6 +206,9 @@ namespace ProjectEvent.Core.Action
                 case ActionType.Dialog:
                     actionInstance = new DialogAction();
                     break;
+                case ActionType.Delay:
+                    actionInstance = new DelayAction();
+                    break;
             }
             if (actionInstance != null)
             {

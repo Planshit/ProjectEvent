@@ -56,6 +56,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 case ActionType.Dialog:
                     builder = new DialogActionBuilder();
                     break;
+                case ActionType.Delay:
+                    builder = new DelayActionBuilder();
+                    break;
             }
             if (builder != null)
             {
@@ -109,6 +112,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                     break;
                 case Core.Action.Types.ActionType.Dialog:
                     builder = new DialogActionBuilder();
+                    break;
+                case Core.Action.Types.ActionType.Delay:
+                    builder = new DelayActionBuilder();
                     break;
             }
             if (builder != null)

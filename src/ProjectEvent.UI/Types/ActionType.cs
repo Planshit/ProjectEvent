@@ -72,6 +72,10 @@ namespace ProjectEvent.UI.Types
         /// <summary>
         /// 对话框
         /// </summary>
-        Dialog = 16
+        Dialog = 16,
+        /// <summary>
+        /// 等待/延迟
+        /// </summary>
+        Delay = 17
     }
 }

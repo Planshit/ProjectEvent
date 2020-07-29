@@ -67,6 +67,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
                 case ActionType.Dialog:
                     action.Icon = Base.IconTypes.Storyboard;
                     break;
+                case ActionType.Delay:
+                    action.Icon = Base.IconTypes.HandsFree;
+                    break;
             }
 
             return action;
@@ -123,6 +126,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
             },
             {
                 ActionType.Dialog,"对话框"
+            },
+            {
+                ActionType.Delay,"等待"
             },
         };
         #endregion

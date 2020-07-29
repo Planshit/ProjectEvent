@@ -61,6 +61,10 @@ namespace ProjectEvent.Core.Action.Types
         /// <summary>
         /// 对话框
         /// </summary>
-        Dialog = 14
+        Dialog = 14,
+        /// <summary>
+        /// 等待/延迟
+        /// </summary>
+        Delay = 15
     }
 }
