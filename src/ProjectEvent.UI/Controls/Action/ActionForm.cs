@@ -358,6 +358,7 @@ namespace ProjectEvent.UI.Controls.Action
                         switch (item.InputType)
                         {
                             case Types.InputType.Text:
+                            case Types.InputType.Number:
                                 RenderInputBox(item);
                                 break;
                             case Types.InputType.Select:
@@ -389,6 +390,7 @@ namespace ProjectEvent.UI.Controls.Action
                         switch (item.InputType)
                         {
                             case Types.InputType.Text:
+                            case Types.InputType.Number:
                                 RenderInputBox(item, true);
                                 break;
                             case Types.InputType.Select:
@@ -416,6 +418,12 @@ namespace ProjectEvent.UI.Controls.Action
         {
             var inputBox = new InputBox();
             inputBox.Placeholder = item.Placeholder;
+            //数字输入
+            if(item.InputType== Types.InputType.Number)
+            {
+                inputBox.InputType = InputTypes.Number;
+                inputBox.Mininum = 1;
+            }
             inputBoxes.Add(inputBox);
             //绑定数据
             BindingOperations.SetBinding(inputBox, TextBox.TextProperty, new Binding()

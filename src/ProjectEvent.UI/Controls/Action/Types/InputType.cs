@@ -18,5 +18,9 @@ namespace ProjectEvent.UI.Controls.Action.Types
         /// 自定义键值
         /// </summary>
         CustomKeyValue,
+        /// <summary>
+        /// 数字
+        /// </summary>
+        Number
     }
 }
