@@ -13,18 +13,22 @@ namespace ProjectEvent.Core
 {
     public class PipeCallFunction
     {
+        static object connectLock = new object();
         static PipeNet pipeNet;
         static bool isConnected = false;
         public delegate void PipeCallFeedbackEventHandler(PipeCallFunctionFeedbackStruct fb);
         public static event PipeCallFeedbackEventHandler OnCallFeedback;
         public static void Connect()
         {
-            if (!isConnected)
+            lock (connectLock)
             {
-                isConnected = true;
-                pipeNet = new PipeNet("callfunction");
-                pipeNet.OnReceiveMsg += PipeNet_OnReceiveMsg;
-                pipeNet.Start();
+                if (!isConnected)
+                {
+                    isConnected = true;
+                    pipeNet = new PipeNet("callfunction");
+                    pipeNet.OnReceiveMsg += PipeNet_OnReceiveMsg;
+                    pipeNet.Start();
+                }
             }
         }
 
