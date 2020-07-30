@@ -4,6 +4,7 @@ using ProjectEvent.UI.Base.Color;
 using ProjectEvent.UI.Controls.Action.Data;
 using ProjectEvent.UI.Controls.Action.Models;
 using ProjectEvent.UI.Controls.Input;
+using ProjectEvent.UI.Controls.Toggle;
 using ProjectEvent.UI.Models.DataModels;
 using System;
 using System.Collections.Generic;
@@ -364,6 +365,9 @@ namespace ProjectEvent.UI.Controls.Action
                             case Types.InputType.Select:
                                 RenderSelectBox(item);
                                 break;
+                            case Types.InputType.Bool:
+                                RenderToggleBox(item);
+                                break;
                         }
                     }
                     LineVisibility = Visibility.Visible;
@@ -399,6 +403,9 @@ namespace ProjectEvent.UI.Controls.Action
                             case Types.InputType.CustomKeyValue:
                                 RenderKVForm(item);
                                 break;
+                            case Types.InputType.Bool:
+                                RenderToggleBox(item, true);
+                                break;
                         }
                     }
 
@@ -419,7 +426,7 @@ namespace ProjectEvent.UI.Controls.Action
             var inputBox = new InputBox();
             inputBox.Placeholder = item.Placeholder;
             //数字输入
-            if(item.InputType== Types.InputType.Number)
+            if (item.InputType == Types.InputType.Number)
             {
                 inputBox.InputType = InputTypes.Number;
                 inputBox.Mininum = 1;
@@ -609,6 +616,58 @@ namespace ProjectEvent.UI.Controls.Action
         }
         #endregion
 
+        #region 渲染一个开关控件
+        private void RenderToggleBox(ActionInputModel item, bool isMultiLine = false)
+        {
+            var control = new Toggle.Toggle();
+
+            //绑定数据
+            BindingOperations.SetBinding(control, Toggle.Toggle.IsCheckedProperty, new Binding()
+            {
+                Source = DataContext,
+                Path = new PropertyPath(item.BindingName),
+                Mode = BindingMode.TwoWay,
+            });
+            if (!isMultiLine)
+            {
+                //单行
+                if (!item.IsStretch && LineInputGroups.Count > 1)
+                {
+                    control.VerticalAlignment = VerticalAlignment.Center;
+                    control.Margin = new Thickness(0, 0, 10, 0);
+                    if (!string.IsNullOrEmpty(item.Title))
+                    {
+                        LineContainer.Children.Add(GetLabel(item));
+                    }
+                    LineContainer.Children.Add(control);
+                }
+                else
+                {
+                    var grid = GetLineGrid();
+                    var label = GetLabel(item);
+                    Grid.SetColumn(control, 1);
+                    grid.Children.Add(label);
+                    grid.Children.Add(control);
+                    label.Loaded += (e, c) =>
+                    {
+                        grid.Width = LineContainer.ActualWidth;
+                    };
+                    LineContainer.Children.Add(grid);
+                }
+            }
+            else
+            {
+                //多行
+                var grid = GetLineGrid();
+                var label = GetLabel(item);
+                Grid.SetColumn(control, 1);
+                grid.Children.Add(label);
+                grid.Children.Add(control);
+                MultiLineContainer.Children.Add(grid);
+            }
+
+        }
+        #endregion
 
         #region 绑定操作结果选择框
         private void BindingActionResults()
@@ -713,7 +772,7 @@ namespace ProjectEvent.UI.Controls.Action
             btn.Content = new TextBlock()
             {
                 Text = name,
-                TextWrapping= TextWrapping.WrapWithOverflow
+                TextWrapping = TextWrapping.WrapWithOverflow
             };
             btn.Padding = new Thickness(5, 0, 5, 0);
             btn.Click += (e, c) =>

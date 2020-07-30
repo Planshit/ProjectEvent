@@ -21,6 +21,10 @@ namespace ProjectEvent.UI.Controls.Action.Types
         /// <summary>
         /// 数字
         /// </summary>
-        Number
+        Number,
+        /// <summary>
+        /// 单选
+        /// </summary>
+        Bool
     }
 }
