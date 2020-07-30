@@ -89,7 +89,8 @@ namespace ProjectEvent.UI.Controls.Base
         Message,
         Download,
         Storyboard,
-        HandsFree
+        HandsFree,
+        PlaybackRate1x
 
     }
 }

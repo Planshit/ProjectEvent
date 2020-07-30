@@ -67,7 +67,7 @@ namespace ProjectEvent.Core.Action
 
             if (isChildren)
             {
-                InvokeActions(taskID, actions, ct);
+                InvokeActions(isChildren, taskID, actions, ct);
             }
             else
             {
@@ -76,7 +76,7 @@ namespace ProjectEvent.Core.Action
                     try
                     {
                         OnActionGroupState?.Invoke(taskID, ActionInvokeStateType.Runing);
-                        InvokeActions(taskID, actions, ct);
+                        InvokeActions(isChildren, taskID, actions, ct);
                     }
                     catch (OperationCanceledException)
                     {
@@ -97,33 +97,7 @@ namespace ProjectEvent.Core.Action
 
         }
 
-        //private static void InvokeActions(int taskID, List<ActionModel> actions, CancellationToken ct)
-        //{
-        //    if (actions == null)
-        //    {
-        //        return;
-        //    }
-        //    int count = actions.Count();
-        //    int runingIndex = 0;
-        //    if (count > 0)
-        //    {
-
-        //    }
-
-        //    ct.ThrowIfCancellationRequested();
-        //    foreach (var action in actions)
-        //    {
-        //        OnActionState?.Invoke(taskID, action.ID, Types.ActionInvokeStateType.Runing);
-        //        GetAction(taskID, action).Invoke();
-        //        if (ct.IsCancellationRequested)
-        //        {
-        //            OnActionState?.Invoke(taskID, action.ID, Types.ActionInvokeStateType.Done);
-        //            ct.ThrowIfCancellationRequested();
-        //        }
-        //        OnActionState?.Invoke(taskID, action.ID, Types.ActionInvokeStateType.Done);
-        //    }
-        //}
-        private static void InvokeActions(int taskID, List<ActionModel> actions, CancellationToken ct, int index = 0)
+        private static void InvokeActions(bool isChildren, int taskID, List<ActionModel> actions, CancellationToken ct, int index = 0)
         {
             if (actions == null || actions.Count == 0)
             {
@@ -144,9 +118,9 @@ namespace ProjectEvent.Core.Action
                     OnActionState?.Invoke(taskID, actionID, Types.ActionInvokeStateType.Done);
                     if (index + 1 < actions.Count)
                     {
-                        InvokeActions(taskID, actions, ct, index + 1);
+                        InvokeActions(isChildren, taskID, actions, ct, index + 1);
                     }
-                    else
+                    else if(!isChildren)
                     {
                         //全部运行完成
                         Debug.WriteLine("全部运行完成");
@@ -208,6 +182,9 @@ namespace ProjectEvent.Core.Action
                     break;
                 case ActionType.Delay:
                     actionInstance = new DelayAction();
+                    break;
+                case ActionType.Loops:
+                    actionInstance = new LoopsAction();
                     break;
             }
             if (actionInstance != null)

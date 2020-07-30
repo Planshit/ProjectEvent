@@ -65,6 +65,10 @@ namespace ProjectEvent.Core.Action.Types
         /// <summary>
         /// 等待/延迟
         /// </summary>
-        Delay = 15
+        Delay = 15,
+        /// <summary>
+        /// 循环
+        /// </summary>
+        Loops = 16
     }
 }

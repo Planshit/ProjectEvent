@@ -65,6 +65,7 @@ namespace ProjectEvent.UI.Controls.Base
             {IconTypes.Download,"\xE896"},
             {IconTypes.Storyboard,"\xF308"},
             {IconTypes.HandsFree,"\xEAD0"},
+            {IconTypes.PlaybackRate1x,"\xEC57"},
 
             {IconTypes.ChevronUp,"\xE70E"}
 

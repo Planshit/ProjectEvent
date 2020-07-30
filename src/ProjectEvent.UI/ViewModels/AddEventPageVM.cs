@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using ProjectEvent.Core.Action;
+using ProjectEvent.Core.Action.Types;
 using ProjectEvent.Core.Event.Types;
 using ProjectEvent.Core.Helper;
 using ProjectEvent.Core.Services;
@@ -284,7 +285,7 @@ namespace ProjectEvent.UI.ViewModels
             foreach (var item in Enum.GetValues(typeof(Types.ActionType)))
             {
                 var type = (Types.ActionType)item;
-                if (type != Types.ActionType.IFElse && type != Types.ActionType.IFEnd)
+                if (type != Types.ActionType.IFElse && type != Types.ActionType.IFEnd && type != Types.ActionType.LoopsEnd)
                 {
                     ComBoxActions.Add(new ComBoxActionModel()
                     {
@@ -330,6 +331,25 @@ namespace ProjectEvent.UI.ViewModels
                     endmodel.ID = container.GetCreateActionID();
                     endmodel.ParentID = id;
                     container.AddItem(endmodel);
+                    break;
+                //组
+                case Types.ActionType.Loops:
+                    int gid = container.GetCreateActionID();
+                    var gmodel = ActionData.GetCreateActionItemModel((Types.ActionType)ComBoxSelectedAction.ID);
+                    gmodel.ID = gid;
+                    container.AddItem(gmodel);
+
+
+                    Types.ActionType endType = Types.ActionType.LoopsEnd;
+                    if ((Types.ActionType)ComBoxSelectedAction.ID == Types.ActionType.Loops)
+                    {
+                        endType = Types.ActionType.LoopsEnd;
+                    }
+
+                    var endgmodel = ActionData.GetCreateActionItemModel(endType);
+                    endgmodel.ID = container.GetCreateActionID();
+                    endgmodel.ParentID = gid;
+                    container.AddItem(endgmodel);
                     break;
                 default:
                     //非特殊action

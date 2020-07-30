@@ -70,6 +70,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
                 case ActionType.Delay:
                     action.Icon = Base.IconTypes.HandsFree;
                     break;
+                case ActionType.Loops:
+                    action.Icon = Base.IconTypes.PlaybackRate1x;
+                    break;
             }
 
             return action;
@@ -129,6 +132,12 @@ namespace ProjectEvent.UI.Controls.Action.Data
             },
             {
                 ActionType.Delay,"等待"
+            },
+            {
+                ActionType.Loops,"循环"
+            },
+            {
+                ActionType.LoopsEnd,"循环结束"
             },
         };
         #endregion

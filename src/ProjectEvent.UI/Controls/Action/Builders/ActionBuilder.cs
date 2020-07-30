@@ -59,6 +59,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 case ActionType.Delay:
                     builder = new DelayActionBuilder();
                     break;
+                case ActionType.Loops:
+                    builder = new LoopsActionBuilder();
+                    break;
             }
             if (builder != null)
             {
@@ -115,6 +118,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                     break;
                 case Core.Action.Types.ActionType.Delay:
                     builder = new DelayActionBuilder();
+                    break;
+                case Core.Action.Types.ActionType.Loops:
+                    builder = new LoopsActionBuilder();
                     break;
             }
             if (builder != null)

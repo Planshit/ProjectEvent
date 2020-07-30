@@ -76,6 +76,14 @@ namespace ProjectEvent.UI.Types
         /// <summary>
         /// 等待/延迟
         /// </summary>
-        Delay = 17
+        Delay = 17,
+        /// <summary>
+        /// 循环
+        /// </summary>
+        Loops = 18,
+        /// <summary>
+        /// 循环结束
+        /// </summary>
+        LoopsEnd = 19
     }
 }
