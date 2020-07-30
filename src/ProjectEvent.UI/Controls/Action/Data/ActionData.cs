@@ -73,6 +73,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
                 case ActionType.Loops:
                     action.Icon = Base.IconTypes.PlaybackRate1x;
                     break;
+                case ActionType.KillProcess:
+                    action.Icon = Base.IconTypes.ProcessingCancel;
+                    break;
             }
 
             return action;
@@ -138,6 +141,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
             },
             {
                 ActionType.LoopsEnd,"循环结束"
+            },
+            {
+                ActionType.KillProcess,"关闭进程"
             },
         };
         #endregion
@@ -303,6 +309,16 @@ namespace ProjectEvent.UI.Controls.Action.Data
                             ID=(int)DialogResultType.ClickButtonValue,
                             DisplayName = "点击的按钮值"
                         }
+                    };
+                    break;
+                case ActionType.KillProcess:
+                    data = new List<ComBoxModel>()
+                    {
+                        new ComBoxModel()
+                        {
+                            ID=(int)CommonResultKeyType.IsSuccess,
+                            DisplayName = "是否成功（True，False）"
+                        },
                     };
                     break;
             }

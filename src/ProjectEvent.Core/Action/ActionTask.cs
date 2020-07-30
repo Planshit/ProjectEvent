@@ -120,7 +120,7 @@ namespace ProjectEvent.Core.Action
                     {
                         InvokeActions(isChildren, taskID, actions, ct, index + 1);
                     }
-                    else if(!isChildren)
+                    else if (!isChildren)
                     {
                         //全部运行完成
                         Debug.WriteLine("全部运行完成");
@@ -185,6 +185,9 @@ namespace ProjectEvent.Core.Action
                     break;
                 case ActionType.Loops:
                     actionInstance = new LoopsAction();
+                    break;
+                case ActionType.KillProcess:
+                    actionInstance = new KillProcessAction();
                     break;
             }
             if (actionInstance != null)

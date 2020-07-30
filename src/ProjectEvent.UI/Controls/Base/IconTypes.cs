@@ -90,7 +90,8 @@ namespace ProjectEvent.UI.Controls.Base
         Download,
         Storyboard,
         HandsFree,
-        PlaybackRate1x
+        PlaybackRate1x,
+        ProcessingCancel
 
     }
 }

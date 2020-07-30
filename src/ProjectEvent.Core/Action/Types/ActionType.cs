@@ -69,6 +69,10 @@ namespace ProjectEvent.Core.Action.Types
         /// <summary>
         /// 循环
         /// </summary>
-        Loops = 16
+        Loops = 16,
+        /// <summary>
+        /// 关闭进程
+        /// </summary>
+        KillProcess = 17
     }
 }

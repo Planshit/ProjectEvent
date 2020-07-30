@@ -62,6 +62,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 case ActionType.Loops:
                     builder = new LoopsActionBuilder();
                     break;
+                case ActionType.KillProcess:
+                    builder = new KillProcessActionBuilder();
+                    break;
             }
             if (builder != null)
             {
@@ -121,6 +124,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                     break;
                 case Core.Action.Types.ActionType.Loops:
                     builder = new LoopsActionBuilder();
+                    break;
+                case Core.Action.Types.ActionType.KillProcess:
+                    builder = new KillProcessActionBuilder();
                     break;
             }
             if (builder != null)

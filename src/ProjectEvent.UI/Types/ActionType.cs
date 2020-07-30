@@ -84,6 +84,10 @@ namespace ProjectEvent.UI.Types
         /// <summary>
         /// 循环结束
         /// </summary>
-        LoopsEnd = 19
+        LoopsEnd = 19,
+        /// <summary>
+        /// 关闭进程
+        /// </summary>
+        KillProcess = 20
     }
 }
