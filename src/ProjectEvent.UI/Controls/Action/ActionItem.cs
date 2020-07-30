@@ -7,6 +7,7 @@ using ProjectEvent.UI.Types;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -162,6 +163,7 @@ namespace ProjectEvent.UI.Controls.Action
         public ActionContainer ActionContainer { get; set; }
         public object VMDataContext { get; set; }
         public IActionBuilder Builder { get; set; }
+        private ActionType[] specialTypes = { ActionType.IFElse, ActionType.IFEnd, ActionType.LoopsEnd };
         public ActionItem()
         {
             DefaultStyleKey = typeof(ActionItem);
@@ -191,7 +193,7 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 return;
             }
-            if (Action.ActionType == ActionType.IFElse || Action.ActionType == ActionType.IFEnd)
+            if (specialTypes.Contains(Action.ActionType))
             {
                 ActionName = $"{Action.ActionName}";
                 Loaded += (e, c) =>
@@ -207,14 +209,14 @@ namespace ProjectEvent.UI.Controls.Action
                 ActionForm.LineInputGroups = Builder.GetBaseActionInputModels();
                 ActionForm.MultiLineInputGroups = Builder.GetDetailActionInputModels();
                 ActionForm.Action = Action;
-                
+
                 ActionForm.ActionContainer = ActionContainer;
                 ActionForm.OnRenderDone += (e, c) =>
                 {
                     OnRenderDone?.Invoke(this, null);
                 };
             }
-            if (Action.ActionType == ActionType.IFElse || Action.ActionType == ActionType.IFEnd)
+            if (specialTypes.Contains(Action.ActionType))
             {
                 ButtonRemove.Visibility = Visibility.Collapsed;
             }

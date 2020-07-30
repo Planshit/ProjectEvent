@@ -108,20 +108,37 @@ namespace ProjectEvent.UI.Controls.Action
         private double oldMoveItemY;
         private bool isClick = false;
         /// <summary>
-        /// 当前移动的if action items暂存区
+        /// 当前移动的group类型 action items暂存区
         /// </summary>
-        private List<ActionItem> ifActionItems;
+        private List<ActionItem> groupActionItems;
         /// <summary>
         /// action高度
         /// </summary>
         private Dictionary<int, double> actionsHeightTemp;
+        /// <summary>
+        /// 组类型
+        /// </summary>
+        private UI.Types.ActionType[] groupActionTypes = { UI.Types.ActionType.IF, UI.Types.ActionType.Loops };
+        /// <summary>
+        /// 组结束类型
+        /// </summary>
+        private UI.Types.ActionType[] groupEndActionTypes = { UI.Types.ActionType.IFEnd, UI.Types.ActionType.LoopsEnd };
+        /// <summary>
+        /// 需要调整间距的action类型
+        /// </summary>
+        private UI.Types.ActionType[] marginActionTypes = { UI.Types.ActionType.IF, UI.Types.ActionType.IFElse, UI.Types.ActionType.Loops };
+        /// <summary>
+        /// 不支持移动的类型
+        /// </summary>
+        private UI.Types.ActionType[] noMoveActionTypes = { UI.Types.ActionType.IFElse, UI.Types.ActionType.LoopsEnd, UI.Types.ActionType.IFEnd };
+
         public ActionContainer()
         {
             DefaultStyleKey = typeof(ActionContainer);
             oldPoint = new Point();
             ActionItems = new List<ActionItem>();
             appendActionItemTempList = new List<ActionItemModel>();
-            ifActionItems = new List<ActionItem>();
+            groupActionItems = new List<ActionItem>();
             RemoveCommand = new Command(new Action<object>(OnRemoveCommand));
             appendBuilderTempList = new List<IActionBuilder>();
             isRendering = false;
@@ -293,9 +310,9 @@ namespace ProjectEvent.UI.Controls.Action
         private void Remove(int id)
         {
             var action = ActionItems.Where(m => m.Action.ID == id).FirstOrDefault();
-            if (action.Action.ActionType == UI.Types.ActionType.IF)
+            if (groupActionTypes.Contains(action.Action.ActionType))
             {
-                var endaction = ActionItems.Where(m => m.Action.ParentID == id && m.Action.ActionType == UI.Types.ActionType.IFEnd).FirstOrDefault();
+                var endaction = ActionItems.Where(m => m.Action.ParentID == id && groupEndActionTypes.Contains(m.Action.ActionType)).FirstOrDefault();
                 var actions = ActionItems.Where(m => m.Y >= action.Y && m.Y <= endaction.Y).ToList();
                 foreach (var item in actions)
                 {
@@ -442,54 +459,75 @@ namespace ProjectEvent.UI.Controls.Action
                 ).
                 OrderBy(m => m.Y);
             ActionItem topActionItem = null;
+
+            //新的父级id
+            int newParentID = 0;
+            //新的间距
+            double newMargin = 0;
+            //新的位置
+            double newActionY = 0;
             if (topActionItems.Count() > 0)
             {
-                //存在上一个时
+                //存在上一个时需要判断是否需要调整父子级关系
+
+                //上一个action
                 topActionItem = topActionItems.Last();
                 //调整自身对齐上一个
-                actionPoint.Y = topActionItem.Y + topActionItem.ActualHeight;
+                newActionY = topActionItem.Y + topActionItem.ActualHeight;
 
-
-
-                //判断上一个是否是判断action
-                if (topActionItem.Action.ActionType == UI.Types.ActionType.IF ||
-                    topActionItem.Action.ActionType == UI.Types.ActionType.IFElse ||
-                    topActionItem.Action.ParentID > 0 &&
-                    topActionItem.Action.ActionType != UI.Types.ActionType.IFEnd)
+                //判断是否需要调整间距
+                if (marginActionTypes.Contains(topActionItem.Action.ActionType))
                 {
-                    //是的话需要将自身设置为if的下级
-                    action.Action.ParentID = topActionItem.Action.ActionType == UI.Types.ActionType.IF ? topActionItem.Action.ID : topActionItem.Action.ParentID;
+                    //上一个是组类型的顶级action
 
+                    //自身设置为下级
+                    newParentID = groupActionTypes.Contains(topActionItem.Action.ActionType) ? topActionItem.Action.ID : topActionItem.Action.ParentID;
                     //设置间距
-                    double margin = topActionItem.Action.ActionType == UI.Types.ActionType.IF || topActionItem.Action.ActionType == UI.Types.ActionType.IFElse ? topActionItem.Margin.Left + 10 : topActionItem.Margin.Left;
-                    action.Margin = new Thickness(margin, 0, margin, 0);
-
+                    newMargin = topActionItem.Margin.Left + 10;
                 }
-                else
+                else if (topActionItem.Action.ParentID > 0 && topActionItem.Margin.Left > 0)
                 {
-                    //重置父级id
-                    action.Action.ParentID = 0;
-                    action.Margin = new Thickness(0);
+                    //上一个是某个action的子级
+
+                    if (noMoveActionTypes.Contains(topActionItem.Action.ActionType))
+                    {
+                        //上一个是不可移动的类型，说明是特殊action的子级
+                        //找到它的父级
+                        var topActionParent = ActionItems.Where(m => m.Action.ID == topActionItem.Action.ParentID).FirstOrDefault();
+                        //跟随父级关系
+                        newParentID = topActionParent.Action.ParentID;
+                        //跟随父级间距
+                        newMargin = topActionParent.Margin.Left;
+                    }
+                    else
+                    {
+                        //自身设置为同等子级
+                        newParentID = topActionItem.Action.ParentID;
+                        //设置同等间距
+                        newMargin = topActionItem.Margin.Left;
+                    }
                 }
-            }
-            else
-            {
-                //不存在说明已经是第一个了
-                actionPoint.Y = 0;
-                //重置父级id
-                action.Action.ParentID = 0;
-                action.Margin = new Thickness(0);
+
+
             }
 
-            if (action.Action.ActionType == UI.Types.ActionType.IF)
+            //更新数据
+            actionPoint.Y = newActionY;
+            action.Action.ParentID = newParentID;
+            action.Margin = new Thickness(newMargin, 0, newMargin, 0);
+
+
+
+            //如果移动的是组类型的还需要将它们的子级展开
+            if (groupActionTypes.Contains(action.Action.ActionType))
             {
-                //查找if action下方的action
+                //查找 action下方的action
                 var bottomActions = ActionItems.Where(m => m.Y > actionPoint.Y && m.Visibility != Visibility.Hidden).OrderBy(m => m.Y).ToList();
 
                 //调整子级的位置
-                for (int i = 0; i < ifActionItems.Count; i++)
+                for (int i = 0; i < groupActionItems.Count; i++)
                 {
-                    var actionItem = ifActionItems[i];
+                    var actionItem = groupActionItems[i];
                     var actionItemPoint = actionItem.RenderTransform as TranslateTransform;
 
                     double newY = 0;
@@ -501,7 +539,7 @@ namespace ProjectEvent.UI.Controls.Action
                     else
                     {
                         //跟随前一个action
-                        var lastItem = ifActionItems[i - 1];
+                        var lastItem = groupActionItems[i - 1];
                         var lastItemPoint = lastItem.RenderTransform as TranslateTransform;
                         newY = lastItemPoint.Y + lastItem.ActualHeight;
                     }
@@ -517,7 +555,7 @@ namespace ProjectEvent.UI.Controls.Action
                         var actionTTF = bottomActions[i].RenderTransform as TranslateTransform;
                         if (i == 0)
                         {
-                            actionTTF.Y = ifActionItems[ifActionItems.Count - 1].Y + ifActionItems[ifActionItems.Count - 1].ActualHeight;
+                            actionTTF.Y = groupActionItems[groupActionItems.Count - 1].Y + groupActionItems[groupActionItems.Count - 1].ActualHeight;
                         }
                         else
                         {
@@ -527,14 +565,14 @@ namespace ProjectEvent.UI.Controls.Action
                         bottomActions[i].Y = actionTTF.Y;
                     }
                 }
-                ifActionItems.Clear();
-
-                //调整间距
-                ResetIfActionMargin(action);
+                groupActionItems.Clear();
             }
+
 
             //排序
             SortAction();
+            //调整间距
+            ResetAllActionsMarigin();
         }
 
         #endregion
@@ -543,16 +581,16 @@ namespace ProjectEvent.UI.Controls.Action
         private void HandleMoveStart(ActionItem action)
         {
             AddActionBtn.Visibility = Visibility.Hidden;
-            if (action.Action.ActionType == UI.Types.ActionType.IF)
+            if (groupActionTypes.Contains(action.Action.ActionType))
             {
-                //移动的是if action时需要将它的子级全部隐藏
+                //移动的是带子级的 action时需要将它的子级全部隐藏
                 int start = action.Action.Index + 1;
                 int end = ActionItems.Where(m => m.Action.ParentID == action.Action.ID).Last().Action.Index + 1;
                 for (int i = start; i < end; i++)
                 {
                     ActionItems[i].Visibility = Visibility.Hidden;
                     ActionItems[i].Margin = new Thickness(0);
-                    ifActionItems.Add(ActionItems[i]);
+                    groupActionItems.Add(ActionItems[i]);
                 }
                 var bottomItems = ActionItems.Where(m => m.Y > action.Y && m.Visibility != Visibility.Hidden).ToList();
                 for (int i = 0; i < bottomItems.Count; i++)
@@ -573,12 +611,12 @@ namespace ProjectEvent.UI.Controls.Action
         }
         #endregion
 
-        #region 调整ifaction的间距
+        #region 调整group类型action的间距
         /// <summary>
-        /// 调整ifaction的间距
+        /// 调整group类型action的间距
         /// </summary>
         /// <param name="action"></param>
-        private void ResetIfActionMargin(ActionItem action)
+        private void ResetGroupActionMargin(ActionItem action)
         {
             var actionPoint = action.RenderTransform as TranslateTransform;
             //查找当前控件的上一个控件
@@ -594,32 +632,55 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 //存在上一个时
                 topActionItem = topActionItems.Last();
-                if (topActionItem.Action.ActionType == UI.Types.ActionType.IF ||
-                    topActionItem.Action.ParentID > 0 &&
-                    topActionItem.Action.ActionType != UI.Types.ActionType.IFEnd)
+                if (marginActionTypes.Contains(topActionItem.Action.ActionType))
                 {
-                    //上一个action还是属于if子级
-                    //addMargin = topActionItem.Margin.Left + 10;
-                    addMargin = topActionItem.Action.ActionType == UI.Types.ActionType.IF || topActionItem.Action.ParentID != action.Action.ID ? topActionItem.Margin.Left + 10 : 10;
+                    addMargin = topActionItem.Margin.Left + 10;
+                }
+                else if (topActionItem.Margin.Left > 0)
+                {
+                    //上一个间距大于0时跟随
+                    addMargin = topActionItem.Margin.Left;
                 }
             }
 
 
-            //调整间距
-            var ifactions = ActionItems.Where(m => m.Action.ID == action.Action.ID || m.Action.ParentID == action.Action.ID).OrderBy(m => m.Y).ToList();
-            foreach (var ifaction in ifactions)
+            //调整所有子级的间距
+            var groupActions = ActionItems.Where(m => m.Action.ID == action.Action.ID || m.Action.ParentID == action.Action.ID).OrderBy(m => m.Y).ToList();
+            //foreach (var groupAction in groupActions)
+            for (int i = 0; i < groupActions.Count; i++)
             {
+                var groupAction = groupActions[i];
                 var newmarigin = addMargin;
-                if (ifaction.Action.ActionType != UI.Types.ActionType.IF &&
-                    ifaction.Action.ActionType != UI.Types.ActionType.IFElse &&
-                    ifaction.Action.ActionType != UI.Types.ActionType.IFEnd)
+                if (!marginActionTypes.Contains(groupAction.Action.ActionType) && !groupEndActionTypes.Contains(groupAction.Action.ActionType))
                 {
                     newmarigin = addMargin + 10;
                 }
-                ifaction.Margin = new Thickness(newmarigin, 0, newmarigin, 0);
-                if (ifaction.Action.ActionType == UI.Types.ActionType.IF && ifaction != action)
+
+                //if (
+                //    i != 0 &&
+                //    !groupActionTypes.Contains(groupAction.Action.ActionType) &&
+                //    !noMoveActionTypes.Contains(groupAction.Action.ActionType)
+                //    )
+                //{
+                //    newmarigin = groupActions[i - 1].Margin.Left;
+                //}
+                //if (i != 0)
+                //{
+                //    //获取当前控件的上一个控件
+                //    var topAction = groupActions[i - 1];
+                //    if (marginActionTypes.Contains(topAction.Action.ActionType) && !noMoveActionTypes.Contains(groupAction.Action.ActionType))
+                //    {
+                //        //需要调整间距的类型
+                //        newmarigin = topAction.Margin.Left + 10;
+                //    }
+                //}
+
+
+                groupAction.Margin = new Thickness(newmarigin, 0, newmarigin, 0);
+
+                if (groupActionTypes.Contains(groupAction.Action.ActionType) && groupAction != action)
                 {
-                    ResetIfActionMargin(ifaction);
+                    ResetGroupActionMargin(groupAction);
                 }
             }
         }
@@ -630,9 +691,9 @@ namespace ProjectEvent.UI.Controls.Action
         {
             foreach (var item in ActionItems)
             {
-                if (item.Action.ActionType == UI.Types.ActionType.IF && item.Action.ParentID == 0)
+                if (groupActionTypes.Contains(item.Action.ActionType) && item.Action.ParentID == 0)
                 {
-                    ResetIfActionMargin(item);
+                    ResetGroupActionMargin(item);
                 }
             }
         }
@@ -704,8 +765,7 @@ namespace ProjectEvent.UI.Controls.Action
         private void Item_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             var control = sender as ActionItem;
-            if (control.Action.ActionType != UI.Types.ActionType.IFElse &&
-                control.Action.ActionType != UI.Types.ActionType.IFEnd)
+            if (!noMoveActionTypes.Contains(control.Action.ActionType))
             {
                 isClick = true;
                 oldPoint = e.GetPosition(null);
@@ -766,7 +826,7 @@ namespace ProjectEvent.UI.Controls.Action
                     }
                 }
 
-                if (action.Action.ActionType == UI.Types.ActionType.IF)
+                if (groupActionTypes.Contains(action.Action.ActionType))
                 {
                     ifID = action.Action.ID;
                 }
@@ -785,66 +845,20 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 result = GenerateIFAction(action);
             }
+            else if (action.Action.ActionType == UI.Types.ActionType.Loops)
+            {
+                result = GenerateLoopsAction(action);
+            }
             else
             {
                 //switch ActionType是UI中使用的Type，与Core使用的ActionType并不一致，这里需要转换
 
                 result = action.Builder?.GetCoreActionModel();
-                //switch (action.Action.ActionType)
-                //{
-                //    case UI.Types.ActionType.WriteFile:
-                //        result = new Core.Action.Models.ActionModel();
-                //        var inputdata = action.GetInputData() as WriteFileActionInputModel;
-                //        result.Action = Core.Action.Types.ActionType.WriteFile;
-                //        result.ID = action.Action.ID;
-                //        result.Parameter = new WriteFileActionParameterModel()
-                //        {
-                //            FilePath = inputdata.FilePath,
-                //            Content = inputdata.Content
-                //        };
-                //        result.Num = 1;
-                //        break;
-                //    case UI.Types.ActionType.HttpRequest:
-                //        result = new Core.Action.Models.ActionModel();
-                //        var httprequestInputdata = action.GetInputData() as HttpRequestActionInputModel;
-                //        result.Action = Core.Action.Types.ActionType.HttpRequest;
-                //        result.ID = action.Action.ID;
-                //        result.Parameter = new HttpRequestActionParameterModel()
-                //        {
-                //            Url = httprequestInputdata.Url,
-                //            QueryParams = httprequestInputdata.QueryParams,
-                //            Method = httprequestInputdata.Method == null ? Core.Net.Types.MethodType.GET : (MethodType)httprequestInputdata.Method.ID,
-
-                //            ParamsType = httprequestInputdata.PamramsType == null ? Core.Net.Types.ParamsType.Json : (ParamsType)httprequestInputdata.PamramsType.ID,
-                //            Files = httprequestInputdata.Files,
-                //            Headers = httprequestInputdata.Headers
-                //        };
-                //        result.Num = 1;
-                //        break;
-                //    case UI.Types.ActionType.Shutdown:
-                //        result = new Core.Action.Models.ActionModel();
-                //        result.Action = Core.Action.Types.ActionType.Shutdown;
-                //        result.ID = action.Action.ID;
-                //        result.Num = 1;
-                //        break;
-                //    case UI.Types.ActionType.StartProcess:
-                //        result = new Core.Action.Models.ActionModel();
-                //        result.Action = Core.Action.Types.ActionType.StartProcess;
-                //        result.ID = action.Action.ID;
-                //        var spinputdata = action.GetInputData() as StartProcessActionInputModel;
-                //        result.Num = 1;
-                //        result.Parameter = new StartProcessActionParamsModel()
-                //        {
-                //            Path = spinputdata.Path,
-                //            Args = spinputdata.Args
-                //        };
-                //        break;
-                //}
             }
             return result;
         }
 
-
+        #region 生成ifaction
         /// <summary>
         /// 生成if action
         /// </summary>
@@ -885,6 +899,33 @@ namespace ProjectEvent.UI.Controls.Action
         }
         #endregion
 
+        #region 生成loops
+        private Core.Action.Models.ActionModel GenerateLoopsAction(ActionItem action)
+        {
+            //action input
+            var inputdata = action.Builder.GetInputModelData() as LoopsActionInputModel;
+
+            var endActionItem = ActionItems.Where(m => m.Action.ParentID == action.Action.ID && m.Action.ActionType == UI.Types.ActionType.LoopsEnd).FirstOrDefault();
+            //actions
+            var actionItems = ActionItems.Where(m => m.Action.ParentID == action.Action.ID && m.Y > action.Y && m.Y < endActionItem.Y).ToList();
+            var actions = GenerateActions(actionItems);
+
+            var result = new Core.Action.Models.ActionModel()
+            {
+                ID = action.Action.ID,
+                Action = Core.Action.Types.ActionType.Loops,
+                Parameter = new Core.Action.Models.LoopsActionParamsModel()
+                {
+                    Count = inputdata.Count,
+                    Actions = actions,
+                },
+                Num = 1
+            };
+            return result;
+        }
+        #endregion
+        #endregion
+
         #region 导入actions
         public void ImportActionsJson(string json)
         {
@@ -911,10 +952,16 @@ namespace ProjectEvent.UI.Controls.Action
         }
         private void GetIFChildrenMaxID(Core.Action.Models.ActionModel action)
         {
-            //var parameterjobject = action.Parameter as JObject;
             var parameter = ObjectConvert.Get<IFActionParameterModel>(action.Parameter);
-            //var parameter = parameterjobject.ToObject<IFActionParameterModel>();
             foreach (var paction in parameter.PassActions.Concat(parameter.NoPassActions))
+            {
+                GetMaxID(paction);
+            }
+        }
+        private void GetGroupChildrenMaxID(Core.Action.Models.ActionModel action)
+        {
+            var parameter = ObjectConvert.Get<BaseGroupActionParamsModel>(action.Parameter);
+            foreach (var paction in parameter.Actions)
             {
                 GetMaxID(paction);
             }
@@ -926,62 +973,25 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 GetIFChildrenMaxID(action);
             }
+            else if (action.Action == Core.Action.Types.ActionType.Loops)
+            {
+                GetGroupChildrenMaxID(action);
+            }
         }
 
         private void ImportAction(Core.Action.Models.ActionModel action, int parentID = 0)
         {
             if (action.Action == Core.Action.Types.ActionType.IF)
             {
-                ImportIFAction(action);
+                ImportIFAction(action, parentID);
+                return;
+            }
+            if (action.Action == Core.Action.Types.ActionType.Loops)
+            {
+                ImportGroupAction(action, parentID);
                 return;
             }
 
-            //switch (action.Action)
-            //{
-            //    case Core.Action.Types.ActionType.WriteFile:
-            //        actionModel = ActionData.GetCreateActionItemModel(UI.Types.ActionType.WriteFile);
-            //        var writefileParameter = ObjectConvert.Get<WriteFileActionParameterModel>(action.Parameter);
-            //        if (writefileParameter != null)
-            //        {
-            //            inputdata = new WriteFileActionInputModel()
-            //            {
-            //                FilePath = writefileParameter.FilePath,
-            //                Content = writefileParameter.Content
-            //            };
-            //        }
-            //        break;
-            //    case Core.Action.Types.ActionType.HttpRequest:
-            //        actionModel = ActionData.GetCreateActionItemModel(UI.Types.ActionType.HttpRequest);
-            //        var httpRequestParameter = ObjectConvert.Get<HttpRequestActionParameterModel>(action.Parameter);
-            //        if (httpRequestParameter != null)
-            //        {
-            //            inputdata = new HttpRequestActionInputModel()
-            //            {
-            //                Url = httpRequestParameter.Url,
-            //                Method = HttpRequestActionData.GetMethodType((int)httpRequestParameter.Method),
-            //                PamramsType = HttpRequestActionData.GetPamramsType((int)httpRequestParameter.ParamsType),
-            //                QueryParams = httpRequestParameter.QueryParams,
-            //                Files = httpRequestParameter.Files,
-            //                Headers = httpRequestParameter.Headers
-            //            };
-            //        }
-            //        break;
-            //    case Core.Action.Types.ActionType.Shutdown:
-            //        actionModel = ActionData.GetCreateActionItemModel(UI.Types.ActionType.Shutdown);
-            //        break;
-            //    case Core.Action.Types.ActionType.StartProcess:
-            //        actionModel = ActionData.GetCreateActionItemModel(UI.Types.ActionType.StartProcess);
-            //        var spparams = ObjectConvert.Get<StartProcessActionParamsModel>(action.Parameter);
-            //        if (spparams != null)
-            //        {
-            //            inputdata = new StartProcessActionInputModel()
-            //            {
-            //                Path = spparams.Path,
-            //                Args = spparams.Args
-            //            };
-            //        }
-            //        break;
-            //}
 
 
             var builder = ActionBuilder.BuilderByAction(action);
@@ -992,7 +1002,7 @@ namespace ProjectEvent.UI.Controls.Action
                 AddItem(actionItem, builder);
             }
         }
-        private void ImportIFAction(Core.Action.Models.ActionModel action)
+        private void ImportIFAction(Core.Action.Models.ActionModel action, int parentID = 0)
         {
             if (action.Action != Core.Action.Types.ActionType.IF)
             {
@@ -1002,14 +1012,8 @@ namespace ProjectEvent.UI.Controls.Action
             var builder = ActionBuilder.BuilderByAction(action);
             var ifActionModel = builder.GetActionItemModel();
             var ifParameter = ObjectConvert.Get<IFActionParameterModel>(action.Parameter);
-            //var ifParameter = ObjectConvert.Get<IFActionParameterModel>(action.Parameter);
+            ifActionModel.ParentID = parentID;
 
-            //var ifActionModel = ActionData.GetCreateActionItemModel(UI.Types.ActionType.IF);
-            //ifActionModel.ID = action.ID;
-            //var ifActionInputData = new IFActionInputModel();
-            //ifActionInputData.Left = ifParameter.LeftInput;
-            //ifActionInputData.Right = ifParameter.RightInput;
-            //ifActionInputData.Condition = IFActionConditionData.GetCombox((int)ifParameter.Condition);
             AddItem(ifActionModel, builder);
             //创建pass子级
             if (ifParameter.PassActions.Count > 0)
@@ -1038,6 +1042,33 @@ namespace ProjectEvent.UI.Controls.Action
             endActionModel.ParentID = ifActionModel.ID;
             AddItem(endActionModel);
         }
+        #region 导入组类型的action
+        private void ImportGroupAction(Core.Action.Models.ActionModel action, int parentID = 0)
+        {
+            //创建头
+            var builder = ActionBuilder.BuilderByAction(action);
+            var actionModel = builder.GetActionItemModel();
+            var a = action.Parameter as BaseGroupActionParamsModel;
+            var parameter = ObjectConvert.Get<BaseGroupActionParamsModel>(action.Parameter);
+
+            actionModel.ParentID = parentID;
+
+            AddItem(actionModel, builder);
+            //创建action子级
+            if (parameter.Actions.Count > 0)
+            {
+                foreach (var item in parameter.Actions)
+                {
+                    ImportAction(item, actionModel.ID);
+                }
+            }
+            //创建end action
+            var endActionModel = ActionData.GetCreateActionItemModel(UI.Types.ActionType.LoopsEnd);
+            endActionModel.ID = GetCreateActionID();
+            endActionModel.ParentID = actionModel.ID;
+            AddItem(endActionModel);
+        }
+        #endregion
         #endregion
 
         #region 生成action id
