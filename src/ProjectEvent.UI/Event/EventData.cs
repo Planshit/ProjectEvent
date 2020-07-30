@@ -313,6 +313,15 @@ namespace ProjectEvent.UI.Event
                 Icon = Controls.Base.IconTypes.NormalWeight,
                 Tag="特殊"
 
+            },
+            new Controls.ItemSelect.Models.ItemModel()
+            {
+                ID = (int)EventType.RunGameEvent,
+                Title = "游戏启动事件",
+                Description = "当启动一个游戏时触发",
+                Icon = Controls.Base.IconTypes.Game,
+                Tag="Beta"
+
             }
         };
     }

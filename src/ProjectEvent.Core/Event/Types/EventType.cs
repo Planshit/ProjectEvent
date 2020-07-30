@@ -63,6 +63,10 @@ namespace ProjectEvent.Core.Event.Types
         /// <summary>
         /// 蓝牙事件
         /// </summary>
-        BluetoothEvent = 13
+        BluetoothEvent = 13,
+        /// <summary>
+        /// 启动游戏事件
+        /// </summary>
+        RunGameEvent = 14
     }
 }

@@ -46,6 +46,11 @@ namespace ProjectEvent.Core.Event.Data
                 { nameof(BluetoothEventVariableType.DeviceName),"设备名称" },
                 { nameof(BluetoothEventVariableType.IsConnected),"是否连接（True连接，False未连接）" },
 
+            } },
+            { EventType.RunGameEvent,new Dictionary<string, string>()
+            {
+                { nameof(RunGameEventVariableType.GamePlatform),"游戏所属平台（Steam，Epic，Tencent，Other）" },
+
             } }
 
         };

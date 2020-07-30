@@ -82,6 +82,9 @@ namespace ProjectEvent.UI.Event
                         FuzzyMatch = beconditionData.FuzzyMatch
                     };
                     break;
+                case EventType.RunGameEvent:
+                    condition = new RunGameEventCondition();
+                    break;
             }
             return new Core.Event.Models.EventModel()
             {

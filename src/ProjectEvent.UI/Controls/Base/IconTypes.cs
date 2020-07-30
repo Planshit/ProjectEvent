@@ -92,7 +92,8 @@ namespace ProjectEvent.UI.Controls.Base
         HandsFree,
         PlaybackRate1x,
         ProcessingCancel,
-        Volume2
+        Volume2,
+        Game
 
     }
 }

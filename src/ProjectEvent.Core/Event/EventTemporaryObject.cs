@@ -73,6 +73,9 @@ namespace ProjectEvent.Core.Event
                     result.Add(nameof(BluetoothEventVariableType.DeviceName), bedata.DeviceName);
                     result.Add(nameof(BluetoothEventVariableType.IsConnected), bedata.IsConnected.ToString());
                     break;
+                case EventType.RunGameEvent:
+                    result.Add(nameof(RunGameEventVariableType.GamePlatform), data.ToString());
+                    break;
             }
 
             return result;
