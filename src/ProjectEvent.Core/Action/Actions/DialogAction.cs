@@ -31,6 +31,9 @@ namespace ProjectEvent.Core.Action.Actions
                 OnEventStateChanged?.Invoke(taskID, action.ID, ActionInvokeStateType.Runing);
                 var p = ObjectConvert.Get<DialogActionParamsModel>(action.Parameter);
                 p.Title = ActionParameterConverter.ConvertToString(taskID, p.Title);
+                p.Content = ActionParameterConverter.ConvertToString(taskID, p.Content);
+                p.Image = ActionParameterConverter.ConvertToString(taskID, p.Image);
+
                 try
                 {
                     callID = new Random().Next(9999) + DateTime.Now.Second;
