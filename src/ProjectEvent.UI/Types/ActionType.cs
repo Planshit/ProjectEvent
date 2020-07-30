@@ -88,6 +88,10 @@ namespace ProjectEvent.UI.Types
         /// <summary>
         /// 关闭进程
         /// </summary>
-        KillProcess = 20
+        KillProcess = 20,
+        /// <summary>
+        /// 设置设备的音量
+        /// </summary>
+        SetDeviceVolume = 21,
     }
 }

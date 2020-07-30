@@ -73,6 +73,10 @@ namespace ProjectEvent.Core.Action.Types
         /// <summary>
         /// 关闭进程
         /// </summary>
-        KillProcess = 17
+        KillProcess = 17,
+        /// <summary>
+        /// 设置设备音量
+        /// </summary>
+        SetDeviceVolume = 18,
     }
 }

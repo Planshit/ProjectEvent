@@ -65,6 +65,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 case ActionType.KillProcess:
                     builder = new KillProcessActionBuilder();
                     break;
+                case ActionType.SetDeviceVolume:
+                    builder = new SetDeviceVolumeActionBuilder();
+                    break;
             }
             if (builder != null)
             {
@@ -127,6 +130,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                     break;
                 case Core.Action.Types.ActionType.KillProcess:
                     builder = new KillProcessActionBuilder();
+                    break;
+                case Core.Action.Types.ActionType.SetDeviceVolume:
+                    builder = new SetDeviceVolumeActionBuilder();
                     break;
             }
             if (builder != null)

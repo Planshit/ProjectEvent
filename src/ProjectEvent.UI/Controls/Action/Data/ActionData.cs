@@ -76,6 +76,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
                 case ActionType.KillProcess:
                     action.Icon = Base.IconTypes.ProcessingCancel;
                     break;
+                case ActionType.SetDeviceVolume:
+                    action.Icon = Base.IconTypes.Volume2;
+                    break;
             }
 
             return action;
@@ -144,6 +147,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
             },
             {
                 ActionType.KillProcess,"关闭进程"
+            },
+            {
+                ActionType.SetDeviceVolume,"调整设备音量"
             },
         };
         #endregion

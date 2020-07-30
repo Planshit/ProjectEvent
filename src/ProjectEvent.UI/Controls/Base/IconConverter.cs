@@ -67,6 +67,7 @@ namespace ProjectEvent.UI.Controls.Base
             {IconTypes.HandsFree,"\xEAD0"},
             {IconTypes.PlaybackRate1x,"\xEC57"},
             {IconTypes.ProcessingCancel,"\xE403"},
+            {IconTypes.Volume2,"\xE994"},
 
             {IconTypes.ChevronUp,"\xE70E"}
 

@@ -487,9 +487,12 @@ namespace ProjectEvent.UI.Controls.Action
             //变量弹出层
             inputBox.GotKeyboardFocus += (e, c) =>
             {
-                VariablePopup.PlacementTarget = inputBox;
-                VariablePopup.IsOpen = true;
-                KeyboradFocusInputBox = inputBox;
+                if (inputBox.InputType == InputTypes.Text)
+                {
+                    VariablePopup.PlacementTarget = inputBox;
+                    VariablePopup.IsOpen = true;
+                    KeyboradFocusInputBox = inputBox;
+                }
             };
             inputBox.LostKeyboardFocus += (e, c) =>
             {

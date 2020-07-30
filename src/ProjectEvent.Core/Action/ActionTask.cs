@@ -189,6 +189,9 @@ namespace ProjectEvent.Core.Action
                 case ActionType.KillProcess:
                     actionInstance = new KillProcessAction();
                     break;
+                case ActionType.SetDeviceVolume:
+                    actionInstance = new SetDeviceVolumeAction();
+                    break;
             }
             if (actionInstance != null)
             {

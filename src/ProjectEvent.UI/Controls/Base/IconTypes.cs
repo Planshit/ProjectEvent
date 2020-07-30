@@ -91,7 +91,8 @@ namespace ProjectEvent.UI.Controls.Base
         Storyboard,
         HandsFree,
         PlaybackRate1x,
-        ProcessingCancel
+        ProcessingCancel,
+        Volume2
 
     }
 }
