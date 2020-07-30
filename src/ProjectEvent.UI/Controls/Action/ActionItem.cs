@@ -160,6 +160,8 @@ namespace ProjectEvent.UI.Controls.Action
         private Border Input;
         private Button ButtonRemove;
         private ActionForm ActionForm;
+        private Border IDBorder;
+
         public ActionContainer ActionContainer { get; set; }
         public object VMDataContext { get; set; }
         public IActionBuilder Builder { get; set; }
@@ -179,6 +181,7 @@ namespace ProjectEvent.UI.Controls.Action
             Header = GetTemplateChild("Header") as Grid;
             ButtonRemove = GetTemplateChild("ButtonRemove") as Button;
             ActionForm = GetTemplateChild("ActionForm") as ActionForm;
+            IDBorder = GetTemplateChild("IDBorder") as Border;
             Render();
         }
         private void translateTransform_Changed(object sender, EventArgs e)
@@ -200,10 +203,15 @@ namespace ProjectEvent.UI.Controls.Action
                 {
                     OnRenderDone?.Invoke(this, null);
                 };
+                IDBorder.Visibility = Visibility.Collapsed;
+                //查找父级
+                var parent = ActionContainer.ActionItems.Where(m => m.Action.ID == Action.ParentID).FirstOrDefault();
+                ToolTip = $"属于 [{parent.Action.ID}] {parent.Action.ActionName}";
+                Cursor = Cursors.No;
             }
             else
             {
-                ActionName = $"[{Action.ID}] {Action.ActionName}";
+                ActionName = Action.ActionName;
                 Icon = Action.Icon;
                 ActionForm.DataContext = Builder.GetInputModelData();
                 ActionForm.LineInputGroups = Builder.GetBaseActionInputModels();

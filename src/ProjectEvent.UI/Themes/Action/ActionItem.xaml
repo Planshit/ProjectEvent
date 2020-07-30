@@ -1,7 +1,10 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:ProjectEvent.UI.Controls.Action"
-                    xmlns:base="clr-namespace:ProjectEvent.UI.Controls.Base">
+                    xmlns:base="clr-namespace:ProjectEvent.UI.Controls.Base"
+                    xmlns:converter="clr-namespace:ProjectEvent.UI.Controls.Converters">
+
+    <converter:ToStringConverter x:Key="ToStringConverter"/>
     <Style TargetType="{x:Type local:ActionItem}">
         <Setter Property="Background" Value="White"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
@@ -42,7 +45,9 @@
                             <Grid x:Name="Header">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                                     <base:Icon x:Name="Icon" IconType="{TemplateBinding Icon}" Foreground="{DynamicResource PrimaryColorBrush}" VerticalAlignment="Center" FontSize="16" Margin="0,0,10,0" Visibility="Visible"/>
-
+                                    <Border x:Name="IDBorder" Background="{DynamicResource StandardMouseHoverBrush}" CornerRadius="2" VerticalAlignment="Center" Margin="0,0,10,0" Padding="10,5" ToolTip="操作ID">
+                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{TemplateBinding ID,Converter={StaticResource ToStringConverter}}" FontSize="10" Foreground="{DynamicResource StandardTextBrush}"/>
+                                    </Border>
                                     <TextBlock Text="{TemplateBinding ActionName}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center"  Foreground="{DynamicResource StandardTextBrush}"/>
 
                                 </StackPanel>
