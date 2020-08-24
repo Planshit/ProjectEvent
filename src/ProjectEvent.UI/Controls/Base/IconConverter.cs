@@ -69,6 +69,7 @@ namespace ProjectEvent.UI.Controls.Base
             {IconTypes.ProcessingCancel,"\xE403"},
             {IconTypes.Volume2,"\xE994"},
             {IconTypes.Game,"\xE7FC"},
+            {IconTypes.NewsSearch,"\xF4E9"},
 
             {IconTypes.ChevronUp,"\xE70E"}
 

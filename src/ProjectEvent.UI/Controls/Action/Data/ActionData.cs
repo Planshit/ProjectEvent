@@ -79,6 +79,10 @@ namespace ProjectEvent.UI.Controls.Action.Data
                 case ActionType.SetDeviceVolume:
                     action.Icon = Base.IconTypes.Volume2;
                     break;
+                case ActionType.Regex:
+                    action.Icon = Base.IconTypes.NewsSearch;
+                    break;
+
             }
 
             return action;
@@ -150,6 +154,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
             },
             {
                 ActionType.SetDeviceVolume,"调整设备音量"
+            },
+            {
+                ActionType.Regex,"正则表达式匹配"
             },
         };
         #endregion
@@ -324,6 +331,16 @@ namespace ProjectEvent.UI.Controls.Action.Data
                         {
                             ID=(int)CommonResultKeyType.IsSuccess,
                             DisplayName = "是否成功（True，False）"
+                        },
+                    };
+                    break;
+                case ActionType.Regex:
+                    data = new List<ComBoxModel>()
+                    {
+                        new ComBoxModel()
+                        {
+                            ID=(int)RegexResultType.Count,
+                            DisplayName = "匹配成功总数"
                         },
                     };
                     break;

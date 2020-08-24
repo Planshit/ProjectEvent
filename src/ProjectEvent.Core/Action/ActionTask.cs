@@ -192,6 +192,9 @@ namespace ProjectEvent.Core.Action
                 case ActionType.SetDeviceVolume:
                     actionInstance = new SetDeviceVolumeAction();
                     break;
+                case ActionType.Regex:
+                    actionInstance = new RegexAction();
+                    break;
             }
             if (actionInstance != null)
             {

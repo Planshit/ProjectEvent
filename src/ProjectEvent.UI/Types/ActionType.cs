@@ -93,5 +93,9 @@ namespace ProjectEvent.UI.Types
         /// 设置设备的音量
         /// </summary>
         SetDeviceVolume = 21,
+        /// <summary>
+        /// 正则表达式匹配
+        /// </summary>
+        Regex = 22
     }
 }

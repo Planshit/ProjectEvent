@@ -93,7 +93,8 @@ namespace ProjectEvent.UI.Controls.Base
         PlaybackRate1x,
         ProcessingCancel,
         Volume2,
-        Game
+        Game,
+        NewsSearch
 
     }
 }

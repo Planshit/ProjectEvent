@@ -68,6 +68,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 case ActionType.SetDeviceVolume:
                     builder = new SetDeviceVolumeActionBuilder();
                     break;
+                case ActionType.Regex:
+                    builder = new RegexActionBuilder();
+                    break;
             }
             if (builder != null)
             {
@@ -133,6 +136,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                     break;
                 case Core.Action.Types.ActionType.SetDeviceVolume:
                     builder = new SetDeviceVolumeActionBuilder();
+                    break;
+                case Core.Action.Types.ActionType.Regex:
+                    builder = new RegexActionBuilder();
                     break;
             }
             if (builder != null)

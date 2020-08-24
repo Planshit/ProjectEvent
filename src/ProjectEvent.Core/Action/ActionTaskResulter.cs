@@ -86,7 +86,7 @@ namespace ProjectEvent.Core.Action
             {
 
                 //var variables = Regex.Matches(content, @"\{(?<id>[0-9]{1,5})\.(?<key>[a-zA-Z]{1,25})\}");
-                var variables = Regex.Matches(content, @"\{(?<id>[0-9]{1,5})\.(?<key>[0-9]{1,25})\}");
+                var variables = Regex.Matches(content, @"\{(?<id>[0-9]{1,5})\.(?<key>-?[0-9]{1,25})\}");
 
                 foreach (Match variable in variables)
                 {
