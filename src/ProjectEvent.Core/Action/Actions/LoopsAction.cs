@@ -1,5 +1,6 @@
 ﻿using ProjectEvent.Core.Action.Models;
 using ProjectEvent.Core.Action.Types;
+using ProjectEvent.Core.Action.Types.ResultTypes;
 using ProjectEvent.Core.Helper;
 using ProjectEvent.Core.Services;
 using System;
@@ -24,15 +25,23 @@ namespace ProjectEvent.Core.Action.Actions
                 {
                     p.Count = 1;
                 }
+                var result = new ActionResultModel();
+                result.ID = action.ID;
+                result.Result = new Dictionary<int, string>();
+                result.Result.Add((int)LoopsResultType.Index, "1");
+                ActionTaskResulter.Add(taskID, result);
                 while (true)
                 {
+                    result.Result[(int)LoopsResultType.Index] = (i + 1).ToString();
                     ActionTask.Invoke(taskID, p.Actions, taskID == ActionTask.TestTaskID, true);
                     i++;
+
                     if (i == p.Count)
                     {
                         break;
                     }
                 }
+                
                 OnEventStateChanged?.Invoke(taskID, action.ID, ActionInvokeStateType.Done);
             };
 

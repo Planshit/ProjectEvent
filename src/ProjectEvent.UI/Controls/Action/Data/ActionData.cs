@@ -344,6 +344,16 @@ namespace ProjectEvent.UI.Controls.Action.Data
                         },
                     };
                     break;
+                case ActionType.Loops:
+                    data = new List<ComBoxModel>()
+                    {
+                        new ComBoxModel()
+                        {
+                            ID=(int)LoopsResultType.Index,
+                            DisplayName = "当前执行次数"
+                        },
+                    };
+                    break;
             }
             return data;
         }
