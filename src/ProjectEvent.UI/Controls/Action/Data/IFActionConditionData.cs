@@ -30,6 +30,26 @@ namespace ProjectEvent.UI.Controls.Action.Data
             {
                 ID = (int)IFActionConditionType.Miss,
                 DisplayName = "不包含"
+            },
+            new ComBoxModel()
+            {
+                ID = (int)IFActionConditionType.Greater,
+                DisplayName = "大于"
+            },
+            new ComBoxModel()
+            {
+                ID = (int)IFActionConditionType.GreaterOrEqual,
+                DisplayName = "大于或等于"
+            },
+            new ComBoxModel()
+            {
+                ID = (int)IFActionConditionType.Less,
+                DisplayName = "小于"
+            },
+            new ComBoxModel()
+            {
+                ID = (int)IFActionConditionType.LessOrEqual,
+                DisplayName = "小于或等于"
             }
         };
         public static ComBoxModel GetCombox(int id)

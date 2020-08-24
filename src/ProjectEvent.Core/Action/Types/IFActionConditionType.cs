@@ -21,6 +21,22 @@ namespace ProjectEvent.Core.Action.Types
         /// <summary>
         /// 不包含
         /// </summary>
-        Miss = 4
+        Miss = 4,
+        /// <summary>
+        /// 大于
+        /// </summary>
+        Greater = 5,
+        /// <summary>
+        /// 小于
+        /// </summary>
+        Less = 6,
+        /// <summary>
+        /// 大于或等于
+        /// </summary>
+        GreaterOrEqual = 7,
+        /// <summary>
+        /// 小于或等于
+        /// </summary>
+        LessOrEqual = 8,
     }
 }
