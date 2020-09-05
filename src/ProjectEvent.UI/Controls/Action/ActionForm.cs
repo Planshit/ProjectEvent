@@ -360,6 +360,7 @@ namespace ProjectEvent.UI.Controls.Action
                         {
                             case Types.InputType.Text:
                             case Types.InputType.Number:
+                            case Types.InputType.MultiLineText:
                                 RenderInputBox(item);
                                 break;
                             case Types.InputType.Select:
@@ -395,6 +396,7 @@ namespace ProjectEvent.UI.Controls.Action
                         {
                             case Types.InputType.Text:
                             case Types.InputType.Number:
+                            case Types.InputType.MultiLineText:
                                 RenderInputBox(item, true);
                                 break;
                             case Types.InputType.Select:
@@ -425,6 +427,14 @@ namespace ProjectEvent.UI.Controls.Action
         {
             var inputBox = new InputBox();
             inputBox.Placeholder = item.Placeholder;
+            //多行输入
+            if (item.InputType == Types.InputType.MultiLineText)
+            {
+                inputBox.TextWrapping = TextWrapping.Wrap;
+                inputBox.AcceptsReturn = true;
+                inputBox.Height = double.NaN;
+                inputBox.MinHeight = 30;
+            }
             //数字输入
             if (item.InputType == Types.InputType.Number)
             {

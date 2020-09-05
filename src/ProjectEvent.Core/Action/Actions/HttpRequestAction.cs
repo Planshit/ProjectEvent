@@ -31,6 +31,8 @@ namespace ProjectEvent.Core.Action.Actions
                  if (p != null)
                  {
                      p.Url = ActionParameterConverter.ConvertToString(taskID, p.Url);
+                     p.JsonStr = ActionParameterConverter.ConvertToString(taskID, p.JsonStr);
+
                      Debug.WriteLine("http request:" + p.Url);
                      var http = new HttpRequest();
                      http.Url = p.Url;
@@ -38,6 +40,7 @@ namespace ProjectEvent.Core.Action.Actions
                      http.Data = p.QueryParams;
                      http.Files = p.Files;
                      http.ParamsType = p.ParamsType;
+                     http.JsonStr = p.JsonStr;
                      try
                      {
                          var content = p.Method == Net.Types.MethodType.GET ? http.GetAsync().Result : http.PostAsync().Result;

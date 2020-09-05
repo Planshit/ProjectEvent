@@ -25,6 +25,10 @@ namespace ProjectEvent.UI.Controls.Action.Types
         /// <summary>
         /// 单选
         /// </summary>
-        Bool
+        Bool,
+        /// <summary>
+        /// 多行文本输入
+        /// </summary>
+        MultiLineText,
     }
 }

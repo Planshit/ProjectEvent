@@ -38,6 +38,10 @@ namespace ProjectEvent.Core.Net
         /// 请求头信息
         /// </summary>
         public Dictionary<string, string> Headers { get; set; }
+        /// <summary>
+        /// json字符串
+        /// </summary>
+        public string JsonStr { get; set; }
 
         /// <summary>
         /// POST数据类型
@@ -76,6 +80,10 @@ namespace ProjectEvent.Core.Net
             if (ParamsType == ParamsType.Json)
             {
                 httpContent = new StringContent(JsonConvert.SerializeObject(Data), Encoding.UTF8, "application/json");
+                if (!string.IsNullOrEmpty(JsonStr))
+                {
+                    httpContent = new StringContent(JsonStr, Encoding.UTF8, "application/json");
+                }
             }
             else if (ParamsType == ParamsType.FormData)
             {

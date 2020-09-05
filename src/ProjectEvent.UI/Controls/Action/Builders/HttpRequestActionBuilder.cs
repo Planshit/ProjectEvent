@@ -57,7 +57,13 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 SelectItems = HttpRequestActionData.PamramsTypes,
                 BindingName = nameof(HttpRequestActionInputModel.PamramsType)
             });
-
+            detailInputModels.Add(new ActionInputModel()
+            {
+                InputType = Types.InputType.MultiLineText,
+                Title = "Json字符串",
+                Placeholder="仅当参数类型为json，方法为post时有效",
+                BindingName = nameof(HttpRequestActionInputModel.JsonStr)
+            });
             detailInputModels.Add(new ActionInputModel()
             {
                 InputType = Types.InputType.CustomKeyValue,
@@ -122,6 +128,7 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 data.Method = HttpRequestActionData.GetMethodType((int)parameter.Method);
                 data.PamramsType = HttpRequestActionData.GetPamramsType((int)parameter.ParamsType);
                 data.QueryParams = parameter.QueryParams;
+                data.JsonStr = parameter.JsonStr;
             }
         }
 
@@ -141,7 +148,8 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                     Method = (MethodType)data.Method.ID,
                     ParamsType = (ParamsType)data.PamramsType.ID,
                     QueryParams = data.QueryParams,
-                    Url = data.Url
+                    Url = data.Url,
+                    JsonStr=data.JsonStr
                 };
             }
         }

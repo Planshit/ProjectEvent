@@ -14,5 +14,6 @@ namespace ProjectEvent.Core.Action.Models
         public Dictionary<string, string> Files { get; set; }
         public ParamsType ParamsType { get; set; }
         public MethodType Method { get; set; }
+        public string JsonStr { get; set; }
     }
 }

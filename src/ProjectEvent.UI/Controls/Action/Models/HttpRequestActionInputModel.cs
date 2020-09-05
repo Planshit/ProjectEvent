@@ -29,6 +29,7 @@ namespace ProjectEvent.UI.Controls.Action.Models
         /// 请求头信息
         /// </summary>
         public Dictionary<string, string> Headers { get; set; }
+        public string JsonStr { get; set; }
 
     }
 }
