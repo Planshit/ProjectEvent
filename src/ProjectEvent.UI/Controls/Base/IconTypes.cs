@@ -94,7 +94,9 @@ namespace ProjectEvent.UI.Controls.Base
         ProcessingCancel,
         Volume2,
         Game,
-        NewsSearch
+        NewsSearch,
+        Share,
+        PageCheckedin
 
     }
 }

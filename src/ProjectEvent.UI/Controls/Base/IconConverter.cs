@@ -70,6 +70,8 @@ namespace ProjectEvent.UI.Controls.Base
             {IconTypes.Volume2,"\xE994"},
             {IconTypes.Game,"\xE7FC"},
             {IconTypes.NewsSearch,"\xF4E9"},
+            {IconTypes.Share,"\xE72D"},
+            {IconTypes.PageCheckedin,"\xF104"},
 
             {IconTypes.ChevronUp,"\xE70E"}
 

@@ -7,18 +7,23 @@
       xmlns:ItemSelect="clr-namespace:ProjectEvent.UI.Controls.ItemSelect"
       xmlns:Navigation="clr-namespace:ProjectEvent.UI.Controls.Navigation" x:Class="ProjectEvent.UI.Views.IndexPage"
       mc:Ignorable="d" 
+       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="IndexPage">
     <Page.Background>
         <SolidColorBrush Color="{DynamicResource PrimaryColor}" Opacity=".1"/>
     </Page.Background>
-
-    <Grid Margin="10,32,0,0">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=container}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid x:Name="container" Margin="10,32,0,0" ContextMenu="{Binding ContainerContextMenu}" AllowDrop="True">
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
-
         </Grid.RowDefinitions>
+
         <Grid Margin="20,0">
             <TextBlock Text="{Binding Title}" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left"/>
 

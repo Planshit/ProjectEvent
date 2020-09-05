@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Win32;
+using Newtonsoft.Json;
 using ProjectEvent.Core.Helper;
 using ProjectEvent.Core.Services;
 using ProjectEvent.UI.Base.Color;
@@ -15,6 +16,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace ProjectEvent.UI.ViewModels
@@ -26,7 +28,11 @@ namespace ProjectEvent.UI.ViewModels
         private readonly IGroup groupService;
         private readonly IApp app;
         public Command RedirectCommand { get; set; }
+        public Command LoadedCommand { get; set; }
+
         public ContextMenu ItemContextMenu { get; set; }
+        public ContextMenu ContainerContextMenu { get; set; }
+
         private GroupModel group;
         private MenuItem moveGroupMenutItem;
         public IndexPageVM(
@@ -41,6 +47,7 @@ namespace ProjectEvent.UI.ViewModels
             this.app = app;
 
             RedirectCommand = new Command(new Action<object>(OnRedirectCommand));
+            LoadedCommand = new Command(new Action<object>(OnLoadedCommand));
             PropertyChanged += IndexPageVM_PropertyChanged;
             Projects = new System.Collections.ObjectModel.ObservableCollection<Controls.ItemSelect.Models.ItemModel>();
             mainVM.PropertyChanged += MainVM_PropertyChanged;
@@ -48,8 +55,37 @@ namespace ProjectEvent.UI.ViewModels
             mainVM.IsShowTitleBar = false;
 
             ItemContextMenu = new ContextMenu();
+            ContainerContextMenu = new ContextMenu();
             Init();
             CreateItemContextMenu();
+            CreateContainerContextMenu();
+        }
+
+        private void OnLoadedCommand(object obj)
+        {
+            Grid container = obj as Grid;
+            if (container != null)
+            {
+                container.Drop += (e, c) =>
+                {
+                    try
+                    {
+                        string fileName = ((System.Array)c.Data.GetData(DataFormats.FileDrop)).GetValue(0).ToString();
+                        if (ImportFromFile(fileName))
+                        {
+                            mainVM.Toast("导入成功", Types.ToastType.Success);
+                            ImportProjects();
+                            return;
+                        }
+                    }
+                    catch (Exception ec)
+                    {
+                        LogHelper.Error(ec.ToString());
+                        mainVM.Toast("导入失败", Types.ToastType.Failed);
+                    }
+
+                };
+            }
         }
 
         private void MainVM_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -125,11 +161,61 @@ namespace ProjectEvent.UI.ViewModels
             {
                 IconType = IconTypes.OpenWithMirrored,
             };
+
+
+            MenuItem exportItem = new MenuItem();
+            exportItem.Header = "导出";
+            exportItem.Icon = new Icon()
+            {
+                IconType = IconTypes.Share,
+            };
+            exportItem.Click += (e, c) =>
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "Json (*.project.json)|*.project.json";
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    string projectJson = JsonConvert.SerializeObject(projects.GetProject(SelectItem.ID));
+                    IOHelper.WriteFile(saveFileDialog.FileName, projectJson);
+                    mainVM.Toast("导出完成", Types.ToastType.Success);
+                }
+
+            };
             ItemContextMenu.Items.Add(moveGroupMenutItem);
+            ItemContextMenu.Items.Add(exportItem);
+
             ItemContextMenu.Items.Add(new Separator());
             ItemContextMenu.Items.Add(delItem);
 
 
+        }
+        private void CreateContainerContextMenu()
+        {
+            MenuItem importItem = new MenuItem();
+            importItem.Header = "导入";
+            importItem.Icon = new Icon()
+            {
+                IconType = IconTypes.PageCheckedin,
+            };
+            importItem.Click += (e, c) =>
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "Json (*.project.json)|*.project.json";
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    if (ImportFromFile(openFileDialog.FileName))
+                    {
+                        mainVM.Toast("导入成功", Types.ToastType.Success);
+                        ImportProjects();
+                        return;
+                    }
+
+                }
+                mainVM.Toast("导入失败", Types.ToastType.Failed);
+
+
+            };
+            ContainerContextMenu.Items.Add(importItem);
         }
         private void IndexPageVM_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
@@ -204,6 +290,29 @@ namespace ProjectEvent.UI.ViewModels
             Projects.Remove(item);
             app.Remove(item.ID);
             mainVM.Toast("方案已被删除", Types.ToastType.Success);
+        }
+        #endregion
+
+        #region 从文件导入方案
+        private bool ImportFromFile(string file)
+        {
+            ProjectModel model = JsonConvert.DeserializeObject<ProjectModel>(IOHelper.ReadFile(file, false));
+            if (model != null)
+            {
+                //创建新的Id
+                model.ID = projects.GetCreateID();
+                model.ProjectName += model.ID;
+                if (group != null)
+                {
+                    model.GroupID = group.ID;
+                }
+                else
+                {
+                    model.GroupID = 0;
+                }
+                return projects.Add(model);
+            }
+            return false;
         }
         #endregion
     }
