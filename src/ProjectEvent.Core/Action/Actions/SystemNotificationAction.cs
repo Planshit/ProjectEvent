@@ -27,10 +27,12 @@ namespace ProjectEvent.Core.Action.Actions
                 p.Title = ActionParameterConverter.ConvertToString(taskID, p.Title);
                 p.Content = ActionParameterConverter.ConvertToString(taskID, p.Content);
                 p.Icon = ActionParameterConverter.ConvertToString(taskID, p.Icon);
+                p.Url = ActionParameterConverter.ConvertToString(taskID, p.Url);
+
                 try
                 {
                     NotificationService notificationService = new NotificationService();
-                    notificationService.ShowNotification(p.Title, p.Content, p.ToastScenarioType, p.Icon);
+                    notificationService.ShowNotification(p.Title, p.Content, p.ToastScenarioType, p.Icon, p.ToastActionType, p.Url);
                 }
                 catch (Exception e)
                 {

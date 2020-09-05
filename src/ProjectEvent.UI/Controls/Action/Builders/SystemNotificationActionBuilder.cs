@@ -26,7 +26,8 @@ namespace ProjectEvent.UI.Controls.Action.Builders
             action.Action = Core.Action.Types.ActionType.SystemNotification;
             inputData = new SystemNotificationActionInputModel()
             {
-                ToastScenarioType = SystemNotificationActionData.ToastScenarioTypes[0]
+                ToastScenarioType = SystemNotificationActionData.ToastScenarioTypes[0],
+                ToastActionType = SystemNotificationActionData.ToastActionTypes[0]
             };
             inputModels = new List<ActionInputModel>();
             detailInputModels = new List<ActionInputModel>();
@@ -61,6 +62,21 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 Title = "图标",
                 Placeholder = "支持网络图片和本地图片",
                 BindingName = nameof(SystemNotificationActionInputModel.Icon)
+            });
+            detailInputModels.Add(new ActionInputModel()
+            {
+                InputType = Types.InputType.Select,
+                Title = "点击通知操作",
+                SelectItems = SystemNotificationActionData.ToastActionTypes,
+                BindingName = nameof(SystemNotificationActionInputModel.ToastActionType)
+            });
+            detailInputModels.Add(new ActionInputModel()
+            {
+                InputType = Types.InputType.Text,
+                Placeholder = "请输入链接，仅在通知操作为打开链接时有效",
+                Title = "打开链接",
+                //IsStretch = true,
+                BindingName = nameof(SystemNotificationActionInputModel.Url)
             });
         }
         public ActionItemModel GetActionItemModel()
@@ -107,6 +123,8 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 data.Content = parameter.Content;
                 data.Icon = parameter.Icon;
                 data.ToastScenarioType = SystemNotificationActionData.GetToastScenarioType((int)parameter.ToastScenarioType);
+                data.ToastActionType = SystemNotificationActionData.GetToastActionType((int)parameter.ToastActionType);
+                data.Url = parameter.Url;
             }
         }
 
@@ -124,7 +142,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                     Title = data.Title,
                     Content = data.Content,
                     Icon = data.Icon,
-                    ToastScenarioType = (Core.Types.ToastScenarioType)data.ToastScenarioType.ID
+                    ToastScenarioType = (Core.Types.ToastScenarioType)data.ToastScenarioType.ID,
+                    ToastActionType = (Core.Types.ToastActionType)data.ToastActionType.ID,
+                    Url = data.Url
                 };
             }
         }

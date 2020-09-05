@@ -85,7 +85,6 @@ namespace ProjectEvent
             services.AddSingleton<IServiceProvider>(services.BuildServiceProvider());
         }
 
-
         private void OnStartup(object sender, StartupEventArgs e)
         {
             if (IsRuning())
@@ -150,7 +149,7 @@ namespace ProjectEvent
         {
             //debug模式允许多开
 #if DEBUG
-            return false;
+            //return true;
 
 #endif
             bool ret;

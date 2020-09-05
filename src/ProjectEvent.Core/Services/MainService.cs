@@ -1,4 +1,5 @@
-﻿using ProjectEvent.Core.Services.Tasks;
+﻿using Microsoft.Toolkit.Uwp.Notifications;
+using ProjectEvent.Core.Services.Tasks;
 using ProjectEvent.Core.Services.TimerTask;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,8 @@ namespace ProjectEvent.Core.Services
         }
         public void Run()
         {
+            DesktopNotificationManagerCompat.RegisterActivator<MyNotificationActivator>();
+
             //启动所有task service
             deviceTaskService.Run();
             timerTaskService.Run();

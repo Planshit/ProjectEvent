@@ -39,6 +39,23 @@ namespace ProjectEvent.UI.Controls.Action.Data
         {
             return ToastScenarioTypes.Where(m => m.ID == id).FirstOrDefault();
         }
-
+        public static List<ComBoxModel> ToastActionTypes = new List<ComBoxModel>()
+                {
+                    new ComBoxModel()
+                    {
+                        ID=(int)ToastActionType.Default,
+                        DisplayName="默认（启动主程序或显示主窗口）"
+                    },
+                    new ComBoxModel()
+                    {
+                        ID=(int)ToastActionType.Url,
+                        DisplayName="打开一个链接"
+                    },
+                   
+                };
+        public static ComBoxModel GetToastActionType(int id)
+        {
+            return ToastActionTypes.Where(m => m.ID == id).FirstOrDefault();
+        }
     }
 }
