@@ -782,12 +782,14 @@ namespace ProjectEvent.UI.Controls.Action
         #endregion
 
         #region 生成actions
+        private List<ActionItem> GeneratedItems;
         public string GenerateActionsJson()
         {
             return JsonConvert.SerializeObject(GenerateActions());
         }
         public List<Core.Action.Models.ActionModel> GenerateActions()
         {
+            GeneratedItems = new List<ActionItem>();
             if (ActionItems.Count == 0)
             {
                 return null;
@@ -804,8 +806,10 @@ namespace ProjectEvent.UI.Controls.Action
         {
             var actions = new List<Core.Action.Models.ActionModel>();
             int ifID = 0;
+
             foreach (var action in actionItems)
             {
+                Debug.WriteLine(action.Action.ActionName + ":" + action.Action.ID + ":" + action.Action.Index);
                 if (ifID == 0)
                 {
                     var actionData = GenerateAction(action);
@@ -852,8 +856,11 @@ namespace ProjectEvent.UI.Controls.Action
             else
             {
                 //switch ActionType是UI中使用的Type，与Core使用的ActionType并不一致，这里需要转换
-
                 result = action.Builder?.GetCoreActionModel();
+                if (result!=null && GeneratedItems.Where(m => m.Action.ID == result.ID).Any())
+                {
+                    return null;
+                }
             }
             return result;
         }
@@ -895,6 +902,9 @@ namespace ProjectEvent.UI.Controls.Action
                 },
                 Num = 1
             };
+            GeneratedItems.AddRange(passActionItems);
+            GeneratedItems.AddRange(unpassActionItems);
+
             return result;
         }
         #endregion
@@ -921,6 +931,8 @@ namespace ProjectEvent.UI.Controls.Action
                 },
                 Num = 1
             };
+            GeneratedItems.AddRange(actionItems);
+
             return result;
         }
         #endregion
