@@ -78,5 +78,9 @@ namespace ProjectEvent.Core.Action.Types
         /// 设置设备音量
         /// </summary>
         SetDeviceVolume = 18,
+        /// <summary>
+        /// 正则表达式匹配
+        /// </summary>
+        Regex = 19
     }
 }

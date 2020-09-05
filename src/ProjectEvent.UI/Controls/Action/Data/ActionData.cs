@@ -350,7 +350,7 @@ namespace ProjectEvent.UI.Controls.Action.Data
                         new ComBoxModel()
                         {
                             ID=(int)LoopsResultType.Index,
-                            DisplayName = "当前执行次数"
+                            DisplayName = "当前执行次数（从0开始）"
                         },
                     };
                     break;

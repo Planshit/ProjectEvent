@@ -32,7 +32,7 @@ namespace ProjectEvent.Core.Action.Actions
                 ActionTaskResulter.Add(taskID, result);
                 while (true)
                 {
-                    result.Result[(int)LoopsResultType.Index] = (i + 1).ToString();
+                    result.Result[(int)LoopsResultType.Index] = i.ToString();
                     ActionTask.Invoke(taskID, p.Actions, taskID == ActionTask.TestTaskID, true);
                     i++;
 
@@ -41,7 +41,7 @@ namespace ProjectEvent.Core.Action.Actions
                         break;
                     }
                 }
-                
+
                 OnEventStateChanged?.Invoke(taskID, action.ID, ActionInvokeStateType.Done);
             };
 

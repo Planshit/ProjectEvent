@@ -831,7 +831,7 @@ namespace ProjectEvent.UI.Controls.Action
                 return;
             }
             //验证操作结果变量
-            var matchs = Regex.Matches(inputTextBox.Text, @"\{(?<id>[0-9]{1,5})\.(?<key>[0-9]{1,25})\}");
+            var matchs = Regex.Matches(inputTextBox.Text, @"\{(?<id>[0-9]{1,5})\.(?<key>-?[0-9]{1,25})\}");
             foreach (Match match in matchs)
             {
                 var id = int.Parse(match.Groups["id"].Value);
@@ -844,13 +844,17 @@ namespace ProjectEvent.UI.Controls.Action
                     break;
                 }
 
-                //判断action是否支持该变量
-                var results = ActionData.GetActionResults(action.Action.ActionType);
-                if (!results.Where(m => m.ID == key).Any())
+                if (action.Action.ActionType == UI.Types.ActionType.Regex && key < 0 || action.Action.ActionType != UI.Types.ActionType.Regex)
                 {
-                    inputTextBox.BorderBrush = Colors.GetColor(ColorTypes.Red);
-                    break;
+                    //判断action是否支持该变量
+                    var results = ActionData.GetActionResults(action.Action.ActionType);
+                    if (!results.Where(m => m.ID == key).Any())
+                    {
+                        inputTextBox.BorderBrush = Colors.GetColor(ColorTypes.Red);
+                        break;
+                    }
                 }
+
             }
             //验证事件变量
             var eventVariableMatchs = Regex.Matches(inputTextBox.Text, @"\{(?<key>[a-zA-Z]{1,25})\}");

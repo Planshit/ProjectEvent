@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace ProjectEvent.Core.Action
 {
@@ -10,7 +11,7 @@ namespace ProjectEvent.Core.Action
     /// </summary>
     public static class ActionParameterConverter
     {
-        public static string ConvertToString(int taskID, string parameter)
+        public static string ConvertToString(int taskID, string parameter, bool isBreak = false)
         {
             if (parameter == null)
             {
@@ -22,9 +23,16 @@ namespace ProjectEvent.Core.Action
             parameter = ActionTaskResulter.GetActionResultsString(taskID, parameter);
             //全局变量
             parameter = GlobalVariable.ConvertToContent(parameter);
+            if (IsHasVariable(parameter) && !isBreak)
+            {
+                parameter = ConvertToString(taskID, parameter, true);
+            }
             return parameter;
         }
-
+        private static bool IsHasVariable(string value)
+        {
+            return Regex.IsMatch(value, @"\{(?<id>[0-9]{1,5})\.(?<key>-?[0-9]{1,25})\}") || Regex.IsMatch(value, @"\{@(?<key>[a-zA-Z]{1,25})\}") || Regex.IsMatch(value, @"\{(?<key>[a-zA-Z]{1,25})\}");
+        }
         public static Dictionary<string, string> ConvertToKeyValues(int taskID, Dictionary<string, string> data)
         {
             var resval = new Dictionary<string, string>();
