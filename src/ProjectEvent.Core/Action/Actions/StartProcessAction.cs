@@ -23,7 +23,7 @@ namespace ProjectEvent.Core.Action.Actions
                 var result = new ActionResultModel();
                 result.ID = action.ID;
                 result.Result = new Dictionary<int, object>();
-                result.Result.Add((int)StartProcessResultType.IsSuccess, "false");
+                result.Result.Add((int)StartProcessResultType.IsSuccess, false);
                 result.Result.Add((int)StartProcessResultType.Handle, "");
                 result.Result.Add((int)StartProcessResultType.Id, "");
                 p.Path = ActionParameterConverter.ConvertToString(taskID, p.Path);
@@ -39,7 +39,7 @@ namespace ProjectEvent.Core.Action.Actions
                         result.Result[(int)StartProcessResultType.Handle] = res.Handle.ToString();
                         result.Result[(int)StartProcessResultType.Id] = res.Id.ToString();
                     }
-                    result.Result[(int)StartProcessResultType.IsSuccess] = "true";
+                    result.Result[(int)StartProcessResultType.IsSuccess] = true;
                 }
                 catch (Exception e)
                 {

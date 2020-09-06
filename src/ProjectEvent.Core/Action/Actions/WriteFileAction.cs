@@ -25,7 +25,7 @@ namespace ProjectEvent.Core.Action.Actions
                  var result = new ActionResultModel();
                  result.ID = action.ID;
                  result.Result = new Dictionary<int, object>();
-                 result.Result.Add((int)CommonResultKeyType.IsSuccess, "false");
+                 result.Result.Add((int)CommonResultKeyType.IsSuccess, false);
                  p.FilePath = ActionParameterConverter.ConvertToString(taskID, p.FilePath);
                  p.Content = ActionParameterConverter.ConvertToString(taskID, p.Content);
 
@@ -33,7 +33,7 @@ namespace ProjectEvent.Core.Action.Actions
                  try
                  {
                      File.WriteAllText(p.FilePath, p.Content);
-                     result.Result[(int)CommonResultKeyType.IsSuccess] = "true";
+                     result.Result[(int)CommonResultKeyType.IsSuccess] = true;
                  }
                  catch (Exception e)
                  {

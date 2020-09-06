@@ -27,7 +27,7 @@ namespace ProjectEvent.Core.Action.Actions
                 var result = new ActionResultModel();
                 result.ID = action.ID;
                 result.Result = new Dictionary<int, object>();
-                result.Result.Add((int)SnippingResultType.IsSuccess, "false");
+                result.Result.Add((int)SnippingResultType.IsSuccess, false);
                 result.Result.Add((int)SnippingResultType.SavePath, p.SavePath);
                 p.SavePath = ActionParameterConverter.ConvertToString(taskID, p.SavePath);
                 try
@@ -41,7 +41,7 @@ namespace ProjectEvent.Core.Action.Actions
                     encoderParams.Param[0] = encoderParam;
                     var codecInfo = ImageCodecInfo.GetImageEncoders().FirstOrDefault(ici => ici.MimeType == "image/jpeg");
                     bitmap.Save(p.SavePath, codecInfo, encoderParams);
-                    result.Result[(int)SnippingResultType.IsSuccess] = "true";
+                    result.Result[(int)SnippingResultType.IsSuccess] = true;
                 }
                 catch (Exception e)
                 {

@@ -31,7 +31,7 @@ namespace ProjectEvent.Core.Action.Actions
                 var result = new ActionResultModel();
                 result.ID = action.ID;
                 result.Result = new Dictionary<int, object>();
-                result.Result.Add((int)GetIPAddressResultType.IsSuccess, "false");
+                result.Result.Add((int)GetIPAddressResultType.IsSuccess, false);
                 result.Result.Add((int)GetIPAddressResultType.IP, string.Empty);
                 try
                 {
@@ -49,7 +49,7 @@ namespace ProjectEvent.Core.Action.Actions
                         }
                         if (!string.IsNullOrEmpty(ipaddress))
                         {
-                            result.Result[(int)GetIPAddressResultType.IsSuccess] = "true";
+                            result.Result[(int)GetIPAddressResultType.IsSuccess] = true;
                             result.Result[(int)GetIPAddressResultType.IP] = ipaddress;
                         }
 
@@ -66,7 +66,7 @@ namespace ProjectEvent.Core.Action.Actions
                         var reg = Regex.Match(html, @"(?<ip>(25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\.(25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\.(25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\.(25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d))");
                         if (reg.Success && !string.IsNullOrEmpty(reg.Groups["ip"].Value))
                         {
-                            result.Result[(int)GetIPAddressResultType.IsSuccess] = "true";
+                            result.Result[(int)GetIPAddressResultType.IsSuccess] = true;
                             result.Result[(int)GetIPAddressResultType.IP] = reg.Groups["ip"].Value;
                         }
                     }

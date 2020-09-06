@@ -34,13 +34,13 @@ namespace ProjectEvent.Core.Action.Actions
                 var result = new ActionResultModel();
                 result.ID = action.ID;
                 result.Result = new Dictionary<int, object>();
-                result.Result.Add((int)DownloadFileResultType.IsSuccess, false.ToString());
+                result.Result.Add((int)DownloadFileResultType.IsSuccess, false);
                 result.Result.Add((int)DownloadFileResultType.SavePath, p.SavePath);
                 try
                 {
                     var wc = new WebClient();
                     wc.DownloadFile(p.Url, p.SavePath);
-                    result.Result[(int)DownloadFileResultType.IsSuccess] = true.ToString();
+                    result.Result[(int)DownloadFileResultType.IsSuccess] = true;
                 }
                 catch (Exception e)
                 {

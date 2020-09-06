@@ -28,13 +28,13 @@ namespace ProjectEvent.Core.Action.Actions
                 var result = new ActionResultModel();
                 result.ID = action.ID;
                 result.Result = new Dictionary<int, object>();
-                result.Result.Add((int)DeleteFileResultType.IsSuccess, "false");
+                result.Result.Add((int)DeleteFileResultType.IsSuccess, false);
                 result.Result.Add((int)DeleteFileResultType.Path, p.Path);
                 p.Path = ActionParameterConverter.ConvertToString(taskID, p.Path);
                 try
                 {
                     File.Delete(p.Path);
-                    result.Result[(int)DeleteFileResultType.IsSuccess] = "true";
+                    result.Result[(int)DeleteFileResultType.IsSuccess] = true;
                 }
                 catch (Exception e)
                 {

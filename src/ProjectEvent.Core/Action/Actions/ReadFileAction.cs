@@ -26,7 +26,7 @@ namespace ProjectEvent.Core.Action.Actions
                  var result = new ActionResultModel();
                  result.ID = action.ID;
                  result.Result = new Dictionary<int, object>();
-                 result.Result.Add((int)ReadFileResultType.IsSuccess, false.ToString());
+                 result.Result.Add((int)ReadFileResultType.IsSuccess, false);
                  result.Result.Add((int)ReadFileResultType.Content, string.Empty);
 
                  p.FilePath = ActionParameterConverter.ConvertToString(taskID, p.FilePath);
@@ -34,6 +34,8 @@ namespace ProjectEvent.Core.Action.Actions
                  try
                  {
                      result.Result[(int)ReadFileResultType.Content] = File.ReadAllText(p.FilePath);
+                     result.Result[(int)ReadFileResultType.IsSuccess] = true;
+
                  }
                  catch (Exception e)
                  {

@@ -190,7 +190,7 @@ namespace ProjectEvent.UI.Controls.Action.Data
             new ComBoxModel()
             {
                 ID = (int)HttpResultType.IsSuccess,
-                DisplayName = "是否成功（true，false）"
+                DisplayName = "是否成功（True，False）"
             },
             new ComBoxModel()
             {
@@ -212,7 +212,7 @@ namespace ProjectEvent.UI.Controls.Action.Data
             new ComBoxModel()
             {
                 ID = (int)CommonResultKeyType.IsSuccess,
-                DisplayName = "是否成功（true，false）"
+                DisplayName = "是否成功（True，False）"
             },
         };
                     break;
@@ -223,7 +223,7 @@ namespace ProjectEvent.UI.Controls.Action.Data
             new ComBoxModel()
             {
                 ID = (int)StartProcessResultType.IsSuccess,
-                DisplayName = "是否成功（true，false）"
+                DisplayName = "是否成功（True，False）"
             },
           new ComBoxModel()
             {
@@ -245,7 +245,7 @@ namespace ProjectEvent.UI.Controls.Action.Data
             new ComBoxModel()
             {
                 ID = (int)CommonResultKeyType.IsSuccess,
-                DisplayName = "是否成功（true，false）"
+                DisplayName = "是否成功（True，False）"
             },
                     };
                     break;
@@ -256,7 +256,7 @@ namespace ProjectEvent.UI.Controls.Action.Data
                         new ComBoxModel()
                         {
                             ID=(int)SnippingResultType.IsSuccess,
-                            DisplayName = "是否成功（true，false）"
+                            DisplayName = "是否成功（True，False）"
                         },
                         new ComBoxModel()
                         {
@@ -272,7 +272,7 @@ namespace ProjectEvent.UI.Controls.Action.Data
                         new ComBoxModel()
                         {
                             ID=(int)DeleteFileResultType.IsSuccess,
-                            DisplayName = "是否成功（true，false）"
+                            DisplayName = "是否成功（True，False）"
                         },
                         new ComBoxModel()
                         {
@@ -288,7 +288,7 @@ namespace ProjectEvent.UI.Controls.Action.Data
                         new ComBoxModel()
                         {
                             ID=(int)CommonResultKeyType.IsSuccess,
-                            DisplayName = "是否成功（true，false）"
+                            DisplayName = "是否成功（True，False）"
                         },
                     };
                     break;
@@ -299,7 +299,7 @@ namespace ProjectEvent.UI.Controls.Action.Data
                         new ComBoxModel()
                         {
                             ID=(int)GetIPAddressResultType.IsSuccess,
-                            DisplayName = "是否成功（true，false）"
+                            DisplayName = "是否成功（True，False）"
                         },
                         new ComBoxModel()
                         {

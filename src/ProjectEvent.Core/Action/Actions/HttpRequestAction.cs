@@ -27,7 +27,7 @@ namespace ProjectEvent.Core.Action.Actions
                  var result = new ActionResultModel();
                  result.ID = action.ID;
                  result.Result = new Dictionary<int, object>();
-                 result.Result.Add((int)HttpResultType.IsSuccess, "false");
+                 result.Result.Add((int)HttpResultType.IsSuccess, false);
                  if (p != null)
                  {
                      p.Url = ActionParameterConverter.ConvertToString(taskID, p.Url);
@@ -46,8 +46,7 @@ namespace ProjectEvent.Core.Action.Actions
                          var content = p.Method == Net.Types.MethodType.GET ? http.GetAsync().Result : http.PostAsync().Result;
                          result.Result.Add((int)HttpResultType.StatusCode, content.StatusCode.ToString());
                          result.Result.Add((int)HttpResultType.Content, content.Content);
-                         result.Result[(int)HttpResultType.IsSuccess] = content.IsSuccess.ToString().ToLower();
-                         Debug.Write(content);
+                         result.Result[(int)HttpResultType.IsSuccess] = content.IsSuccess;
                      }
                      catch (Exception e)
                      {

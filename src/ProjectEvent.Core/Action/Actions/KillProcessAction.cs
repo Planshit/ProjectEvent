@@ -31,7 +31,7 @@ namespace ProjectEvent.Core.Action.Actions
                 var result = new ActionResultModel();
                 result.ID = action.ID;
                 result.Result = new Dictionary<int, object>();
-                result.Result.Add((int)CommonResultKeyType.IsSuccess, true.ToString());
+                result.Result.Add((int)CommonResultKeyType.IsSuccess, true);
                 if (!string.IsNullOrEmpty(p.ProcessName))
                 {
                     var processes = Process.GetProcesses();
@@ -54,17 +54,17 @@ namespace ProjectEvent.Core.Action.Actions
                         }
                         if (closeProcesses.Count == 0)
                         {
-                            result.Result[(int)CommonResultKeyType.IsSuccess] = false.ToString();
+                            result.Result[(int)CommonResultKeyType.IsSuccess] = false;
                         }
                     }
                     catch
                     {
-                        result.Result[(int)CommonResultKeyType.IsSuccess] = false.ToString();
+                        result.Result[(int)CommonResultKeyType.IsSuccess] = false;
                     }
                 }
                 else
                 {
-                    result.Result[(int)CommonResultKeyType.IsSuccess] = false.ToString();
+                    result.Result[(int)CommonResultKeyType.IsSuccess] = false;
                 }
                 ActionTaskResulter.Add(taskID, result);
                 OnEventStateChanged?.Invoke(taskID, action.ID, ActionInvokeStateType.Done);
