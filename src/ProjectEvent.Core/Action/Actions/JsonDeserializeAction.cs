@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,6 +33,12 @@ namespace ProjectEvent.Core.Action.Actions
                  Debug.WriteLine("JsonDeserialize:" + p.Content);
                  try
                  {
+                     //尝试用正则表达式取出有效范围
+                     var regx = Regex.Match(p.Content, @"\{([\s\S]*)\}");
+                     if (regx.Success)
+                     {
+                         p.Content = regx.Value;
+                     }
                      result.Result[-1] = JsonConvert.DeserializeObject<object>(p.Content);
                      result.Result[(int)CommonResultKeyType.IsSuccess] = true;
 
