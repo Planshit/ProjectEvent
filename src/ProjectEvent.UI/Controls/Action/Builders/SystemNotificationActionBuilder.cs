@@ -42,7 +42,7 @@ namespace ProjectEvent.UI.Controls.Action.Builders
             });
             inputModels.Add(new ActionInputModel()
             {
-                InputType = Types.InputType.Text,
+                InputType = Types.InputType.MultiLineText,
                 Placeholder = "请输入",
                 Title = "内容",
                 //IsStretch = true,

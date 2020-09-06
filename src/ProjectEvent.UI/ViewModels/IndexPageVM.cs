@@ -191,6 +191,17 @@ namespace ProjectEvent.UI.ViewModels
         }
         private void CreateContainerContextMenu()
         {
+            MenuItem newItem = new MenuItem();
+            newItem.Header = "创建新的方案";
+            newItem.Icon = new Icon()
+            {
+                IconType = IconTypes.CalculatorAddition,
+            };
+            newItem.Click += (e, c) =>
+            {
+                mainVM.Uri = nameof(AddEventPage);
+            };
+
             MenuItem importItem = new MenuItem();
             importItem.Header = "导入";
             importItem.Icon = new Icon()
@@ -215,6 +226,7 @@ namespace ProjectEvent.UI.ViewModels
 
 
             };
+            ContainerContextMenu.Items.Add(newItem);
             ContainerContextMenu.Items.Add(importItem);
         }
         private void IndexPageVM_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
