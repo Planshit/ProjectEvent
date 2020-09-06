@@ -315,7 +315,9 @@ namespace ProjectEvent.UI.Controls.Action
                 {
                     var action = VariableActionComboBox.SelectedItem as ComBoxModel;
                     var variable = VariableActionResultsComboBox.SelectedItem as ComBoxModel;
-                    KeyboradFocusInputBox.AppendText($"{{{action.ID}.{variable.ID}}}");
+                    //KeyboradFocusInputBox.AppendText($"{{{action.ID}.{variable.ID}}}");
+                    KeyboradFocusInputBox.SelectedText = $"{{{action.ID}.{variable.ID}}}";
+                    KeyboradFocusInputBox.Focus();
                 }
             };
             //渲染事件变量
@@ -792,8 +794,11 @@ namespace ProjectEvent.UI.Controls.Action
             {
                 if (KeyboradFocusInputBox != null)
                 {
-                    KeyboradFocusInputBox.AppendText($"{{{variable}}}");
-                    //KeyboradFocusInputBox.Text = $"{{{variable}}}";
+                    //KeyboradFocusInputBox.AppendText($"{{{variable}}}");
+                    ////KeyboradFocusInputBox.Text = $"{{{variable}}}";
+                    //KeyboradFocusInputBox.Focus();
+
+                    KeyboradFocusInputBox.SelectedText = $"{{{variable}}}";
                     KeyboradFocusInputBox.Focus();
                 }
             };
