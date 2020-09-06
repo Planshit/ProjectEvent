@@ -195,6 +195,9 @@ namespace ProjectEvent.Core.Action
                 case ActionType.Regex:
                     actionInstance = new RegexAction();
                     break;
+                case ActionType.ReadFile:
+                    actionInstance = new ReadFileAction();
+                    break;
             }
             if (actionInstance != null)
             {

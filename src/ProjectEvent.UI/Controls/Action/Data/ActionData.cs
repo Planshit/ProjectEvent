@@ -82,7 +82,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
                 case ActionType.Regex:
                     action.Icon = Base.IconTypes.NewsSearch;
                     break;
-
+                case ActionType.ReadFile:
+                    action.Icon = Base.IconTypes.EntityExtraction;
+                    break;
             }
 
             return action;
@@ -157,6 +159,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
             },
             {
                 ActionType.Regex,"正则表达式匹配"
+            },
+            {
+                ActionType.ReadFile,"读取文件"
             },
         };
         #endregion
@@ -351,6 +356,21 @@ namespace ProjectEvent.UI.Controls.Action.Data
                         {
                             ID=(int)LoopsResultType.Index,
                             DisplayName = "当前执行次数（从0开始）"
+                        },
+                    };
+                    break;
+                case ActionType.ReadFile:
+                    data = new List<ComBoxModel>()
+                    {
+                        new ComBoxModel()
+                        {
+                            ID=(int)ReadFileResultType.IsSuccess,
+                            DisplayName = "是否成功（True，False）"
+                        },
+                         new ComBoxModel()
+                        {
+                            ID=(int)ReadFileResultType.Content,
+                            DisplayName = "文件内容"
                         },
                     };
                     break;

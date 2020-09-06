@@ -72,6 +72,7 @@ namespace ProjectEvent.UI.Controls.Base
             {IconTypes.NewsSearch,"\xF4E9"},
             {IconTypes.Share,"\xE72D"},
             {IconTypes.PageCheckedin,"\xF104"},
+            {IconTypes.EntityExtraction,"\xE467"},
 
             {IconTypes.ChevronUp,"\xE70E"}
 

@@ -81,6 +81,10 @@ namespace ProjectEvent.Core.Action.Types
         /// <summary>
         /// 正则表达式匹配
         /// </summary>
-        Regex = 19
+        Regex = 19,
+        /// <summary>
+        /// 读取文件
+        /// </summary>
+        ReadFile = 20
     }
 }

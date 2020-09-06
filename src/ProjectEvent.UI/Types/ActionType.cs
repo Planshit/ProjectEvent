@@ -96,6 +96,10 @@ namespace ProjectEvent.UI.Types
         /// <summary>
         /// 正则表达式匹配
         /// </summary>
-        Regex = 22
+        Regex = 22,
+        /// <summary>
+        /// 读取文件
+        /// </summary>
+        ReadFile = 23
     }
 }

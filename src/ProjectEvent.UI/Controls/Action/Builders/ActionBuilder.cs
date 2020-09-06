@@ -71,6 +71,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 case ActionType.Regex:
                     builder = new RegexActionBuilder();
                     break;
+                case ActionType.ReadFile:
+                    builder = new ReadFileActionBuilder();
+                    break;
             }
             if (builder != null)
             {
@@ -139,6 +142,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                     break;
                 case Core.Action.Types.ActionType.Regex:
                     builder = new RegexActionBuilder();
+                    break;
+                case Core.Action.Types.ActionType.ReadFile:
+                    builder = new ReadFileActionBuilder();
                     break;
             }
             if (builder != null)

@@ -96,7 +96,8 @@ namespace ProjectEvent.UI.Controls.Base
         Game,
         NewsSearch,
         Share,
-        PageCheckedin
+        PageCheckedin,
+        EntityExtraction
 
     }
 }
