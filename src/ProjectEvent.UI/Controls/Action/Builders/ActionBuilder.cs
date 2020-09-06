@@ -74,6 +74,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 case ActionType.ReadFile:
                     builder = new ReadFileActionBuilder();
                     break;
+                case ActionType.JsonDeserialize:
+                    builder = new JsonDeserializeActionBuilder();
+                    break;
             }
             if (builder != null)
             {
@@ -145,6 +148,9 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                     break;
                 case Core.Action.Types.ActionType.ReadFile:
                     builder = new ReadFileActionBuilder();
+                    break;
+                case Core.Action.Types.ActionType.JsonDeserialize:
+                    builder = new JsonDeserializeActionBuilder();
                     break;
             }
             if (builder != null)

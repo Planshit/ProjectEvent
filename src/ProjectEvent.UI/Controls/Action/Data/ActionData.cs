@@ -85,6 +85,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
                 case ActionType.ReadFile:
                     action.Icon = Base.IconTypes.EntityExtraction;
                     break;
+                case ActionType.JsonDeserialize:
+                    action.Icon = Base.IconTypes.FileCode;
+                    break;
             }
 
             return action;
@@ -162,6 +165,9 @@ namespace ProjectEvent.UI.Controls.Action.Data
             },
             {
                 ActionType.ReadFile,"读取文件"
+            },
+            {
+                ActionType.JsonDeserialize,"Json解析"
             },
         };
         #endregion
@@ -371,6 +377,16 @@ namespace ProjectEvent.UI.Controls.Action.Data
                         {
                             ID=(int)ReadFileResultType.Content,
                             DisplayName = "文件内容"
+                        },
+                    };
+                    break;
+                case ActionType.JsonDeserialize:
+                    data = new List<ComBoxModel>()
+                    {
+                        new ComBoxModel()
+                        {
+                            ID=(int)CommonResultKeyType.IsSuccess,
+                            DisplayName = "是否成功（True，False）"
                         },
                     };
                     break;

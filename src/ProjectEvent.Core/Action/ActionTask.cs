@@ -198,6 +198,9 @@ namespace ProjectEvent.Core.Action
                 case ActionType.ReadFile:
                     actionInstance = new ReadFileAction();
                     break;
+                case ActionType.JsonDeserialize:
+                    actionInstance = new JsonDeserializeAction();
+                    break;
             }
             if (actionInstance != null)
             {

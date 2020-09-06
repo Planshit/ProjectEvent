@@ -85,6 +85,10 @@ namespace ProjectEvent.Core.Action.Types
         /// <summary>
         /// 读取文件
         /// </summary>
-        ReadFile = 20
+        ReadFile = 20,
+        /// <summary>
+        /// Json解析
+        /// </summary>
+        JsonDeserialize = 21
     }
 }

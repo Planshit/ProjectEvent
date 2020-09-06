@@ -100,6 +100,10 @@ namespace ProjectEvent.UI.Types
         /// <summary>
         /// 读取文件
         /// </summary>
-        ReadFile = 23
+        ReadFile = 23,
+        /// <summary>
+        /// json解析
+        /// </summary>
+        JsonDeserialize = 24
     }
 }

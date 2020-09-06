@@ -97,7 +97,41 @@ namespace ProjectEvent.Core.Action
                     {
                         if (actionResult.Result.ContainsKey(key))
                         {
-                            result = result.Replace(variable.Value, actionResult.Result[key]);
+                            result = result.Replace(variable.Value, actionResult.Result[key].ToString());
+                        }
+                    }
+                }
+
+                //json数据变量
+                var jsonDataVariables = Regex.Matches(content, @"\[(?<id>[0-9]{1,5})\.(?<key>.*?)\]");
+
+                foreach (Match variable in jsonDataVariables)
+                {
+                    var id = variable.Groups["id"].Value;
+                    var key = variable.Groups["key"].Value;
+                    var actionResult = taskResult.Where(m => m.ID == int.Parse(id)).FirstOrDefault();
+                    if (actionResult != null && !string.IsNullOrEmpty(key))
+                    {
+                        if (actionResult.Result.ContainsKey(-1) && actionResult.Result[-1] != null)
+                        {
+                            //解析变量
+                            string[] array = key.Split('.');
+                            dynamic data = actionResult.Result[-1];
+                            foreach (var name in array)
+                            {
+                                try
+                                {
+                                    data = data[name];
+                                }
+                                catch
+                                {
+                                    break;
+                                }
+                            }
+                            if (data != null)
+                            {
+                                result = result.Replace(variable.Value, data.ToString());
+                            }
                         }
                     }
                 }
