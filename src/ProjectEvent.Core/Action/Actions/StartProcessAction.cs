@@ -22,7 +22,7 @@ namespace ProjectEvent.Core.Action.Actions
                 var p = ObjectConvert.Get<StartProcessActionParamsModel>(action.Parameter);
                 var result = new ActionResultModel();
                 result.ID = action.ID;
-                result.Result = new Dictionary<int, string>();
+                result.Result = new Dictionary<int, object>();
                 result.Result.Add((int)StartProcessResultType.IsSuccess, "false");
                 result.Result.Add((int)StartProcessResultType.Handle, "");
                 result.Result.Add((int)StartProcessResultType.Id, "");

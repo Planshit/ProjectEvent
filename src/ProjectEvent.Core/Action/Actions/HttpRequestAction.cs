@@ -26,7 +26,7 @@ namespace ProjectEvent.Core.Action.Actions
                  var p = ObjectConvert.Get<HttpRequestActionParameterModel>(action.Parameter);
                  var result = new ActionResultModel();
                  result.ID = action.ID;
-                 result.Result = new Dictionary<int, string>();
+                 result.Result = new Dictionary<int, object>();
                  result.Result.Add((int)HttpResultType.IsSuccess, "false");
                  if (p != null)
                  {
@@ -47,6 +47,7 @@ namespace ProjectEvent.Core.Action.Actions
                          result.Result.Add((int)HttpResultType.StatusCode, content.StatusCode.ToString());
                          result.Result.Add((int)HttpResultType.Content, content.Content);
                          result.Result[(int)HttpResultType.IsSuccess] = content.IsSuccess.ToString().ToLower();
+                         Debug.Write(content);
                      }
                      catch (Exception e)
                      {

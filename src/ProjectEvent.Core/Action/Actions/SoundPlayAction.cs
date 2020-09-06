@@ -71,7 +71,7 @@ namespace ProjectEvent.Core.Action.Actions
                 var p = ObjectConvert.Get<SoundPlayActionParamsModel>(action.Parameter);
                 var result = new ActionResultModel();
                 result.ID = action.ID;
-                result.Result = new Dictionary<int, string>();
+                result.Result = new Dictionary<int, object>();
                 result.Result.Add((int)CommonResultKeyType.IsSuccess, "false");
                 p.Path = ActionParameterConverter.ConvertToString(taskID, p.Path);
                 try

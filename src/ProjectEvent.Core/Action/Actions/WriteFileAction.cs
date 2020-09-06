@@ -24,7 +24,7 @@ namespace ProjectEvent.Core.Action.Actions
                  var p = ObjectConvert.Get<WriteFileActionParameterModel>(action.Parameter);
                  var result = new ActionResultModel();
                  result.ID = action.ID;
-                 result.Result = new Dictionary<int, string>();
+                 result.Result = new Dictionary<int, object>();
                  result.Result.Add((int)CommonResultKeyType.IsSuccess, "false");
                  p.FilePath = ActionParameterConverter.ConvertToString(taskID, p.FilePath);
                  p.Content = ActionParameterConverter.ConvertToString(taskID, p.Content);

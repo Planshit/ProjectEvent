@@ -27,7 +27,7 @@ namespace ProjectEvent.Core.Action.Actions
                 var p = ObjectConvert.Get<DeleteFileActionParamsModel>(action.Parameter);
                 var result = new ActionResultModel();
                 result.ID = action.ID;
-                result.Result = new Dictionary<int, string>();
+                result.Result = new Dictionary<int, object>();
                 result.Result.Add((int)DeleteFileResultType.IsSuccess, "false");
                 result.Result.Add((int)DeleteFileResultType.Path, p.Path);
                 p.Path = ActionParameterConverter.ConvertToString(taskID, p.Path);

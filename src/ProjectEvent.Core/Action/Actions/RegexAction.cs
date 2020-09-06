@@ -23,7 +23,7 @@ namespace ProjectEvent.Core.Action.Actions
                 var p = ObjectConvert.Get<RegexActionParamsModel>(action.Parameter);
                 var result = new ActionResultModel();
                 result.ID = action.ID;
-                result.Result = new Dictionary<int, string>();
+                result.Result = new Dictionary<int, object>();
                 result.Result.Add((int)RegexResultType.Count, "0");
                 p.Content = ActionParameterConverter.ConvertToString(taskID, p.Content);
 

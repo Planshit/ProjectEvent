@@ -60,7 +60,7 @@ namespace ProjectEvent.Core.Action.Actions
             {
                 var result = new ActionResultModel();
                 result.ID = actionID;
-                result.Result = new Dictionary<int, string>();
+                result.Result = new Dictionary<int, object>();
                 result.Result.Add((int)DialogResultType.ClickButtonValue, fb.FeedbackData.ToString());
                 //返回数据
                 ActionTaskResulter.Add(taskID, result);

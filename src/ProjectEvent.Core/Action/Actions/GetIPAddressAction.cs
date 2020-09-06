@@ -30,7 +30,7 @@ namespace ProjectEvent.Core.Action.Actions
                 var p = ObjectConvert.Get<GetIPAddressActionParamsModel>(action.Parameter);
                 var result = new ActionResultModel();
                 result.ID = action.ID;
-                result.Result = new Dictionary<int, string>();
+                result.Result = new Dictionary<int, object>();
                 result.Result.Add((int)GetIPAddressResultType.IsSuccess, "false");
                 result.Result.Add((int)GetIPAddressResultType.IP, string.Empty);
                 try

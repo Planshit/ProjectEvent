@@ -27,7 +27,7 @@ namespace ProjectEvent.Core.Action.Actions
                 }
                 var result = new ActionResultModel();
                 result.ID = action.ID;
-                result.Result = new Dictionary<int, string>();
+                result.Result = new Dictionary<int, object>();
                 result.Result.Add((int)LoopsResultType.Index, "1");
                 ActionTaskResulter.Add(taskID, result);
                 while (true)

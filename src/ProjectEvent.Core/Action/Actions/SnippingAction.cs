@@ -26,7 +26,7 @@ namespace ProjectEvent.Core.Action.Actions
                 var p = ObjectConvert.Get<SnippingActionParamsModel>(action.Parameter);
                 var result = new ActionResultModel();
                 result.ID = action.ID;
-                result.Result = new Dictionary<int, string>();
+                result.Result = new Dictionary<int, object>();
                 result.Result.Add((int)SnippingResultType.IsSuccess, "false");
                 result.Result.Add((int)SnippingResultType.SavePath, p.SavePath);
                 p.SavePath = ActionParameterConverter.ConvertToString(taskID, p.SavePath);

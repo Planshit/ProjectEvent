@@ -25,7 +25,7 @@ namespace ProjectEvent.Core.Action.Actions
                  var p = ObjectConvert.Get<ReadFileActionParamsModel>(action.Parameter);
                  var result = new ActionResultModel();
                  result.ID = action.ID;
-                 result.Result = new Dictionary<int, string>();
+                 result.Result = new Dictionary<int, object>();
                  result.Result.Add((int)ReadFileResultType.IsSuccess, false.ToString());
                  result.Result.Add((int)ReadFileResultType.Content, string.Empty);
 

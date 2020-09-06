@@ -68,7 +68,7 @@ namespace ProjectEvent.Core.Action.Actions
 
                 var result = new ActionResultModel();
                 result.ID = action.ID;
-                result.Result = new Dictionary<int, string>();
+                result.Result = new Dictionary<int, object>();
                 result.Result.Add((int)CommonResultKeyType.IsSuccess, isPass.ToString());
                 //result.Result = new Dictionary<int, ActionResultValueModel>();
                 //result.Result.Add((int)CommonResultKeyType.Status, new ActionResultValueModel()
