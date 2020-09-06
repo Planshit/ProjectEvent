@@ -7,7 +7,7 @@ namespace ProjectEvent.Core.Action.Models
     public class DownloadFileParamsModel
     {
         public string Url { get; set; }
-
         public string SavePath { get; set; }
+        public Dictionary<string, string> Headers { get; set; }
     }
 }

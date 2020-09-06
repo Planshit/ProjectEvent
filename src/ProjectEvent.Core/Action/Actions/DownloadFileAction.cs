@@ -39,6 +39,10 @@ namespace ProjectEvent.Core.Action.Actions
                 try
                 {
                     var wc = new WebClient();
+                    foreach (var item in p.Headers)
+                    {
+                        wc.Headers.Add(item.Key, item.Value);
+                    }
                     wc.DownloadFile(p.Url, p.SavePath);
                     result.Result[(int)DownloadFileResultType.IsSuccess] = true;
                 }

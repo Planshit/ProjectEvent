@@ -16,6 +16,8 @@ namespace ProjectEvent.UI.Controls.Action.Builders
         private Core.Action.Models.ActionModel action;
         private object inputData;
         private List<ActionInputModel> inputModels;
+        private List<ActionInputModel> detailInputModels;
+
         private List<ComBoxModel> actionResultKeys;
         public DownloadFileActionBuilder()
         {
@@ -24,6 +26,7 @@ namespace ProjectEvent.UI.Controls.Action.Builders
             action.Action = Core.Action.Types.ActionType.DownloadFile;
             inputData = new DownloadFileActionInputModel();
             inputModels = new List<ActionInputModel>();
+            detailInputModels = new List<ActionInputModel>();
             actionResultKeys = ActionData.GetActionResults(UI.Types.ActionType.DownloadFile);
 
             inputModels.Add(new ActionInputModel()
@@ -39,6 +42,13 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 Placeholder = "请输入保存路径，包括文件名",
                 Title = "保存路径",
                 BindingName = nameof(DownloadFileActionInputModel.SavePath)
+            });
+
+            detailInputModels.Add(new ActionInputModel()
+            {
+                InputType = Types.InputType.CustomKeyValue,
+                Title = "请求头",
+                BindingName = nameof(DownloadFileActionInputModel.Headers)
             });
         }
         public ActionItemModel GetActionItemModel()
@@ -58,7 +68,7 @@ namespace ProjectEvent.UI.Controls.Action.Builders
 
         public List<ActionInputModel> GetDetailActionInputModels()
         {
-            return null;
+            return detailInputModels;
         }
 
         public object GetInputModelData()
@@ -83,6 +93,7 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 var data = inputData as DownloadFileActionInputModel;
                 data.Url = parameter.Url;
                 data.SavePath = parameter.SavePath;
+                data.Headers = parameter.Headers;
 
             }
         }
@@ -99,7 +110,8 @@ namespace ProjectEvent.UI.Controls.Action.Builders
                 action.Parameter = new DownloadFileParamsModel()
                 {
                     Url = data.Url,
-                    SavePath = data.SavePath
+                    SavePath = data.SavePath,
+                    Headers = data.Headers
                 };
             }
         }

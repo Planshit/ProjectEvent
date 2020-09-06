@@ -10,5 +10,7 @@ namespace ProjectEvent.UI.Controls.Action.Models
         public string Url { get; set; }
 
         public string SavePath { get; set; }
+        public Dictionary<string, string> Headers { get; set; }
+
     }
 }
