@@ -62,7 +62,7 @@ namespace ProjectEvent.Core.Net
             var response = await httpClient.GetAsync(Url);
             //var content = await response.Content.ReadAsStringAsync();
             var contentBytes = await response.Content.ReadAsByteArrayAsync();
-            var content = Encoding.Default.GetString(contentBytes, 0, contentBytes.Length - 1);
+            var content = Encoding.Default.GetString(contentBytes, 0, contentBytes.Length);
             var result = new HttpResultModel()
             {
                 IsSuccess = true,
@@ -110,7 +110,7 @@ namespace ProjectEvent.Core.Net
             }
             var response = await httpClient.PostAsync(Url, httpContent);
             var contentBytes = await response.Content.ReadAsByteArrayAsync();
-            var content = Encoding.Default.GetString(contentBytes, 0, contentBytes.Length - 1);
+            var content = Encoding.Default.GetString(contentBytes, 0, contentBytes.Length);
             //var content = await response.Content.ReadAsStringAsync();
             var result = new HttpResultModel()
             {
