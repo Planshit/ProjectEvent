@@ -52,3 +52,5 @@
 [开发者博客](http://thelittlepandaisbehind.com) 
 
 [关于开发者](http://thelittlepandaisbehind.com/about.html) [看看是谁写的狗屎]
+
+[用户帮助文档](https://littlepanda.gitbook.io/project-event/)
