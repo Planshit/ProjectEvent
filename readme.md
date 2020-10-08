@@ -6,13 +6,6 @@
   <img alt="Project Event" src="https://i.loli.net/2020/07/05/Cu4DA7KHd1vqRcZ.jpg">
 </p>
 
-
-### 下载
-
-[<img alt="Project Event" width="16" src="https://c.s-microsoft.com/favicon.ico?v2"/> 微软商店 Microsoft Store](https://www.microsoft.com/store/apps/9PDZ8MHCVCFR) 
-
-未来将不再从releases页发布软件包，请从微软商店下载和更新。
-
 ### 基本使用
 
 安装启动软件后你可以在右下角状态栏看到⚡图标，左键双击直接进入主界面，右键单击显示快捷菜单。
@@ -39,18 +32,8 @@
 
 [功能建议](https://github.com/Planshit/ProjectEvent/issues/new?assignees=&labels=enhancement&template=feature-request-----.md&title=%5Bfeature%5D+%E6%88%91%E5%B8%8C%E6%9C%9B%E8%83%BD%E5%A2%9E%E5%8A%A0%2F%E8%B0%83%E6%95%B4...)
 
-如果你并不熟悉或不喜欢使用[issues](https://github.com/Planshit/ProjectEvent/issues)，还可以通过底部的关于开发者链接，找到我的电子邮箱或微博进行联系。
-
-不局限于问题反馈，还欢迎提供你的想法或者改进建议。
-
 ### 其他
 
-由于软件是开源的，任何人都可以再次修改发布，所以建议不要从本页面指定的地址外下载软件，以防被恶意篡改。
-
 [Todo](https://github.com/Planshit/ProjectEvent/projects) [追踪开发进度和版本计划]
-
-[开发者博客](http://thelittlepandaisbehind.com) 
-
-[关于开发者](http://thelittlepandaisbehind.com/about.html) [看看是谁写的狗屎]
 
 [用户帮助文档](https://littlepanda.gitbook.io/project-event/)
