@@ -322,6 +322,7 @@ namespace ProjectEvent.UI.ViewModels
                 {
                     model.GroupID = 0;
                 }
+                app.Add(model);
                 return projects.Add(model);
             }
             return false;
