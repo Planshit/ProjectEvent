@@ -1,5 +1,7 @@
 # Project Event
 
+[Microsoft Store →](https://www.microsoft.com/store/apps/9PDZ8MHCVCFR)
+
 一个类似于iOS自动化快捷指令的PC版软件，提供了可以在Windows上创建事件监听方案的能力，当事件触发时自动执行方案所设定的操作。
 
 <p align="center">
